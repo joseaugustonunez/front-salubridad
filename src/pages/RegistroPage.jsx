@@ -49,7 +49,6 @@ function RegisterPage() {
       });
   
       toast.success("¡Registro exitoso!");
-      console.log("Usuario registrado correctamente:", response);
   
       setFormData({
         nombreUsuario: "",
@@ -60,8 +59,6 @@ function RegisterPage() {
       setTermsAccepted(false);
   
     } catch (error) {
-      console.error("Error al registrar el usuario:", error);
-      console.log("Respuesta de error:", error.response?.data);
   
       const mensajeError =
         error.response?.data?.message || // si el backend responde con { message: "..." }

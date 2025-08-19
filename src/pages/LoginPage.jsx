@@ -21,11 +21,9 @@ function LoginPage() {
 
     try {
       const user = await login({ email, password });
-      console.log("Usuario autenticado:", user);
       toast.success('Inicio de sesión exitoso');
       navigate("/");
     } catch (err) {
-      console.error("Error al iniciar sesión:", err);
       toast.error('Correo o contraseña incorrectos');
       setError("Correo o contraseña incorrectos");
     }
