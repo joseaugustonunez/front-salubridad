@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://back-salubridad.sistemasudh.com/notificaciones"; // Ajusta la URL según tu backend
+const API_URL = "https://back-salubridad.sistemasudh.com/notificaciones"; // Ajusta la URL según tu backend
 
 // Obtener todas las notificaciones de un usuario
 export const obtenerNotificaciones = async (usuarioId) => {
