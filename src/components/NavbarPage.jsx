@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import NotificacionesComponent from "./NotificacionesComponent";
-import img1 from '/img1.png';
+import img1 from './assets/img1.png';
 export default function NavbarPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
