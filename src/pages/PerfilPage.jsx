@@ -163,8 +163,7 @@ const recargarUsuario = async (userId) => {
         }
       }
 
-      // Verificar y mostrar el ID para depuración
-      console.log("ID del usuario obtenido:", userId);
+    
 
       // Verificar que tenemos un ID válido antes de continuar
       if (!userId) {
@@ -255,7 +254,6 @@ const recargarUsuario = async (userId) => {
         }
       }
 
-      console.log("ID del usuario obtenido (cover):", userId);
 
       if (!userId) {
         console.error("No se pudo obtener el ID del usuario para la portada");
@@ -308,7 +306,6 @@ const recargarUsuario = async (userId) => {
 
   const handleEstablecimientoCreado = (nuevoEstablecimiento) => {
     // Aquí puedes actualizar el estado o hacer algo con el nuevo establecimiento
-    console.log("Establecimiento creado:", nuevoEstablecimiento);
   };
   if (loading || !user) {
     return (
