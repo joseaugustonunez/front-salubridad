@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import NotificacionesComponent from "./NotificacionesComponent";
-
+import { imagen1 } from "../assets/img1.png"
 export default function NavbarPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -10,7 +10,7 @@ export default function NavbarPage() {
   const [activeLink, setActiveLink] = useState("inicio");
   const { user, logout } = useAuth();
   const [notifications, setNotifications] = useState([]);
-  
+
   // Refs para los elementos que necesitan detección de clicks fuera
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -20,58 +20,58 @@ export default function NavbarPage() {
   const userMenuButtonRef = useRef(null);
   const notificationsRef = useRef(null);
   const notificationsButtonRef = useRef(null);
-  
+
   // Effect to handle click outside
   useEffect(() => {
     function handleClickOutside(event) {
       // Close menu if click is outside both the menu and its toggle button
       if (
         isMenuOpen &&
-        menuRef.current && 
+        menuRef.current &&
         !menuRef.current.contains(event.target) &&
-        menuButtonRef.current && 
+        menuButtonRef.current &&
         !menuButtonRef.current.contains(event.target)
       ) {
         setIsMenuOpen(false);
       }
-      
+
       // Close search if click is outside both the search and its toggle button
       if (
         isSearchOpen &&
-        searchRef.current && 
+        searchRef.current &&
         !searchRef.current.contains(event.target) &&
-        searchButtonRef.current && 
+        searchButtonRef.current &&
         !searchButtonRef.current.contains(event.target)
       ) {
         setIsSearchOpen(false);
       }
-      
+
       // Close user menu if click is outside both the menu and its toggle button
       if (
         isUserMenuOpen &&
-        userMenuRef.current && 
+        userMenuRef.current &&
         !userMenuRef.current.contains(event.target) &&
-        userMenuButtonRef.current && 
+        userMenuButtonRef.current &&
         !userMenuButtonRef.current.contains(event.target)
       ) {
         setIsUserMenuOpen(false);
       }
-      
+
       // Close notifications if click is outside both the notifications and its toggle button
       if (
         isNotificationsOpen &&
-        notificationsRef.current && 
+        notificationsRef.current &&
         !notificationsRef.current.contains(event.target) &&
-        notificationsButtonRef.current && 
+        notificationsButtonRef.current &&
         !notificationsButtonRef.current.contains(event.target)
       ) {
         setIsNotificationsOpen(false);
       }
     }
-    
+
     // Add event listener
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     // Clean up event listener
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -81,7 +81,7 @@ export default function NavbarPage() {
   // Effect to set active link based on current pathname when component mounts
   useEffect(() => {
     const path = window.location.pathname;
-        
+
     // Map pathname to menu item
     if (path === "/") {
       setActiveLink("inicio");
@@ -121,41 +121,41 @@ export default function NavbarPage() {
     setIsUserMenuOpen(false);
     setIsNotificationsOpen(false);
   };
-  
+
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
     setIsMenuOpen(false);
     setIsUserMenuOpen(false);
     setIsNotificationsOpen(false);
   };
-  
+
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
     setIsMenuOpen(false);
     setIsSearchOpen(false);
     setIsNotificationsOpen(false);
   };
-  
+
   const toggleNotifications = () => {
     setIsNotificationsOpen(!isNotificationsOpen);
     setIsMenuOpen(false);
     setIsSearchOpen(false);
     setIsUserMenuOpen(false);
   };
-    
+
   // Count unread notifications
   const unreadCount = notifications.filter(notif => !notif.read).length;
-    
+
   // Function to mark a notification as read
   const markAsRead = (id) => {
     setNotifications(notifications.map(notif =>
-      notif.id === id ? {...notif, read: true} : notif
+      notif.id === id ? { ...notif, read: true } : notif
     ));
   };
-    
+
   // Function to mark all notifications as read
   const markAllAsRead = () => {
-    setNotifications(notifications.map(notif => ({...notif, read: true})));
+    setNotifications(notifications.map(notif => ({ ...notif, read: true })));
   };
 
   // Check if user is admin
@@ -169,7 +169,7 @@ export default function NavbarPage() {
     // Close mobile menu after link click
     setIsMenuOpen(false);
   };
-  
+
   return (
     <div className="fixed top-0 left-0 w-full z-50 px-4 pt-4">
       <nav className="bg-white shadow-md rounded-xl mx-auto max-w-7xl">
@@ -210,54 +210,50 @@ export default function NavbarPage() {
             <div className="hidden md:flex items-center space-x-6 font-helveticaBold">
               <a
                 href="/"
-                className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
-                  activeLink === "inicio"
+                className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "inicio"
                     ? "bg-[#254A5D] text-white"
                     : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
+                  }`}
                 onClick={() => handleLinkClick("inicio")}
               >
                 Inicio
               </a>
               <a
                 href="/establecimientos"
-                className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
-                  activeLink === "establecimientos"
+                className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "establecimientos"
                     ? "bg-[#254A5D] text-white"
                     : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
+                  }`}
                 onClick={() => handleLinkClick("establecimientos")}
               >
                 Establecimientos
               </a>
               <a
                 href="/top"
-                className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
-                  activeLink === "top"
+                className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "top"
                     ? "bg-[#254A5D] text-white"
                     : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
+                  }`}
                 onClick={() => handleLinkClick("top")}
               >
                 Top
               </a>
               <a
                 href="/promociones"
-                className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
-                  activeLink === "promociones"
+                className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "promociones"
                     ? "bg-[#254A5D] text-white"
                     : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
+                  }`}
                 onClick={() => handleLinkClick("promociones")}
               >
                 Promociones
               </a>
-              
+
               {/* Admin-specific navigation items */}
               {isAdmin && (
                 <div className="relative group">
                   <button className="px-3 py-1.5 rounded-3xl transition duration-200 text-gray-700 hover:bg-[#254A5D] hover:text-white flex items-center">
-                    Admin 
+                    Admin
                     <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -306,7 +302,7 @@ export default function NavbarPage() {
               {isBusinessOwner && (
                 <div className="relative group">
                   <button className="px-3 py-1.5 rounded-3xl transition duration-200 text-gray-700 hover:bg-[#254A5D] hover:text-white flex items-center">
-                    Mi Negocio 
+                    Mi Negocio
                     <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -346,9 +342,9 @@ export default function NavbarPage() {
             </div>
 
             {/* Center: Logo */}
-         <div className="flex flex-col items-center md:flex-grow md:items-center">
- <img src="../public/img1.png" alt="Logo Noka" className="max-w-[43px] h-auto mb-1 transform scale-125" />
-</div>
+            <div className="flex flex-col items-center md:flex-grow md:items-center">
+              <img src={imagen1} alt="Logo Noka" className="max-w-[43px] h-auto mb-1 transform scale-125" />
+            </div>
 
             {/* Right: Search and actions */}
             <div className="flex items-center space-x-4">
@@ -395,7 +391,7 @@ export default function NavbarPage() {
                   />
                 </svg>
               </div>
-              
+
               {/* Welcome message with role indicator */}
               {user && user.nombreUsuario ? (
                 <div className="hidden md:flex items-center">
@@ -444,7 +440,7 @@ export default function NavbarPage() {
 
                 {/* User menu dropdown */}
                 {isUserMenuOpen && (
-                  <div 
+                  <div
                     ref={userMenuRef}
                     className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-md py-2 z-10"
                   >
@@ -490,7 +486,7 @@ export default function NavbarPage() {
                             )}
                           </div>
                         </div>
-                        
+
                         {/* Common user options */}
                         <a
                           href="/perfil"
@@ -499,7 +495,7 @@ export default function NavbarPage() {
                         >
                           Mi Perfil
                         </a>
-                        
+
                         {/* Business Owner specific options */}
                         {isBusinessOwner && (
                           <>
@@ -535,7 +531,7 @@ export default function NavbarPage() {
                             </a>
                           </>
                         )}
-                        
+
                         {/* Admin-specific options */}
                         {isAdmin && (
                           <>
@@ -578,7 +574,7 @@ export default function NavbarPage() {
                             </a>
                           </>
                         )}
-                        
+
                         <hr className="my-2 border-gray-200" />
                         <a
                           href="#logout"
@@ -606,7 +602,7 @@ export default function NavbarPage() {
 
           {/* Mobile search (expanded) */}
           {isSearchOpen && (
-            <div 
+            <div
               ref={searchRef}
               className="mt-4 md:hidden"
             >
@@ -635,56 +631,52 @@ export default function NavbarPage() {
 
           {/* Mobile menu (expanded) */}
           {isMenuOpen && (
-            <div 
+            <div
               ref={menuRef}
               className="mt-4 pb-4 md:hidden"
             >
               <a
                 href="/"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                  activeLink === "inicio"
+                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "inicio"
                     ? "bg-[#254A5D] text-white"
                     : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
+                  }`}
                 onClick={() => handleLinkClick("inicio")}
               >
                 Inicio
               </a>
               <a
                 href="/establecimientos"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                  activeLink === "establecimientos"
+                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "establecimientos"
                     ? "bg-[#254A5D] text-white"
                     : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
+                  }`}
                 onClick={() => handleLinkClick("establecimientos")}
               >
                 Establecimientos
               </a>
               <a
                 href="/top"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                  activeLink === "top"
+                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "top"
                     ? "bg-[#254A5D] text-white"
                     : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
+                  }`}
                 onClick={() => handleLinkClick("top")}
               >
                 Top
               </a>
               <a
                 href="/promociones"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                  activeLink === "promociones"
+                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "promociones"
                     ? "bg-[#254A5D] text-white"
                     : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
+                  }`}
                 onClick={() => handleLinkClick("promociones")}
               >
                 Promociones
               </a>
-              
-              
+
+
               {/* Business Owner specific options in mobile menu */}
               {isBusinessOwner && (
                 <>
@@ -693,51 +685,47 @@ export default function NavbarPage() {
                   </div>
                   <a
                     href="/negocio/dashboard"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "negocio-dashboard"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-dashboard"
                         ? "bg-[#2A9D8F] text-white"
                         : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("negocio-dashboard")}
                   >
                     Dashboard
                   </a>
                   <a
                     href="/negocio/reservas"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "negocio-reservas"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-reservas"
                         ? "bg-[#2A9D8F] text-white"
                         : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("negocio-reservas")}
                   >
                     Gestionar Reservas
                   </a>
                   <a
                     href="/negocio/promociones"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "negocio-promociones"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-promociones"
                         ? "bg-[#2A9D8F] text-white"
                         : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("negocio-promociones")}
                   >
                     Mis Promociones
                   </a>
                   <a
                     href="/negocio/estadisticas"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "negocio-estadisticas"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-estadisticas"
                         ? "bg-[#2A9D8F] text-white"
                         : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("negocio-estadisticas")}
                   >
                     Estadísticas
                   </a>
                 </>
               )}
-              
+
               {/* Admin options in mobile menu */}
               {isAdmin && (
                 <>
@@ -746,78 +734,72 @@ export default function NavbarPage() {
                   </div>
                   <a
                     href="/admin/tipos"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "tipos"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "tipos"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("tipos")}
                   >
                     Tipos
                   </a>
                   <a
                     href="/admin/categorias"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "categorias"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "categorias"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("categorias")}
                   >
                     Categorias
                   </a>
                   <a
                     href="/admin/usuarios"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "usuarios"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "usuarios"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("usuarios")}
                   >
                     Gestionar Usuarios
                   </a>
                   <a
                     href="/admin/establecimientos"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "establecimientos-admin"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "establecimientos-admin"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("establecimientos-admin")}
                   >
                     Gestionar Establecimientos
                   </a>
                   <a
                     href="/admin/promociones"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "promociones"
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "promociones"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                    }`}
+                      }`}
                     onClick={() => setActiveLink("promociones")}
                   >
                     Promociones
                   </a>
                 </>
               )}
-              
+
               <div className="my-2 border-t border-gray-200 pt-2">
                 {user && (
                   <>
                     <a
                       href="/perfil"
-                      className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                        activeLink === "perfil"
+                      className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "perfil"
                           ? "bg-[#254A5D] text-white"
                           : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                        }`}
                       onClick={() => setActiveLink("perfil")}
                     >
                       Mi Perfil
                     </a>
-                    
-                    
+
+
                     <a
                       href="#logout"
                       onClick={(e) => {
