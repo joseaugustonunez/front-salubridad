@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/users";
+const API_URL = "http://back-salubridad.sistemasudh.com/users";
 
 // Obtener token del localStorage
 const obtenerToken = () => {

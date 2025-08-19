@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/tipos"; // Asegúrate de que esta URL sea correcta
+const API_URL = "http://back-salubridad.sistemasudh.com/tipos"; // Asegúrate de que esta URL sea correcta
 
 // Obtener todos los Tipos
 export const obtenerTipos = async () => {

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/horarios"; // Asegúrate de que esta URL sea correcta
+const API_URL = "http://back-salubridad.sistemasudh.com/horarios"; // Asegúrate de que esta URL sea correcta
 
 // Obtener todos los Horarios
 export const obtenerHorarios = async () => {

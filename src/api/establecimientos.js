@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Asegúrate de que la URL sea válida según tu backend
-const API_URL = "http://localhost:3000/establecimientos";
+const API_URL = "http://back-salubridad.sistemasudh.com/establecimientos";
 
 // Función para obtener el token desde el almacenamiento local
 const obtenerToken = () => {

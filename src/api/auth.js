@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/auth'; // Ajusta según tu backend
+const API_URL = 'http://back-salubridad.sistemasudh.com/auth'; 
 
 // LOGIN
 export const login = async (credenciales) => {
