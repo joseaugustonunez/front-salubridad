@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import NotificacionesComponent from "./NotificacionesComponent";
-import { imagen1 } from "../assets/img1.png"
+import {img1}from './assets/img1.png';
 export default function NavbarPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -211,8 +211,8 @@ export default function NavbarPage() {
               <a
                 href="/"
                 className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "inicio"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                  ? "bg-[#254A5D] text-white"
+                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                   }`}
                 onClick={() => handleLinkClick("inicio")}
               >
@@ -221,8 +221,8 @@ export default function NavbarPage() {
               <a
                 href="/establecimientos"
                 className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "establecimientos"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                  ? "bg-[#254A5D] text-white"
+                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                   }`}
                 onClick={() => handleLinkClick("establecimientos")}
               >
@@ -231,8 +231,8 @@ export default function NavbarPage() {
               <a
                 href="/top"
                 className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "top"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                  ? "bg-[#254A5D] text-white"
+                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                   }`}
                 onClick={() => handleLinkClick("top")}
               >
@@ -241,8 +241,8 @@ export default function NavbarPage() {
               <a
                 href="/promociones"
                 className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "promociones"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                  ? "bg-[#254A5D] text-white"
+                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                   }`}
                 onClick={() => handleLinkClick("promociones")}
               >
@@ -343,7 +343,7 @@ export default function NavbarPage() {
 
             {/* Center: Logo */}
             <div className="flex flex-col items-center md:flex-grow md:items-center">
-              <img src={imagen1} alt="Logo Noka" className="max-w-[43px] h-auto mb-1 transform scale-125" />
+              <img src={img1} alt="Logo Noka" className="max-w-[43px] h-auto mb-1 transform scale-125" />
             </div>
 
             {/* Right: Search and actions */}
@@ -638,8 +638,8 @@ export default function NavbarPage() {
               <a
                 href="/"
                 className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "inicio"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                  ? "bg-[#254A5D] text-white"
+                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                   }`}
                 onClick={() => handleLinkClick("inicio")}
               >
@@ -648,8 +648,8 @@ export default function NavbarPage() {
               <a
                 href="/establecimientos"
                 className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "establecimientos"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                  ? "bg-[#254A5D] text-white"
+                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                   }`}
                 onClick={() => handleLinkClick("establecimientos")}
               >
@@ -658,8 +658,8 @@ export default function NavbarPage() {
               <a
                 href="/top"
                 className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "top"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                  ? "bg-[#254A5D] text-white"
+                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                   }`}
                 onClick={() => handleLinkClick("top")}
               >
@@ -668,8 +668,8 @@ export default function NavbarPage() {
               <a
                 href="/promociones"
                 className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "promociones"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                  ? "bg-[#254A5D] text-white"
+                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                   }`}
                 onClick={() => handleLinkClick("promociones")}
               >
@@ -686,8 +686,8 @@ export default function NavbarPage() {
                   <a
                     href="/negocio/dashboard"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-dashboard"
-                        ? "bg-[#2A9D8F] text-white"
-                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                      ? "bg-[#2A9D8F] text-white"
+                      : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("negocio-dashboard")}
                   >
@@ -696,8 +696,8 @@ export default function NavbarPage() {
                   <a
                     href="/negocio/reservas"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-reservas"
-                        ? "bg-[#2A9D8F] text-white"
-                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                      ? "bg-[#2A9D8F] text-white"
+                      : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("negocio-reservas")}
                   >
@@ -706,8 +706,8 @@ export default function NavbarPage() {
                   <a
                     href="/negocio/promociones"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-promociones"
-                        ? "bg-[#2A9D8F] text-white"
-                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                      ? "bg-[#2A9D8F] text-white"
+                      : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("negocio-promociones")}
                   >
@@ -716,8 +716,8 @@ export default function NavbarPage() {
                   <a
                     href="/negocio/estadisticas"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-estadisticas"
-                        ? "bg-[#2A9D8F] text-white"
-                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                      ? "bg-[#2A9D8F] text-white"
+                      : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("negocio-estadisticas")}
                   >
@@ -735,8 +735,8 @@ export default function NavbarPage() {
                   <a
                     href="/admin/tipos"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "tipos"
-                        ? "bg-[#254A5D] text-white"
-                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      ? "bg-[#254A5D] text-white"
+                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("tipos")}
                   >
@@ -745,8 +745,8 @@ export default function NavbarPage() {
                   <a
                     href="/admin/categorias"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "categorias"
-                        ? "bg-[#254A5D] text-white"
-                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      ? "bg-[#254A5D] text-white"
+                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("categorias")}
                   >
@@ -755,8 +755,8 @@ export default function NavbarPage() {
                   <a
                     href="/admin/usuarios"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "usuarios"
-                        ? "bg-[#254A5D] text-white"
-                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      ? "bg-[#254A5D] text-white"
+                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("usuarios")}
                   >
@@ -765,8 +765,8 @@ export default function NavbarPage() {
                   <a
                     href="/admin/establecimientos"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "establecimientos-admin"
-                        ? "bg-[#254A5D] text-white"
-                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      ? "bg-[#254A5D] text-white"
+                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("establecimientos-admin")}
                   >
@@ -775,8 +775,8 @@ export default function NavbarPage() {
                   <a
                     href="/admin/promociones"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "promociones"
-                        ? "bg-[#254A5D] text-white"
-                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      ? "bg-[#254A5D] text-white"
+                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       }`}
                     onClick={() => setActiveLink("promociones")}
                   >
@@ -791,8 +791,8 @@ export default function NavbarPage() {
                     <a
                       href="/perfil"
                       className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "perfil"
-                          ? "bg-[#254A5D] text-white"
-                          : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                         }`}
                       onClick={() => setActiveLink("perfil")}
                     >

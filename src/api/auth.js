@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://back-salubridad.sistemasudh.com/auth'; 
+const API_URL = 'https://back-salubridad.sistemasudh.com/auth'; 
 
 // LOGIN
 export const login = async (credenciales) => {
