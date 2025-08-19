@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import NotificacionesComponent from "./NotificacionesComponent";
-import {img1}from './assets/img1.png';
 export default function NavbarPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -343,7 +342,7 @@ export default function NavbarPage() {
 
             {/* Center: Logo */}
             <div className="flex flex-col items-center md:flex-grow md:items-center">
-              <img src={img1} alt="Logo Noka" className="max-w-[43px] h-auto mb-1 transform scale-125" />
+              <img src="/img1" alt="Logo Noka" className="max-w-[43px] h-auto mb-1 transform scale-125" />
             </div>
 
             {/* Right: Search and actions */}
