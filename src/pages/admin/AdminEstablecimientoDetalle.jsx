@@ -2,11 +2,18 @@ import { useState, useEffect } from 'react';
 import { obtenerEstablecimientoPorId } from "../../api/establecimientos";
 import { eliminarComentario } from "../../api/comentario";
 import { SiTiktok } from 'react-icons/si';
-import { Trash2, Edit, Save, X, ChevronDown, ChevronUp, Facebook, Instagram, Twitter, Youtube, Linkedin, MapPin, Phone, Clock, Star } from 'lucide-react';
 import { useParams } from 'react-router-dom';
+import { 
+  Trash2, Edit, Save, X, ChevronDown, ChevronUp, 
+  Facebook, Instagram, Twitter, Youtube, Linkedin, 
+  MapPin, Phone, Clock, Star, Calendar, Users,
+  Heart, MessageCircle, Eye, Building2, Award,
+  Camera, Image as ImageIcon, Upload
+} from 'lucide-react';
 import { toast } from "react-hot-toast";
+
 const AdminEstablecimientoDetalle = () => {
-  const [establecimiento, setEstablecimiento] = useState(null);
+ const [establecimiento, setEstablecimiento] = useState(null);
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('general');
@@ -126,6 +133,18 @@ const AdminEstablecimientoDetalle = () => {
       };
     });
   };
+ const tabConfig = [
+    { key: 'general', label: 'Información General', icon: Building2 },
+    { key: 'media', label: 'Multimedia', icon: ImageIcon },
+    { key: 'comments', label: 'Comentarios', icon: MessageCircle }
+  ];
+const socialIcons = {
+    facebook: { icon: Facebook, color: 'text-blue-600', bg: 'bg-blue-50' },
+    instagram: { icon: Instagram, color: 'text-pink-600', bg: 'bg-pink-50' },
+    twitter: { icon: Twitter, color: 'text-sky-500', bg: 'bg-sky-50' },
+    youtube: { icon: Youtube, color: 'text-red-600', bg: 'bg-red-50' },
+    tiktok: { icon: SiTiktok, color: 'text-gray-800', bg: 'bg-gray-50' }
+  };
 
   const handleSaveChanges = async () => {
     try {
@@ -156,439 +175,525 @@ const AdminEstablecimientoDetalle = () => {
     );
   }
 
+
+
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-teal-700 to-teal-900 text-white p-32 shadow-md" style={{ background: `linear-gradient(to right, #254A5D, #337179)` }}>
-        <div className="container mx-auto">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">Panel de Administración</h1>
-            <div className="flex space-x-4">
-              {editMode ? (
-                <>
-                  <button
-                    onClick={handleSaveChanges}
-                    className="flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
-                    style={{ backgroundColor: "#49C581" }}
-                  >
-                    <Save size={18} className="mr-2" />
-                    Guardar
-                  </button>
-                  <button
-                    onClick={handleEditToggle}
-                    className="flex items-center px-4 py-2 bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-lg font-medium transition-colors"
-                  >
-                    <X size={18} className="mr-2" />
-                    Cancelar
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={handleEditToggle}
-                  className="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors"
-                  style={{ backgroundColor: "#37a6ca" }}
-                >
-                  <Edit size={18} className="mr-2" />
-                  Editar
-                </button>
-              )}
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Modern Header */}
+  <div className="bg-gradient-to-br from-[#254A5D] via-[#337179] to-[#49C581] text-white shadow-2xl">
+  <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-24 sm:py-20 md:py-24 lg:py-40">
+    <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
+      <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 md:space-x-6 text-center sm:text-left">
+        <div className="p-3 sm:p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+          <Building2 size={32} className="text-white sm:w-8 sm:h-8 md:w-10 md:h-10" />
+        </div>
+        <div>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-1 sm:mb-2">
+            Panel de Administración
+          </h1>
+          <p className="text-slate-200 text-sm sm:text-base md:text-lg">
+            Gestión de establecimiento
+          </p>
         </div>
       </div>
-
+                      
+      <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 md:space-x-4 w-full sm:w-auto">
+        {editMode ? (
+          <>
+            <button
+              onClick={handleSaveChanges}
+              className="flex items-center justify-center px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 rounded-xl font-medium text-sm sm:text-base transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <Save size={16} className="mr-2 sm:mr-3 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Guardar Cambios</span>
+              <span className="sm:hidden">Guardar</span>
+            </button>
+            <button
+              onClick={handleEditToggle}
+              className="flex items-center justify-center px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-slate-500 hover:bg-slate-600 rounded-xl font-medium text-sm sm:text-base transition-all duration-200 shadow-lg"
+            >
+              <X size={16} className="mr-2 sm:mr-3 sm:w-5 sm:h-5" />
+              Cancelar
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={handleEditToggle}
+            className="flex items-center justify-center px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-xl font-medium text-sm sm:text-base transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            <Edit size={16} className="mr-2 sm:mr-3 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Editar Establecimiento</span>
+            <span className="sm:hidden">Editar</span>
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+</div>
       {/* Main Content */}
-      <div className="container mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
-          {/* Banner and Basic Info */}
-          <div className="relative h-64 bg-gray-300">
-          {establecimiento.portada ? (
-  <div
-    className="w-full h-full bg-cover bg-center relative"
-    style={{
-      backgroundImage: `url(https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada})`
-    }}
-  >
-    <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-  </div>
-) : (
-  <div className="flex items-center justify-center h-full bg-gray-200">
-    <span className="text-gray-500 text-lg">Sin imagen de portada</span>
-  </div>
-)}
+      <div className="container mx-auto px-6 py-8">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+          {/* Hero Section */}
+          <div className="relative h-80 bg-gradient-to-r from-slate-900 to-blue-900">
+            {establecimiento.portada ? (
+              <div
+                className="w-full h-full bg-cover bg-center relative"
+                style={{
+                  backgroundImage: `url(https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada})`
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30"></div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-full bg-gradient-to-r from-slate-800 to-blue-800">
+                <Camera size={64} className="text-white/50" />
+              </div>
+            )}
             
-            <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6">
-              <div className="flex items-end">
-                <div className="h-24 w-24 rounded-lg overflow-hidden border-4 border-white bg-white shadow-lg">
-                  {establecimiento.imagen ? (
-                    <img src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`} alt={establecimiento.nombre} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                      <span className="text-sm text-gray-500">Sin logo</span>
+            <div className="absolute bottom-0 left-0 w-full p-8">
+              <div className="flex items-end space-x-6">
+                <div className="relative">
+                  <div className="h-28 w-28 rounded-2xl overflow-hidden border-4 border-white shadow-2xl bg-white">
+                    {establecimiento.imagen ? (
+                      <img 
+                      src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`}
+                        alt={establecimiento.nombre} 
+                        className="w-full h-full object-cover" 
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-slate-100">
+                        <Building2 size={32} className="text-slate-400" />
+                      </div>
+                    )}
+                  </div>
+                  {establecimiento.verificado && (
+                    <div className="absolute -top-2 -right-2 bg-emerald-500 rounded-full p-2 shadow-lg">
+                      <Award size={16} className="text-white" />
                     </div>
                   )}
                 </div>
-                <div className="ml-4 text-white">
-                  <h2 className="text-2xl font-bold">{establecimiento.nombre}</h2>
-                  <div className="flex items-center mt-1">
-                    <Star size={16} fill="#F8485E" stroke="none" className="mr-1" />
-                    <span className="font-medium">{establecimiento.promedioCalificaciones || "0.0"}</span>
-                    <span className="mx-2">•</span>
-                    <span className="text-sm">{establecimiento.comentarios?.length || 0} reseñas</span>
-                    <span className="mx-2">•</span>
-                    <span className="text-sm">{establecimiento.seguidores?.length || 0} seguidores</span>
-                  </div>
-                </div>
+                
+               <div className="text-white flex-1">
+  <h2 className="text-2xl sm:text-3xl font-bold mb-2">{establecimiento.nombre}</h2>
+  <div className="flex flex-wrap gap-2 sm:gap-6 text-xs sm:text-sm">
+    <div className="flex items-center bg-white/20 rounded-full px-2 sm:px-3 py-1 backdrop-blur-sm">
+      <Star size={14} fill="#fbbf24" stroke="none" className="mr-1" />
+      <span className="font-medium">{establecimiento.promedioCalificaciones}</span>
+    </div>
+    <div className="flex items-center bg-white/20 rounded-full px-2 sm:px-3 py-1 backdrop-blur-sm">
+      <MessageCircle size={14} className="mr-1" />
+      <span>{establecimiento.comentarios?.length || 0} reseñas</span>
+    </div>
+    <div className="flex items-center bg-white/20 rounded-full px-2 sm:px-3 py-1 backdrop-blur-sm">
+      <Users size={14} className="mr-1" />
+      <span>{establecimiento.seguidores?.length || 0} seguidores</span>
+    </div>
+    <div className="flex items-center bg-white/20 rounded-full px-2 sm:px-3 py-1 backdrop-blur-sm">
+      <Heart size={14} className="mr-1" />
+      <span>{establecimiento.likes?.length || 0} likes</span>
+    </div>
+  </div>
+</div>
               </div>
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="px-6 py-4 border-b" style={{ borderColor: "#337179" }}>
-            <div className="flex space-x-6">
-              <button 
-                className={`pb-2 px-1 font-medium ${activeTab === 'general' ? 'border-b-2 text-teal-600' : 'text-gray-600'}`}
-                style={{ borderColor: activeTab === 'general' ? "#49C581" : "transparent", color: activeTab === 'general' ? "#337179" : "" }}
-                onClick={() => setActiveTab('general')}
-              >
-                Información General
-              </button>
-              <button 
-                className={`pb-2 px-1 font-medium ${activeTab === 'media' ? 'border-b-2 text-teal-600' : 'text-gray-600'}`}
-                style={{ borderColor: activeTab === 'media' ? "#49C581" : "transparent", color: activeTab === 'media' ? "#337179" : "" }}
-                onClick={() => setActiveTab('media')}
-              >
-                Multimedia
-              </button>
-              <button 
-                className={`pb-2 px-1 font-medium ${activeTab === 'comments' ? 'border-b-2 text-teal-600' : 'text-gray-600'}`}
-                style={{ borderColor: activeTab === 'comments' ? "#49C581" : "transparent", color: activeTab === 'comments' ? "#337179" : "" }}
-                onClick={() => setActiveTab('comments')}
-              >
-                Comentarios
-              </button>
-            </div>
-          </div>
+          {/* Modern Tabs */}
+       <div className="border-b border-slate-200 bg-slate-50/50">
+  <div className="flex justify-center sm:justify-start space-x-4 sm:space-x-8 px-4 sm:px-8 overflow-x-auto scrollbar-hide">
+    {tabConfig.map(({ key, label, icon: Icon }) => (
+      <button
+        key={key}
+        className={`flex items-center justify-center sm:justify-start space-x-1 sm:space-x-2 py-3 px-4 border-b-2 font-medium transition-all duration-200
+          ${activeTab === key
+            ? 'border-blue-500 text-blue-600 bg-blue-50/50 rounded-t-lg'
+            : 'border-transparent text-slate-600 hover:text-slate-800 hover:border-slate-300'
+          }`}
+        onClick={() => setActiveTab(key)}
+      >
+        <Icon size={18} />
+        <span className="hidden sm:inline">{label}</span> {/* Texto solo visible en pantallas sm+ */}
+        {key === 'comments' && establecimiento.comentarios?.length > 0 && (
+          <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-1">
+            {establecimiento.comentarios.length}
+          </span>
+        )}
+      </button>
+    ))}
+  </div>
+</div>
+
 
           {/* Tab Content */}
-          <div className="p-6">
-            {/* General Info Tab */}
+          <div className="p-8">
             {activeTab === 'general' && (
-              <div className="space-y-6">
+              <div className="space-y-8">
+                {/* Quick Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {[
+                    { label: 'Me gusta', value: establecimiento.likes?.length || 0, color: 'bg-red-500', icon: Heart },
+                    { label: 'Seguidores', value: establecimiento.seguidores?.length || 0, color: 'bg-blue-500', icon: Users },
+                    { label: 'Comentarios', value: establecimiento.comentarios?.length || 0, color: 'bg-emerald-500', icon: MessageCircle },
+                    { label: 'Calificación', value: establecimiento.promedioCalificaciones || "0.0", color: 'bg-amber-500', icon: Star }
+                  ].map((stat, index) => (
+                    <div key={index} className="bg-gradient-to-br from-white to-slate-50 p-6 rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
+                          <p className="text-sm text-slate-600 mt-1">{stat.label}</p>
+                        </div>
+                        <div className={`${stat.color} p-3 rounded-xl`}>
+                          <stat.icon size={24} className="text-white" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
                 {/* Información General */}
-                <div className="bg-white border rounded-lg shadow-sm">
+                <div className="bg-gradient-to-r from-slate-50 to-blue-50 border border-slate-200 rounded-xl shadow-lg overflow-hidden">
                   <div 
-                    className="flex justify-between items-center p-4 cursor-pointer" 
+                    className="flex justify-between items-center p-6 cursor-pointer bg-gradient-to-r from-slate-600 to-blue-600 text-white"
                     onClick={() => toggleSection('general')}
-                    style={{ backgroundColor: "#254A5D", color: "white" }}
                   >
-                    <h3 className="text-lg font-medium">Información General</h3>
+                    <div className="flex items-center space-x-3">
+                      <Building2 size={20} />
+                      <h3 className="text-lg font-semibold">Información General</h3>
+                    </div>
                     {expandedSections.general ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                   </div>
                   
                   {expandedSections.general && (
-                    <div className="p-4">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                    <div className="p-6 bg-white">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Nombre del Establecimiento</label>
                           {editMode ? (
                             <input
                               type="text"
                               name="nombre"
                               value={formData.nombre || ''}
                               onChange={handleInputChange}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{establecimiento.nombre}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg">{establecimiento.nombre}</p>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Teléfono de Contacto</label>
                           {editMode ? (
                             <input
                               type="text"
                               name="telefono"
                               value={formData.telefono || ''}
                               onChange={handleInputChange}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{establecimiento.telefono}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg flex items-center">
+                              <Phone size={16} className="mr-2 text-slate-500" />
+                              {establecimiento.telefono}
+                            </p>
                           )}
                         </div>
                         
-                        <div className="col-span-2">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                        <div className="col-span-2 space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Descripción</label>
                           {editMode ? (
                             <textarea
                               name="descripcion"
                               value={formData.descripcion || ''}
                               onChange={handleInputChange}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                              rows="3"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                              rows="4"
                             />
                           ) : (
-                            <p className="text-gray-900">{establecimiento.descripcion}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg leading-relaxed">{establecimiento.descripcion}</p>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Estado</label>
                           {editMode ? (
                             <select
                               name="estado"
                               value={formData.estado || ''}
                               onChange={handleInputChange}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                             >
                               <option value="pendiente">Pendiente</option>
                               <option value="aprobado">Aprobado</option>
                               <option value="rechazado">Rechazado</option>
                             </select>
                           ) : (
-                            <p className="text-gray-900 capitalize">{establecimiento.estado}</p>
+                            <div className="bg-slate-50 p-3 rounded-lg">
+                              <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
+                                establecimiento.estado === 'aprobado' ? 'bg-emerald-100 text-emerald-800' :
+                                establecimiento.estado === 'rechazado' ? 'bg-red-100 text-red-800' :
+                                'bg-amber-100 text-amber-800'
+                              }`}>
+                                {establecimiento.estado === 'aprobado' ? '✓ Aprobado' :
+                                 establecimiento.estado === 'rechazado' ? '✗ Rechazado' :
+                                 '⏳ Pendiente'}
+                              </span>
+                            </div>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Verificado</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Verificado</label>
                           {editMode ? (
                             <select
                               name="verificado"
-                              value={formData.verificado.toString()}
+                              value={formData.verificado?.toString() || 'false'}
                               onChange={(e) => setFormData({...formData, verificado: e.target.value === 'true'})}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                             >
-                              <option value="true">Sí</option>
-                              <option value="false">No</option>
+                              <option value="true">Verificado</option>
+                              <option value="false">No verificado</option>
                             </select>
                           ) : (
-                            <p className="text-gray-900">{establecimiento.verificado ? 'Sí' : 'No'}</p>
+                            <div className="bg-slate-50 p-3 rounded-lg">
+                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                establecimiento.verificado ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'
+                              }`}>
+                                {establecimiento.verificado ? (
+                                  <>
+                                    <Award size={12} className="mr-1" />
+                                    Verificado
+                                  </>
+                                ) : (
+                                  'No verificado'
+                                )}
+                              </span>
+                            </div>
                           )}
                         </div>
                       </div>
                     </div>
                   )}
                 </div>
-                
+
                 {/* Ubicación */}
-                <div className="bg-white border rounded-lg shadow-sm">
+                <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl shadow-lg overflow-hidden">
                   <div 
-                    className="flex justify-between items-center p-4 cursor-pointer" 
+                    className="flex justify-between items-center p-6 cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 text-white"
                     onClick={() => toggleSection('ubicacion')}
-                    style={{ backgroundColor: "#337179", color: "white" }}
                   >
-                    <h3 className="text-lg font-medium">Ubicación</h3>
+                    <div className="flex items-center space-x-3">
+                      <MapPin size={20} />
+                      <h3 className="text-lg font-semibold">Ubicación</h3>
+                    </div>
                     {expandedSections.ubicacion ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                   </div>
                   
                   {expandedSections.ubicacion && establecimiento.ubicacion && establecimiento.ubicacion.map((ubicacion, index) => (
-                    <div className="p-4" key={ubicacion._id || index}>
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="col-span-2">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                    <div className="p-6 bg-white" key={ubicacion._id || index}>
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="col-span-2 space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Dirección Completa</label>
                           {editMode ? (
                             <input
                               type="text"
                               name="direccion"
-                              value={formData.ubicacion[index]?.direccion || ''}
+                              value={formData.ubicacion?.[index]?.direccion || ''}
                               onChange={(e) => handleInputChange(e, 'ubicacion', index)}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{ubicacion.direccion}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg flex items-center">
+                              <MapPin size={16} className="mr-2 text-slate-500" />
+                              {ubicacion.direccion}
+                            </p>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Ciudad</label>
                           {editMode ? (
                             <input
                               type="text"
                               name="ciudad"
-                              value={formData.ubicacion[index]?.ciudad || ''}
+                              value={formData.ubicacion?.[index]?.ciudad || ''}
                               onChange={(e) => handleInputChange(e, 'ubicacion', index)}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{ubicacion.ciudad}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg">{ubicacion.ciudad}</p>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Distrito</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Distrito</label>
                           {editMode ? (
                             <input
                               type="text"
                               name="distrito"
-                              value={formData.ubicacion[index]?.distrito || ''}
+                              value={formData.ubicacion?.[index]?.distrito || ''}
                               onChange={(e) => handleInputChange(e, 'ubicacion', index)}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{ubicacion.distrito}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg">{ubicacion.distrito}</p>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Código Postal</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Código Postal</label>
                           {editMode ? (
                             <input
                               type="text"
                               name="codigoPostal"
-                              value={formData.ubicacion[index]?.codigoPostal || ''}
+                              value={formData.ubicacion?.[index]?.codigoPostal || ''}
                               onChange={(e) => handleInputChange(e, 'ubicacion', index)}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{ubicacion.codigoPostal}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg">{ubicacion.codigoPostal}</p>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Referencia</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Referencia</label>
                           {editMode ? (
                             <input
                               type="text"
                               name="referencia"
-                              value={formData.ubicacion[index]?.referencia || ''}
+                              value={formData.ubicacion?.[index]?.referencia || ''}
                               onChange={(e) => handleInputChange(e, 'ubicacion', index)}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{ubicacion.referencia}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg">{ubicacion.referencia}</p>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Latitud</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Latitud</label>
                           {editMode ? (
                             <input
                               type="number"
                               name="latitud"
                               step="0.000001"
-                              value={formData.ubicacion[index]?.coordenadas?.latitud || 0}
+                              value={formData.ubicacion?.[index]?.coordenadas?.latitud || 0}
                               onChange={(e) => handleCoordenadasChange(e, index)}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{ubicacion.coordenadas?.latitud}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg font-mono">{ubicacion.coordenadas?.latitud}</p>
                           )}
                         </div>
                         
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Longitud</label>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-slate-700">Longitud</label>
                           {editMode ? (
                             <input
                               type="number"
                               name="longitud"
                               step="0.000001"
-                              value={formData.ubicacion[index]?.coordenadas?.longitud || 0}
+                              value={formData.ubicacion?.[index]?.coordenadas?.longitud || 0}
                               onChange={(e) => handleCoordenadasChange(e, index)}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                              className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
                             />
                           ) : (
-                            <p className="text-gray-900">{ubicacion.coordenadas?.longitud}</p>
+                            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg font-mono">{ubicacion.coordenadas?.longitud}</p>
                           )}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                
-                {/* Horario */}
-                <div className="bg-white border rounded-lg shadow-sm">
+
+                {/* Horarios */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl shadow-lg overflow-hidden">
                   <div 
-                    className="flex justify-between items-center p-4 cursor-pointer" 
+                    className="flex justify-between items-center p-6 cursor-pointer bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
                     onClick={() => toggleSection('horario')}
-                    style={{ backgroundColor: "#49C581", color: "white" }}
                   >
-                    <h3 className="text-lg font-medium">Horarios</h3>
+                    <div className="flex items-center space-x-3">
+                      <Clock size={20} />
+                      <h3 className="text-lg font-semibold">Horarios de Atención</h3>
+                    </div>
                     {expandedSections.horario ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                   </div>
                   
                   {expandedSections.horario && (
-                    <div className="p-4">
-                      <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Día</th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrada</th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salida</th>
-                              {editMode && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>}
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white divide-y divide-gray-200">
-                            {establecimiento.horario && establecimiento.horario.map((horario, index) => (
-                              <tr key={horario._id || index}>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  {editMode ? (
-                                    <select
-                                      name="dia"
-                                      value={formData.horario[index]?.dia || ''}
-                                      onChange={(e) => handleInputChange(e, 'horario', index)}
-                                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                                    >
-                                      {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'].map(dia => (
-                                        <option key={dia} value={dia}>{dia}</option>
-                                      ))}
-                                    </select>
-                                  ) : (
-                                    horario.dia
-                                  )}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  {editMode ? (
-                                    <input
-                                      type="time"
-                                      name="entrada"
-                                      value={formData.horario[index]?.entrada || ''}
-                                      onChange={(e) => handleInputChange(e, 'horario', index)}
-                                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                                    />
-                                  ) : (
-                                    horario.entrada
-                                  )}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  {editMode ? (
-                                    <input
-                                      type="time"
-                                      name="salida"
-                                      value={formData.horario[index]?.salida || ''}
-                                      onChange={(e) => handleInputChange(e, 'horario', index)}
-                                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                                    />
-                                  ) : (
-                                    horario.salida
-                                  )}
-                                </td>
-                                {editMode && (
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <button
-                                      className="text-red-600 hover:text-red-900"
-                                      onClick={() => {
-                                        setFormData(prev => ({
-                                          ...prev,
-                                          horario: prev.horario.filter((_, i) => i !== index)
-                                        }));
-                                      }}
-                                    >
-                                      <Trash2 size={18} />
-                                    </button>
-                                  </td>
+                    <div className="p-6 bg-white">
+                      <div className="space-y-4">
+                        {establecimiento.horario && establecimiento.horario.map((horario, index) => (
+                          <div key={horario._id || index} className="flex items-center justify-between p-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-lg border border-slate-200">
+                            <div className="flex items-center space-x-4 flex-1">
+                              <div className="min-w-0 flex-1">
+                                <label className="block text-xs font-medium text-slate-500 mb-1">Día</label>
+                                {editMode ? (
+                                  <select
+                                    name="dia"
+                                    value={formData.horario?.[index]?.dia || ''}
+                                    onChange={(e) => handleInputChange(e, 'horario', index)}
+                                    className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                  >
+                                    {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'].map(dia => (
+                                      <option key={dia} value={dia}>{dia}</option>
+                                    ))}
+                                  </select>
+                                ) : (
+                                  <p className="font-semibold text-slate-800">{horario.dia}</p>
                                 )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                              </div>
+                              
+                              <div className="min-w-0 flex-1">
+                                <label className="block text-xs font-medium text-slate-500 mb-1">Apertura</label>
+                                {editMode ? (
+                                  <input
+                                    type="time"
+                                    name="entrada"
+                                    value={formData.horario?.[index]?.entrada || ''}
+                                    onChange={(e) => handleInputChange(e, 'horario', index)}
+                                    className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                  />
+                                ) : (
+                                  <p className="font-medium text-emerald-600">{horario.entrada}</p>
+                                )}
+                              </div>
+                              
+                              <div className="min-w-0 flex-1">
+                                <label className="block text-xs font-medium text-slate-500 mb-1">Cierre</label>
+                                {editMode ? (
+                                  <input
+                                    type="time"
+                                    name="salida"
+                                    value={formData.horario?.[index]?.salida || ''}
+                                    onChange={(e) => handleInputChange(e, 'horario', index)}
+                                    className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                  />
+                                ) : (
+                                  <p className="font-medium text-red-600">{horario.salida}</p>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {editMode && (
+                              <button
+                                className="ml-4 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all duration-200"
+                                onClick={() => {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    horario: prev.horario?.filter((_, i) => i !== index) || []
+                                  }));
+                                }}
+                              >
+                                <Trash2 size={18} />
+                              </button>
+                            )}
+                          </div>
+                        ))}
                         
                         {editMode && (
                           <button
-                            className="mt-4 flex items-center text-teal-600 hover:text-teal-800"
+                            className="w-full p-4 border-2 border-dashed border-blue-300 rounded-lg text-blue-600 hover:text-blue-800 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 flex items-center justify-center space-x-2"
                             onClick={() => {
                               setFormData(prev => ({
                                 ...prev,
@@ -598,152 +703,105 @@ const AdminEstablecimientoDetalle = () => {
                                 ]
                               }));
                             }}
-                            style={{ color: "#337179" }}
                           >
-                            <span className="mr-1">+</span> Agregar horario
+                            <Calendar size={18} />
+                            <span className="font-medium">Agregar nuevo horario</span>
                           </button>
                         )}
                       </div>
                     </div>
                   )}
                 </div>
-                
+
                 {/* Redes Sociales */}
-                <div className="bg-white border rounded-lg shadow-sm">
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl shadow-lg overflow-hidden">
                   <div 
-                    className="flex justify-between items-center p-4 cursor-pointer" 
+                    className="flex justify-between items-center p-6 cursor-pointer bg-gradient-to-r from-purple-600 to-pink-600 text-white"
                     onClick={() => toggleSection('redesSociales')}
-                    style={{ backgroundColor: "#F8485E", color: "white" }}
                   >
-                    <h3 className="text-lg font-medium">Redes Sociales</h3>
+                    <div className="flex items-center space-x-3">
+                      <Instagram size={20} />
+                      <h3 className="text-lg font-semibold">Redes Sociales</h3>
+                    </div>
                     {expandedSections.redesSociales ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                   </div>
                   
                   {expandedSections.redesSociales && (
-                    <div className="p-4">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <div className="flex items-center mb-1">
-                            <Facebook size={16} className="mr-2 text-blue-600" />
-                            <label className="text-sm font-medium text-gray-700">Facebook</label>
-                          </div>
-                          {editMode ? (
-                            <input
-                              type="text"
-                              name="facebook"
-                              value={formData.redesSociales?.facebook || ''}
-                              onChange={(e) => handleInputChange(e, 'redesSociales')}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                            />
-                          ) : (
-                            <p className="text-gray-900">{establecimiento.redesSociales?.facebook}</p>
-                          )}
-                        </div>
-                        
-                        <div>
-                          <div className="flex items-center mb-1">
-                            <Instagram size={16} className="mr-2 text-pink-600" />
-                            <label className="text-sm font-medium text-gray-700">Instagram</label>
-                          </div>
-                          {editMode ? (
-                            <input
-                              type="text"
-                              name="instagram"
-                              value={formData.redesSociales?.instagram || ''}
-                              onChange={(e) => handleInputChange(e, 'redesSociales')}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                            />
-                          ) : (
-                            <p className="text-gray-900">{establecimiento.redesSociales?.instagram}</p>
-                          )}
-                        </div>
-                        
-                        <div>
-                          <div className="flex items-center mb-1">
-                            <Twitter size={16} className="mr-2 text-blue-400" />
-                            <label className="text-sm font-medium text-gray-700">Twitter</label>
-                          </div>
-                          {editMode ? (
-                            <input
-                              type="text"
-                              name="twitter"
-                              value={formData.redesSociales?.twitter || ''}
-                              onChange={(e) => handleInputChange(e, 'redesSociales')}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                            />
-                          ) : (
-                            <p className="text-gray-900">{establecimiento.redesSociales?.twitter}</p>
-                          )}
-                        </div>
-                        
-                        <div>
-                          <div className="flex items-center mb-1">
-                            <Youtube size={16} className="mr-2 text-red-600" />
-                            <label className="text-sm font-medium text-gray-700">YouTube</label>
-                          </div>
-                          {editMode ? (
-                            <input
-                              type="text"
-                              name="youtube"
-                              value={formData.redesSociales?.youtube || ''}
-                              onChange={(e) => handleInputChange(e, 'redesSociales')}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                            />
-                          ) : (
-                            <p className="text-gray-900">{establecimiento.redesSociales?.youtube}</p>
-                          )}
-                        </div>
-                        
-                        <div>
-                          <div className="flex items-center mb-1">
-                            <SiTiktok size={16} className="mr-2 text-blac" />
-                            <label className="text-sm font-medium text-gray-700">tiktok</label>
-                          </div>
-                          {editMode ? (
-                            <input
-                              type="text"
-                              name="tiktok"
-                              value={formData.redesSociales?.tiktok || ''}
-                              onChange={(e) => handleInputChange(e, 'redesSociales')}
-                              className="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                            />
-                          ) : (
-                            <p className="text-gray-900">{establecimiento.redesSociales?.tiktok}</p>
-                          )}
-                        </div>
+                    <div className="p-6 bg-white">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {Object.entries(socialIcons).map(([platform, config]) => {
+                          const IconComponent = config.icon;
+                          return (
+                            <div key={platform} className="space-y-2">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <div className={`${config.bg} p-2 rounded-lg`}>
+                                  <IconComponent size={16} className={config.color} />
+                                </div>
+                                <label className="text-sm font-semibold text-slate-700 capitalize">{platform}</label>
+                              </div>
+                              {editMode ? (
+                                <input
+                                  type="text"
+                                  name={platform}
+                                  value={formData.redesSociales?.[platform] || ''}
+                                  onChange={(e) => handleInputChange(e, 'redesSociales')}
+                                  placeholder={`URL de ${platform}`}
+                                  className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                                />
+                              ) : (
+                                <div className="bg-slate-50 p-3 rounded-lg">
+                                  {establecimiento.redesSociales?.[platform] ? (
+                                    <a 
+                                      href={establecimiento.redesSociales[platform]} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:text-blue-800 break-all"
+                                    >
+                                      {establecimiento.redesSociales[platform]}
+                                    </a>
+                                  ) : (
+                                    <span className="text-slate-500 italic">No configurado</span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
                 </div>
-                
+
                 {/* Categorías */}
-                <div className="bg-white border rounded-lg shadow-sm">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl shadow-lg overflow-hidden">
                   <div 
-                    className="flex justify-between items-center p-4 cursor-pointer" 
+                    className="flex justify-between items-center p-6 cursor-pointer bg-gradient-to-r from-amber-600 to-orange-600 text-white"
                     onClick={() => toggleSection('categorias')}
-                    style={{ backgroundColor: "#37a6ca", color: "white" }}
                   >
-                    <h3 className="text-lg font-medium">Categorías</h3>
+                    <div className="flex items-center space-x-3">
+                      <Building2 size={20} />
+                      <h3 className="text-lg font-semibold">Categorías</h3>
+                    </div>
                     {expandedSections.categorias ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                   </div>
                   
                   {expandedSections.categorias && (
-                    <div className="p-4">
+                    <div className="p-6 bg-white">
                       {establecimiento.categoria && establecimiento.categoria.length > 0 ? (
-                        <div className="space-y-2">
+                        <div className="space-y-4">
                           {establecimiento.categoria.map((cat, index) => (
-                            <div key={cat._id || index} className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
-                              <div>
-                                <p className="font-medium">{cat.nombre}</p>
-                                <p className="text-sm text-gray-500">{cat.descripcion}</p>
+                            <div key={cat._id || index} className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200">
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-slate-800">{cat.nombre}</h4>
+                                <p className="text-sm text-slate-600 mt-1">{cat.descripcion}</p>
                               </div>
                               {editMode && (
                                 <button
-                                  className="text-red-600 hover:text-red-900"
+                                  className="ml-4 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all duration-200"
                                   onClick={() => {
                                     setFormData(prev => ({
                                       ...prev,
-                                      categoria: prev.categoria.filter((_, i) => i !== index)
+                                      categoria: prev.categoria?.filter((_, i) => i !== index) || []
                                     }));
                                   }}
                                 >
@@ -755,46 +813,50 @@ const AdminEstablecimientoDetalle = () => {
                           
                           {editMode && (
                             <button
-                              className="mt-2 flex items-center text-teal-600 hover:text-teal-800"
-                              style={{ color: "#337179" }}
-                              // Aquí iría la lógica para agregar categoría
+                              className="w-full p-4 border-2 border-dashed border-amber-300 rounded-lg text-amber-600 hover:text-amber-800 hover:border-amber-400 hover:bg-amber-50 transition-all duration-200 flex items-center justify-center space-x-2"
                             >
-                              <span className="mr-1">+</span> Agregar categoría
+                              <Building2 size={18} />
+                              <span className="font-medium">Agregar nueva categoría</span>
                             </button>
                           )}
                         </div>
                       ) : (
-                        <p className="text-gray-500">No hay categorías asignadas</p>
+                        <div className="text-center py-8">
+                          <Building2 size={48} className="mx-auto text-slate-300 mb-4" />
+                          <p className="text-slate-500">No hay categorías asignadas</p>
+                        </div>
                       )}
                     </div>
                   )}
                 </div>
-                
+
                 {/* Tipos */}
-                <div className="bg-white border rounded-lg shadow-sm">
+                <div className="bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-200 rounded-xl shadow-lg overflow-hidden">
                   <div 
-                    className="flex justify-between items-center p-4 cursor-pointer" 
+                    className="flex justify-between items-center p-6 cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-600 text-white"
                     onClick={() => toggleSection('tipos')}
-                    style={{ backgroundColor: "#254A5D", color: "white" }}
                   >
-                    <h3 className="text-lg font-medium">Tipos</h3>
+                    <div className="flex items-center space-x-3">
+                      <Award size={20} />
+                      <h3 className="text-lg font-semibold">Tipos de Establecimiento</h3>
+                    </div>
                     {expandedSections.tipos ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                   </div>
                   
                   {expandedSections.tipos && (
-                    <div className="p-4">
+                    <div className="p-6 bg-white">
                       {establecimiento.tipo && establecimiento.tipo.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-3">
                           {establecimiento.tipo.map((tip, index) => (
-                            <div key={tip._id || index} className="flex items-center bg-gray-100 rounded-full px-3 py-1">
-                              <span className="text-sm font-medium">{tip.tipo_nombre}</span>
+                            <div key={tip._id || index} className="flex items-center bg-gradient-to-r from-teal-100 to-cyan-100 rounded-full px-4 py-2 border border-teal-200">
+                              <span className="text-sm font-medium text-teal-800">{tip.tipo_nombre}</span>
                               {editMode && (
                                 <button
-                                  className="ml-2 text-red-600 hover:text-red-900"
+                                  className="ml-2 text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100 transition-all duration-200"
                                   onClick={() => {
                                     setFormData(prev => ({
                                       ...prev,
-                                      tipo: prev.tipo.filter((_, i) => i !== index)
+                                      tipo: prev.tipo?.filter((_, i) => i !== index) || []
                                     }));
                                   }}
                                 >
@@ -806,168 +868,152 @@ const AdminEstablecimientoDetalle = () => {
                           
                           {editMode && (
                             <button
-                              className="flex items-center bg-teal-50 text-teal-700 rounded-full px-3 py-1 hover:bg-teal-100"
-                              style={{ color: "#337179" }}
-                              // Aquí iría la lógica para agregar tipo
+                              className="flex items-center bg-teal-50 text-teal-700 rounded-full px-4 py-2 hover:bg-teal-100 border-2 border-dashed border-teal-300 hover:border-teal-400 transition-all duration-200"
                             >
-                              <span className="mr-1">+</span> Agregar tipo
+                              <span className="mr-1">+</span> 
+                              <span className="text-sm font-medium">Agregar tipo</span>
                             </button>
                           )}
                         </div>
                       ) : (
-                        <p className="text-gray-500">No hay tipos asignados</p>
+                        <div className="text-center py-8">
+                          <Award size={48} className="mx-auto text-slate-300 mb-4" />
+                          <p className="text-slate-500">No hay tipos asignados</p>
+                        </div>
                       )}
-                    </div>
-                  )}
-                </div>
-                
-                {/* Estadísticas */}
-                <div className="bg-white border rounded-lg shadow-sm">
-                  <div 
-                    className="flex justify-between items-center p-4 cursor-pointer" 
-                    onClick={() => toggleSection('estadisticas')}
-                    style={{ backgroundColor: "#49C581", color: "white" }}
-                  >
-                    <h3 className="text-lg font-medium">Estadísticas</h3>
-                    {expandedSections.estadisticas ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                  </div>
-                  
-                  {expandedSections.estadisticas && (
-                    <div className="p-4">
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                          <p className="text-2xl font-bold" style={{ color: "#337179" }}>{establecimiento.likes?.length || 0}</p>
-                          <p className="text-sm text-gray-600">Me gusta</p>
-                        </div>
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                          <p className="text-2xl font-bold" style={{ color: "#337179" }}>{establecimiento.seguidores?.length || 0}</p>
-                          <p className="text-sm text-gray-600">Seguidores</p>
-                        </div>
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                          <p className="text-2xl font-bold" style={{ color: "#337179" }}>{establecimiento.comentarios?.length || 0}</p>
-                          <p className="text-sm text-gray-600">Comentarios</p>
-                        </div>
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                          <p className="text-2xl font-bold" style={{ color: "#337179" }}>{establecimiento.promedioCalificaciones || "0.0"}</p>
-                          <p className="text-sm text-gray-600">Calificación</p>
-                        </div>
-                      </div>
                     </div>
                   )}
                 </div>
               </div>
             )}
-            
+
             {/* Multimedia Tab */}
             {activeTab === 'media' && (
-              <div className="space-y-6">
-                <div className="bg-white border rounded-lg shadow-sm">
-                  <div className="p-4" style={{ backgroundColor: "#337179", color: "white" }}>
-                    <h3 className="text-lg font-medium">Imagen Principal</h3>
-                  </div>
-                  <div className="p-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="h-24 w-24 rounded-lg overflow-hidden bg-gray-200">
-                        {establecimiento.imagen ? (
-                          <img 
-                            src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`} 
-                            alt="Imagen principal" 
-                            className="h-full w-full object-cover" 
-                          />
-                        ) : (
-                          <div className="h-full w-full flex items-center justify-center bg-gray-100">
-                            <span className="text-sm text-gray-500">Sin imagen</span>
+              <div className="space-y-8">
+                <div className="grid md:grid-cols-2 gap-8">
+                  {/* Imagen Principal */}
+                  <div className="bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden">
+                    <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                      <div className="flex items-center space-x-3">
+                        <Camera size={20} />
+                        <h3 className="text-lg font-semibold">Imagen Principal</h3>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <div className="flex flex-col items-center space-y-4">
+                        <div className="h-32 w-32 rounded-xl overflow-hidden bg-slate-200 shadow-lg">
+                          {establecimiento.imagen ? (
+                            <img 
+                               src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`} 
+                              alt="Imagen principal" 
+                              className="h-full w-full object-cover" 
+                            />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center bg-slate-100">
+                              <Building2 size={32} className="text-slate-400" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {editMode && (
+                          <div className="w-full">
+                            <input
+                              type="file"
+                              id="imagen"
+                              accept="image/*"
+                              className="hidden"
+                            />
+                            <label 
+                              htmlFor="imagen"
+                              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-lg cursor-pointer inline-block text-center font-medium transition-all duration-200 flex items-center justify-center space-x-2"
+                            >
+                              <Upload size={18} />
+                              <span>Cambiar imagen</span>
+                            </label>
                           </div>
                         )}
+                        <p className="text-sm text-slate-500 text-center">Logo o imagen representativa del establecimiento</p>
                       </div>
-                      
-                      {editMode && (
-                        <div>
-                          <input
-                            type="file"
-                            id="imagen"
-                            accept="image/*"
-                            className="hidden"
-                            // Aquí iría la lógica para subir imagen
-                          />
-                          <label 
-                            htmlFor="imagen"
-                            className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-4 py-2 rounded-md cursor-pointer inline-block"
-                            style={{ backgroundColor: "#e6f7ff", color: "#337179" }}
-                          >
-                            Cambiar imagen
-                          </label>
-                        </div>
-                      )}
                     </div>
-                    <p className="mt-2 text-sm text-gray-500">Imagen principal del establecimiento (logo)</p>
+                  </div>
+
+                  {/* Imagen de Portada */}
+                  <div className="bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden">
+                    <div className="p-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                      <div className="flex items-center space-x-3">
+                        <ImageIcon size={20} />
+                        <h3 className="text-lg font-semibold">Imagen de Portada</h3>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <div className="flex flex-col space-y-4">
+                        <div className="h-40 rounded-xl overflow-hidden bg-slate-200 shadow-lg">
+                          {establecimiento.portada ? (
+                            <img 
+                              src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`}
+                              alt="Imagen de portada" 
+                              className="h-full w-full object-cover" 
+                            />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center bg-slate-100">
+                              <ImageIcon size={48} className="text-slate-400" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {editMode && (
+                          <div>
+                            <input
+                              type="file"
+                              id="portada"
+                              accept="image/*"
+                              className="hidden"
+                            />
+                            <label 
+                              htmlFor="portada"
+                              className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-3 rounded-lg cursor-pointer inline-block text-center font-medium transition-all duration-200 flex items-center justify-center space-x-2"
+                            >
+                              <Upload size={18} />
+                              <span>Cambiar portada</span>
+                            </label>
+                          </div>
+                        )}
+                        <p className="text-sm text-slate-500">Imagen de fondo para el perfil del establecimiento</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="bg-white border rounded-lg shadow-sm">
-                  <div className="p-4" style={{ backgroundColor: "#254A5D", color: "white" }}>
-                    <h3 className="text-lg font-medium">Imagen de Portada</h3>
-                  </div>
-                  <div className="p-4">
-                    <div className="h-40 rounded-lg overflow-hidden bg-gray-200">
-                      {establecimiento.portada ? (
-                        <img 
-                          src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`} 
-                          alt="Imagen de portada" 
-                          className="h-full w-full object-cover" 
-                        />
-                      ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-gray-100">
-                          <span className="text-sm text-gray-500">Sin imagen de portada</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {editMode && (
-                      <div className="mt-3">
-                        <input
-                          type="file"
-                          id="portada"
-                          accept="image/*"
-                          className="hidden"
-                          // Aquí iría la lógica para subir portada
-                        />
-                        <label 
-                          htmlFor="portada"
-                          className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-4 py-2 rounded-md cursor-pointer inline-block"
-                          style={{ backgroundColor: "#e6f7ff", color: "#337179" }}
-                        >
-                          Cambiar portada
-                        </label>
+
+                {/* Galería de Imágenes */}
+                <div className="bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden">
+                  <div className="p-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <ImageIcon size={20} />
+                        <h3 className="text-lg font-semibold">Galería de Imágenes</h3>
                       </div>
-                    )}
-                    <p className="mt-2 text-sm text-gray-500">Imagen de portada del establecimiento</p>
+                      <span className="text-emerald-200 text-sm">{establecimiento.imagenes?.length || 0} imágenes</span>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="bg-white border rounded-lg shadow-sm">
-                  <div className="p-4" style={{ backgroundColor: "#F8485E", color: "white" }}>
-                    <h3 className="text-lg font-medium">Galería de Imágenes</h3>
-                  </div>
-                  <div className="p-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="p-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                       {establecimiento.imagenes && establecimiento.imagenes.length > 0 ? (
                         establecimiento.imagenes.map((img, index) => (
                           <div key={index} className="relative group">
-                            <div className="h-32 rounded-lg overflow-hidden bg-gray-200">
+                            <div className="h-32 rounded-xl overflow-hidden bg-slate-200 shadow-lg">
                               <img 
-                                src={`https://back-salubridad.sistemasudh.com/uploads/${img}`} 
+                                  src={`https://back-salubridad.sistemasudh.com/uploads/${img}`} 
                                 alt={`Imagen ${index + 1}`} 
-                                className="h-full w-full object-cover" 
+                                className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-110" 
                               />
                             </div>
                             {editMode && (
                               <button
-                                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg"
                                 onClick={() => {
                                   setFormData(prev => ({
                                     ...prev,
-                                    imagenes: prev.imagenes.filter((_, i) => i !== index)
+                                    imagenes: prev.imagenes?.filter((_, i) => i !== index) || []
                                   }));
                                 }}
                               >
@@ -976,44 +1022,50 @@ const AdminEstablecimientoDetalle = () => {
                             )}
                           </div>
                         ))
-                      ) : (
-                        <div className="col-span-4 text-center py-8">
-                          <p className="text-gray-500">No hay imágenes en la galería</p>
-                        </div>
-                      )}
+                      ) : null}
                       
                       {editMode && (
-                        <div className="h-32 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+                        <div className="h-32 rounded-xl border-2 border-dashed border-slate-300 hover:border-emerald-400 hover:bg-emerald-50 flex items-center justify-center transition-all duration-200 cursor-pointer">
                           <input
                             type="file"
                             id="galeria"
                             accept="image/*"
                             className="hidden"
-                            // Aquí iría la lógica para subir imagen a la galería
                           />
                           <label 
                             htmlFor="galeria"
-                            className="text-gray-500 hover:text-gray-700 cursor-pointer text-center p-4"
+                            className="text-slate-500 hover:text-emerald-600 cursor-pointer text-center p-4 w-full h-full flex flex-col items-center justify-center"
                           >
-                            <span className="block text-xl mb-1">+</span>
-                            <span className="text-sm">Agregar imagen</span>
+                            <Upload size={24} className="mb-2" />
+                            <span className="text-sm font-medium">Agregar imagen</span>
                           </label>
                         </div>
                       )}
                     </div>
+                    
+                    {(!establecimiento.imagenes || establecimiento.imagenes.length === 0) && !editMode && (
+                      <div className="text-center py-16">
+                        <ImageIcon size={64} className="mx-auto text-slate-300 mb-4" />
+                        <p className="text-slate-500 text-lg">No hay imágenes en la galería</p>
+                        <p className="text-slate-400 text-sm mt-2">Las imágenes aparecerán aquí una vez que sean agregadas</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             )}
-            
+
             {/* Comments Tab */}
             {activeTab === 'comments' && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Comentarios ({establecimiento.comentarios?.length || 0})</h3>
+                  <div>
+                    <h3 className="text-2xl font-bold text-slate-800">Comentarios y Reseñas</h3>
+                    <p className="text-slate-600">Gestiona las reseñas de los usuarios</p>
+                  </div>
                   {editMode && establecimiento.comentarios?.length > 0 && (
                     <button
-                      className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
+                      className="flex items-center space-x-2 text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-lg font-medium transition-all duration-200"
                       onClick={() => {
                         if (window.confirm("¿Estás seguro de que deseas eliminar todos los comentarios? Esta acción no se puede deshacer.")) {
                           setFormData(prev => ({
@@ -1023,57 +1075,67 @@ const AdminEstablecimientoDetalle = () => {
                         }
                       }}
                     >
-                      <Trash2 size={14} className="mr-1" /> Eliminar todos
+                      <Trash2 size={16} />
+                      <span>Eliminar todos</span>
                     </button>
                   )}
                 </div>
                 
                 {establecimiento.comentarios && establecimiento.comentarios.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {establecimiento.comentarios.map((comentario) => (
-                      <div key={comentario._id} className="bg-white border rounded-lg p-4 shadow-sm">
+                      <div key={comentario._id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-200">
                         <div className="flex justify-between items-start">
-                          <div className="flex items-start space-x-3">
-                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                              <span className="text-gray-500 font-medium">{comentario.usuario?.nombreUsuario?.[0] || '?'}</span>
+                          <div className="flex items-start space-x-4">
+                            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                              <span className="text-white font-bold text-lg">{comentario.usuario?.nombreUsuario?.[0] || '?'}</span>
                             </div>
-                            <div>
-                              <p className="font-medium">{comentario.usuario?.nombreUsuario || 'Usuario eliminado'}</p>
-                              <div className="flex items-center mt-1">
-                                <div className="flex">
-                                  {[1, 2, 3, 4, 5].map((star) => (
-                                    <Star 
-                                      key={star} 
-                                      size={16} 
-                                      fill={star <= comentario.calificacion ? "#F8485E" : "transparent"}
-                                      stroke={star <= comentario.calificacion ? "none" : "#D1D5DB"}
-                                      className="mr-1" 
-                                    />
-                                  ))}
-                                </div>
-                                <span className="text-xs text-gray-500 ml-2">
-                                  {new Date(comentario.fecha).toLocaleDateString()}
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-2">
+                                <h4 className="font-semibold text-slate-800">{comentario.usuario?.nombreUsuario || 'Usuario eliminado'}</h4>
+                                <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
+                                  {new Date(comentario.fecha).toLocaleDateString('es-ES', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                  })}
                                 </span>
                               </div>
+                              <div className="flex items-center mb-3">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star 
+                                    key={star} 
+                                    size={16} 
+                                    fill={star <= comentario.calificacion ? "#F59E0B" : "transparent"}
+                                    stroke={star <= comentario.calificacion ? "#F59E0B" : "#D1D5DB"}
+                                    className="mr-1" 
+                                  />
+                                ))}
+                                <span className="ml-2 text-sm font-medium text-slate-600">
+                                  {comentario.calificacion}.0
+                                </span>
+                              </div>
+                              <p className="text-slate-700 leading-relaxed">{comentario.comentario}</p>
                             </div>
                           </div>
                           
                           {editMode && (
                             <button
-                              className="text-red-600 hover:text-red-900"
+                              className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all duration-200"
                               onClick={() => handleDeleteComment(comentario._id)}
                             >
                               <Trash2 size={18} />
                             </button>
                           )}
                         </div>
-                        <p className="mt-3 text-gray-700">{comentario.comentario}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-gray-50 rounded-lg p-8 text-center">
-                    <p className="text-gray-500">No hay comentarios para este establecimiento</p>
+                  <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-16 text-center border border-slate-200">
+                    <MessageCircle size={64} className="mx-auto text-slate-300 mb-6" />
+                    <h4 className="text-xl font-semibold text-slate-600 mb-2">No hay comentarios todavía</h4>
+                    <p className="text-slate-500">Los comentarios y reseñas de los usuarios aparecerán aquí</p>
                   </div>
                 )}
               </div>

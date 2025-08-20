@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  Store, 
-  CheckCircle, 
-  Clock, 
-  XCircle, 
-  Star, 
-  Heart, 
-  Users, 
-  Phone, 
-  MapPin, 
-  Calendar, 
-  Globe, 
-  Settings, 
+import {
+  Search,
+  Store,
+  CheckCircle,
+  Clock,
+  XCircle,
+  Star,
+  Heart,
+  Users,
+  Phone,
+  MapPin,
+  Calendar,
+  Globe,
+  Settings,
   Eye,
   Shield,
   ShieldCheck,
@@ -119,18 +119,18 @@ export default function AdminEstablecimientos() {
 
   const filtrarEstablecimientos = () => {
     let filtered = establecimientos;
-    
+
     if (filtro !== "todos") {
       filtered = filtered.filter((est) => est.estado === filtro);
     }
-    
+
     if (searchTerm) {
       filtered = filtered.filter((est) =>
         est.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
         est.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
+
     return filtered;
   };
 
@@ -186,15 +186,16 @@ export default function AdminEstablecimientos() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Header Ultra Moderno */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        <div className="absolute inset-0">
+      <div className="relative z-10 pt-12 pb-20 px-6 overflow-hidden bg-gradient-to-br from-[#254A5D] via-[#337179] to-[#49C581] ">
+        <div className="absolute inset-0 ">
           <div className="absolute top-0 left-0 w-full h-full opacity-20">
-            <div className="absolute top-20 left-20 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-            <div className="absolute top-40 right-20 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-700"></div>
-            <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+            {/* Círculos decorativos en tonos verdes */}
+            <div className="absolute top-20 left-20 w-72 h-72 bg-[#49C581] rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+            <div className="absolute top-40 right-20 w-96 h-96 bg-[#337179] rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-700"></div>
+            <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-[#254A5D] rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
           </div>
         </div>
-        
+
         <div className="relative z-10 pt-20 pb-20 px-6">
           <div className="max-w-7xl mx-auto">
             <motion.div
@@ -203,22 +204,12 @@ export default function AdminEstablecimientos() {
               transition={{ duration: 0.8 }}
               className="text-center"
             >
-              <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/10 backdrop-blur-lg rounded-full border border-white/20">
-                <Building2 className="text-blue-300" size={24} />
-                <span className="text-blue-100 font-medium">Panel de Administración</span>
-              </div>
-              
               <h1 className="text-6xl md:text-7xl font-black text-white mb-6 tracking-tight">
                 Gestión de{" "}
-                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                <span className="text-[#49C581]">
                   Establecimientos
                 </span>
               </h1>
-              
-              <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
-                Administra, supervisa y gestiona todos los establecimientos registrados en la plataforma 
-                con herramientas avanzadas de control y verificación.
-              </p>
 
               {/* Stats Preview */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
@@ -235,7 +226,7 @@ export default function AdminEstablecimientos() {
                     transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
                     className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 border border-white/20"
                   >
-                    <stat.icon className="text-blue-300 mx-auto mb-2" size={24} />
+                    <stat.icon className="text-[#49C581] mx-auto mb-2" size={24} />
                     <div className="text-2xl font-bold text-white">{stat.value}</div>
                     <div className="text-sm text-slate-300">{stat.label}</div>
                   </motion.div>
@@ -246,6 +237,7 @@ export default function AdminEstablecimientos() {
         </div>
       </div>
 
+
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Mensaje de estado */}
         <AnimatePresence>
@@ -254,11 +246,10 @@ export default function AdminEstablecimientos() {
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              className={`mb-8 p-6 rounded-2xl shadow-xl border-l-4 backdrop-blur-lg ${
-                mensaje.tipo === "error"
+              className={`mb-8 p-6 rounded-2xl shadow-xl border-l-4 backdrop-blur-lg ${mensaje.tipo === "error"
                   ? "bg-red-50/90 text-red-800 border-red-400"
                   : "bg-green-50/90 text-green-800 border-green-400"
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3">
                 {mensaje.tipo === "error" ? (
@@ -308,18 +299,17 @@ export default function AdminEstablecimientos() {
               ].map((filtroItem) => {
                 const IconComponent = filtroItem.icon;
                 const isActive = filtro === filtroItem.key;
-                
+
                 return (
                   <motion.button
                     key={filtroItem.key}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setFiltro(filtroItem.key)}
-                    className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 flex items-center gap-2 ${
-                      isActive
-                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                    className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 flex items-center gap-2 ${isActive
+                        ? "bg-gradient-to-r from-[#49C581] to-[#337179] text-white shadow-lg"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
+                      }`}
                   >
                     <IconComponent size={16} />
                     {filtroItem.label}
@@ -345,7 +335,7 @@ export default function AdminEstablecimientos() {
                 className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:shadow-lg transition-all duration-300"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <div 
+                  <div
                     className="p-3 rounded-xl"
                     style={{ backgroundColor: `${stat.color}15` }}
                   >
@@ -386,7 +376,7 @@ export default function AdminEstablecimientos() {
               const statusConfig = getStatusConfig(establecimiento.estado);
               const StatusIcon = statusConfig.icon;
               const isExpanded = establecimientoExpandido === establecimiento._id;
-              
+
               return (
                 <motion.div
                   key={establecimiento._id}
@@ -397,14 +387,15 @@ export default function AdminEstablecimientos() {
                 >
                   {/* Header Moderno */}
                   <div className="relative h-56 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-blue-900/80 to-indigo-900/90"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#254A5D]/90 via-[#49C581]/80 to-[#337179]/90"></div>
+
                     <img
                       src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`}
                       alt={`Portada de ${establecimiento.nombre}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       onError={(e) => (e.target.style.display = "none")}
                     />
-                    
+
                     {/* Content Overlay */}
                     <div className="absolute inset-0 p-6 flex flex-col justify-between">
                       <div className="flex justify-between items-start">
@@ -423,7 +414,7 @@ export default function AdminEstablecimientos() {
                             ))}
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-col gap-2">
                           <div
                             className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl font-bold text-white backdrop-blur-sm border border-white/30`}
@@ -432,7 +423,7 @@ export default function AdminEstablecimientos() {
                             <StatusIcon size={16} />
                             <span className="capitalize text-sm">{establecimiento.estado}</span>
                           </div>
-                          
+
                           {establecimiento.verificado && (
                             <div className="inline-flex items-center gap-2 px-3 py-2 bg-blue-500/90 backdrop-blur-sm rounded-xl font-bold text-white border border-white/30">
                               <ShieldCheck size={16} />
@@ -441,7 +432,7 @@ export default function AdminEstablecimientos() {
                           )}
                         </div>
                       </div>
-                      
+
                       {/* Rating Badge */}
                       <div className="self-end">
                         <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-2xl">
@@ -626,11 +617,10 @@ export default function AdminEstablecimientos() {
                           e.stopPropagation();
                           cambiarVerificacion(establecimiento._id, !establecimiento.verificado);
                         }}
-                        className={`px-6 py-4 rounded-2xl font-bold text-white transition-all duration-300 flex items-center gap-2 shadow-lg ${
-                          establecimiento.verificado
+                        className={`px-6 py-4 rounded-2xl font-bold text-white transition-all duration-300 flex items-center gap-2 shadow-lg ${establecimiento.verificado
                             ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
                             : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
-                        }`}
+                          }`}
                       >
                         {establecimiento.verificado ? (
                           <>
