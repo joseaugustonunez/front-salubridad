@@ -298,29 +298,45 @@ export default function HomePage() {
       {/* Contenido Principal - Restaurantes y Ofertas Unificados */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-2xl font-bold text-[#254A5D]">Descubre lugares & ofertas</h3>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setActiveFilter('all')}
-                className={`px-4 py-2 rounded-full text-sm ${activeFilter === 'all' ? 'bg-[#49C581] text-white' : 'bg-white text-gray-600 border border-gray-200'}`}
-              >
-                Todos
-              </button>
-              <button
-                onClick={() => setActiveFilter('featured')}
-                className={`px-4 py-2 rounded-full text-sm ${activeFilter === 'featured' ? 'bg-[#49C581] text-white' : 'bg-white text-gray-600 border border-gray-200'}`}
-              >
-                Destacados
-              </button>
-              <button
-                onClick={() => setActiveFilter('offers')}
-                className={`px-4 py-2 rounded-full text-sm ${activeFilter === 'offers' ? 'bg-[#49C581] text-white' : 'bg-white text-gray-600 border border-gray-200'}`}
-              >
-                Con ofertas
-              </button>
-            </div>
-          </div>
+         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 space-y-3 md:space-y-0">
+  <h3 className="text-2xl font-bold text-[#254A5D]">
+    Descubre lugares & ofertas
+  </h3>
+
+  <div className="flex flex-wrap gap-2">
+    <button
+      onClick={() => setActiveFilter('all')}
+      className={`px-3 py-1.5 rounded-full text-xs md:text-sm ${
+        activeFilter === 'all'
+          ? 'bg-[#49C581] text-white'
+          : 'bg-white text-gray-600 border border-gray-200'
+      }`}
+    >
+      Todos
+    </button>
+    <button
+      onClick={() => setActiveFilter('featured')}
+      className={`px-3 py-1.5 rounded-full text-xs md:text-sm ${
+        activeFilter === 'featured'
+          ? 'bg-[#49C581] text-white'
+          : 'bg-white text-gray-600 border border-gray-200'
+      }`}
+    >
+      Destacados
+    </button>
+    <button
+      onClick={() => setActiveFilter('offers')}
+      className={`px-3 py-1.5 rounded-full text-xs md:text-sm ${
+        activeFilter === 'offers'
+          ? 'bg-[#49C581] text-white'
+          : 'bg-white text-gray-600 border border-gray-200'
+      }`}
+    >
+      Con ofertas
+    </button>
+  </div>
+</div>
+
 
           {loading ? (
             <div className="text-center py-10">

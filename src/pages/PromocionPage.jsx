@@ -483,7 +483,7 @@ export default function PromocionesView() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100">
+    <div className="flex flex-col min-h-screen ">
       {/* Fondo con gradiente ligero */}
       <div className="absolute inset-0 z-0 opacity-5">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-b from-blue-300 to-transparent rounded-full blur-3xl"></div>

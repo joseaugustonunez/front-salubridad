@@ -27,11 +27,11 @@ const PerfilPage = () => {
   const [establecimientosData, setEstablecimientosData] = useState([]);
   const [selectedEstablishmentId, setSelectedEstablishmentId] = useState(null);
 
-const recargarUsuario = async (userId) => {
-  const usuarioActualizado = await obtenerUsuarioPorId(userId);
-  setUser(usuarioActualizado);
-  localStorage.setItem("user", JSON.stringify(usuarioActualizado));
-};
+  const recargarUsuario = async (userId) => {
+    const usuarioActualizado = await obtenerUsuarioPorId(userId);
+    setUser(usuarioActualizado);
+    localStorage.setItem("user", JSON.stringify(usuarioActualizado));
+  };
   // Imagen de portada por defecto
   const defaultCoverPhoto =
     "https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80";
@@ -89,7 +89,7 @@ const recargarUsuario = async (userId) => {
           // Comprobar si el usuario tiene algún establecimiento creado
           setTieneEstablecimiento(
             parsedUser.establecimientosCreados &&
-              parsedUser.establecimientosCreados.length > 0
+            parsedUser.establecimientosCreados.length > 0
           );
         }
       } catch (error) {
@@ -163,7 +163,7 @@ const recargarUsuario = async (userId) => {
         }
       }
 
-    
+
 
       // Verificar que tenemos un ID válido antes de continuar
       if (!userId) {
@@ -331,9 +331,8 @@ const recargarUsuario = async (userId) => {
         {/* Mostrar foto de portada o la imagen por defecto */}
         <div className="absolute inset-0">
           <img
-            src={`https://back-salubridad.sistemasudh.com${user.fotoPortada}${
-              user.fotoPortada?.includes("?") ? "&" : "?"
-            }t=${Date.now()}`}
+            src={`https://back-salubridad.sistemasudh.com${user.fotoPortada}${user.fotoPortada?.includes("?") ? "&" : "?"
+              }t=${Date.now()}`}
             alt="Portada"
             className="w-full h-full object-cover opacity-90"
           />
@@ -366,9 +365,8 @@ const recargarUsuario = async (userId) => {
             >
               {user.fotoPerfil ? (
                 <img
-                  src={`https://back-salubridad.sistemasudh.com${user.fotoPerfil}${
-                    user.fotoPerfil?.includes("?") ? "&" : "?"
-                  }t=${Date.now()}`}
+                  src={`https://back-salubridad.sistemasudh.com${user.fotoPerfil}${user.fotoPerfil?.includes("?") ? "&" : "?"
+                    }t=${Date.now()}`}
                   alt="Foto de perfil"
                   className="w-full h-full object-cover"
                 />
@@ -464,17 +462,16 @@ const recargarUsuario = async (userId) => {
               {tabs.map((tab) => (
                 <button
                   key={tab.name}
-                  className={`flex items-center px-4 py-4 text-sm font-medium transition border-b-2 ${
-                    activeTab === tab.name
+                  className={`flex items-center px-4 py-4 text-sm font-medium transition border-b-2 ${activeTab === tab.name
                       ? "border-b-2 text-white"
                       : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
+                    }`}
                   style={
                     activeTab === tab.name
                       ? {
-                          borderColor: "#49C581",
-                          color: "#337179",
-                        }
+                        borderColor: "#49C581",
+                        color: "#337179",
+                      }
                       : {}
                   }
                   onClick={() => setActiveTab(tab.name)}
@@ -498,9 +495,7 @@ const recargarUsuario = async (userId) => {
 
             {activeTab === "Establecimiento" && (
               <div className="text-center py-10">
-                <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-                  <FaStore size={36} style={{ color: "#37a6ca" }} />
-                </div>
+                
                 {tieneEstablecimiento ? (
                   <div>
                     <h3
@@ -508,7 +503,7 @@ const recargarUsuario = async (userId) => {
                       style={{ color: "#254A5D" }}
                     >
                       {user.establecimientosCreados &&
-                      user.establecimientosCreados.length > 0
+                        user.establecimientosCreados.length > 0
                         ? `Tienes ${user.establecimientosCreados.length} establecimiento(s)`
                         : "No tienes establecimientos registrados"}
                     </h3>
@@ -528,7 +523,7 @@ const recargarUsuario = async (userId) => {
                               <EstablecimientoCard
                                 establecimientoId={est.id}
                                 tieneEstablecimiento={tieneEstablecimiento}
-                                 onEstablecimientoActualizado={() => recargarUsuario(user._id)}
+                                onEstablecimientoActualizado={() => recargarUsuario(user._id)}
                               />
                             </div>
                           </div>
@@ -564,7 +559,7 @@ const recargarUsuario = async (userId) => {
               <div className="bg-white rounded-lg shadow p-6">
                 {tieneEstablecimiento ? (
                   <PromocionForm tieneEstablecimiento={tieneEstablecimiento}
-            establecimientosData={establecimientosData}/>
+                    establecimientosData={establecimientosData} />
                 ) : (
                   <div className="text-center py-6">
                     <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
@@ -627,57 +622,57 @@ const recargarUsuario = async (userId) => {
               </div>
             )}
 
-{activeTab === "Opiniones" && (
-  <div className="text-center py-10">
-    {!tieneEstablecimiento ? (
-      <div>
-        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-          <FaCommentDots size={36} style={{ color: "#F8485E" }} />
-        </div>
-        <h3
-          className="text-lg font-medium"
-          style={{ color: "#254A5D" }}
-        >
-          Necesitas un establecimiento para recibir opiniones
-        </h3>
-        <p className="text-gray-500 mt-1">
-          Crea primero tu establecimiento para poder recibir
-          opiniones de tus clientes
-        </p>
-        <button
-          onClick={() => setActiveTab("Crear Establecimiento")}
-          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
-          style={{ backgroundColor: "#49C581" }}
-        >
-          Crear Establecimiento
-        </button>
-      </div>
-    ) : (
-      <div>
-        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-          <FaCommentDots size={36} style={{ color: "#F8485E" }} />
-        </div>
-        <h3
-          className="text-lg font-medium mb-4"
-          style={{ color: "#254A5D" }}
-        >
-          Opiniones de tus establecimientos
-        </h3>
-        
-        {loading ? (
-          <div className="text-center py-4">
-            <p>Cargando opiniones...</p>
-          </div>
-        ) : (
-          <ComentariosEstablecimiento
-            tieneEstablecimiento={tieneEstablecimiento}
-            establecimientosData={establecimientosData}
-          />
-        )}
-      </div>
-    )}
-  </div>
-)}
+            {activeTab === "Opiniones" && (
+              <div className="text-center py-10">
+                {!tieneEstablecimiento ? (
+                  <div>
+                    <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                      <FaCommentDots size={36} style={{ color: "#F8485E" }} />
+                    </div>
+                    <h3
+                      className="text-lg font-medium"
+                      style={{ color: "#254A5D" }}
+                    >
+                      Necesitas un establecimiento para recibir opiniones
+                    </h3>
+                    <p className="text-gray-500 mt-1">
+                      Crea primero tu establecimiento para poder recibir
+                      opiniones de tus clientes
+                    </p>
+                    <button
+                      onClick={() => setActiveTab("Crear Establecimiento")}
+                      className="mt-4 px-4 py-2 rounded-md text-white font-medium"
+                      style={{ backgroundColor: "#49C581" }}
+                    >
+                      Crear Establecimiento
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                      <FaCommentDots size={36} style={{ color: "#F8485E" }} />
+                    </div>
+                    <h3
+                      className="text-lg font-medium mb-4"
+                      style={{ color: "#254A5D" }}
+                    >
+                      Opiniones de tus establecimientos
+                    </h3>
+
+                    {loading ? (
+                      <div className="text-center py-4">
+                        <p>Cargando opiniones...</p>
+                      </div>
+                    ) : (
+                      <ComentariosEstablecimiento
+                        tieneEstablecimiento={tieneEstablecimiento}
+                        establecimientosData={establecimientosData}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -172,7 +172,7 @@ const PromocionesPage = ({ tieneEstablecimiento, establecimientosData }) => {
         <h1 className="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Gestión de Promociones</h1>
         <button
           onClick={handleCrearNueva}
-          className="flex items-center justify-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+          className="flex items-center justify-center px-4 py-2 bg-gradient-to-r from-[#49C581] to-[#337179] text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
         >
           <Plus size={18} className="mr-2" />
           <span>Nueva Promoción</span>
@@ -199,7 +199,7 @@ const PromocionesPage = ({ tieneEstablecimiento, establecimientosData }) => {
         {mostrarFormulario && (
           <div className="w-full lg:w-1/2 transition-all duration-300">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+              <div className="bg-gradient-to-r from-[#49C581] to-[#337179] px-6 py-4">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-bold text-white">
                     {promocionSeleccionada ? "Editar Promoción" : "Crear Promoción"}
@@ -302,7 +302,7 @@ const PromocionesPage = ({ tieneEstablecimiento, establecimientosData }) => {
               </p>
               <button
                 onClick={handleCrearNueva}
-                className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-lg inline-flex items-center"
+                className="px-4 py-2 bg-gradient-to-r from-[#49C581] to-[#337179] text-white font-medium rounded-lg inline-flex items-center"
               >
                 <Plus size={18} className="mr-1" />
                 <span>Crear Primera Promoción</span>
@@ -608,7 +608,7 @@ const PromocionForm = ({ promocion, onSuccess, establecimientoId }) => {
       <div className="flex gap-2 pt-4">
         <button
           onClick={handleSubmit}
-          className="flex-grow py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200"
+          className="flex-grow py-2 bg-gradient-to-r from-[#49C581] to-[#337179] text-white font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200"
         >
           {promocion ? "Actualizar Promoción" : "Crear Promoción"}
         </button>

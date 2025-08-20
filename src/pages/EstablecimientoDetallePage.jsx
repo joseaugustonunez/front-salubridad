@@ -701,8 +701,8 @@ export default function EstablecimientoDetallePage() {
                 <button
                   key={i}
                   className={`w-2 h-2 rounded-full ${i === currentImageIndex
-                      ? "bg-white"
-                      : "bg-white bg-opacity-50"
+                    ? "bg-white"
+                    : "bg-white bg-opacity-50"
                     }`}
                   onClick={() => setCurrentImageIndex(i)}
                 ></button>
@@ -838,8 +838,8 @@ export default function EstablecimientoDetallePage() {
           <div className="flex overflow-x-auto">
             <button
               className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "info"
-                  ? "text-[#49C581] border-b-2 border-[#49C581]"
-                  : "text-gray-500 hover:text-[#337179]"
+                ? "text-[#49C581] border-b-2 border-[#49C581]"
+                : "text-gray-500 hover:text-[#337179]"
                 }`}
               onClick={() => setActiveTab("info")}
             >
@@ -847,8 +847,8 @@ export default function EstablecimientoDetallePage() {
             </button>
             <button
               className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "photos"
-                  ? "text-[#49C581] border-b-2 border-[#49C581]"
-                  : "text-gray-500 hover:text-[#337179]"
+                ? "text-[#49C581] border-b-2 border-[#49C581]"
+                : "text-gray-500 hover:text-[#337179]"
                 }`}
               onClick={() => setActiveTab("photos")}
             >
@@ -856,8 +856,8 @@ export default function EstablecimientoDetallePage() {
             </button>
             <button
               className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "reviews"
-                  ? "text-[#49C581] border-b-2 border-[#49C581]"
-                  : "text-gray-500 hover:text-[#337179]"
+                ? "text-[#49C581] border-b-2 border-[#49C581]"
+                : "text-gray-500 hover:text-[#337179]"
                 }`}
               onClick={() => setActiveTab("reviews")}
             >
@@ -865,8 +865,8 @@ export default function EstablecimientoDetallePage() {
             </button>
             <button
               className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "offers"
-                  ? "text-[#49C581] border-b-2 border-[#49C581]"
-                  : "text-gray-500 hover:text-[#337179]"
+                ? "text-[#49C581] border-b-2 border-[#49C581]"
+                : "text-gray-500 hover:text-[#337179]"
                 }`}
               onClick={() => setActiveTab("offers")}
             >
@@ -1037,61 +1037,60 @@ export default function EstablecimientoDetallePage() {
                   </div>
                 </div>
 
-        <div className="bg-[#f2f8f7] p-4 rounded-lg mb-6 border border-gray-100">
-  <h4 className="font-medium text-[#254A5D] mb-3">Escribe tu reseña</h4>
+                <div className="bg-[#f2f8f7] p-4 rounded-lg mb-6 border border-gray-100">
+                  <h4 className="font-medium text-[#254A5D] mb-3">Escribe tu reseña</h4>
 
-  <form onSubmit={handleSubmit}>
-    {error && <div className="text-red-500 mb-2 text-sm">{error}</div>}
+                  <form onSubmit={handleSubmit}>
+                    {error && <div className="text-red-500 mb-2 text-sm">{error}</div>}
 
-    {/* Contenedor principal: móvil en columna, desktop en fila */}
-    <div className="bg-gradient-to-r from-[#337179] to-[#254A5D] p-4 rounded-xl flex flex-col md:flex-row md:items-center gap-3 shadow-lg">
+                    {/* Contenedor principal: móvil en columna, desktop en fila */}
+                    <div className="bg-gradient-to-r from-[#337179] to-[#254A5D] p-4 rounded-xl flex flex-col md:flex-row md:items-center gap-3 shadow-lg">
 
-      {/* Estrellas de valoración */}
-      <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            type="button"
-            key={star}
-            onClick={() => setNewRating(star)}
-            className="focus:outline-none transition-transform hover:scale-110"
-            aria-label={`Calificación ${star}`}
-          >
-            {star <= newRating ? (
-              <FaStar className="text-yellow-300 text-xl" />
-            ) : (
-              <FaRegStar className="text-white/70 hover:text-yellow-300 text-xl" />
-            )}
-          </button>
-        ))}
-      </div>
+                      {/* Estrellas de valoración */}
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            type="button"
+                            key={star}
+                            onClick={() => setNewRating(star)}
+                            className="focus:outline-none transition-transform hover:scale-110"
+                            aria-label={`Calificación ${star}`}
+                          >
+                            {star <= newRating ? (
+                              <FaStar className="text-yellow-300 text-xl" />
+                            ) : (
+                              <FaRegStar className="text-white/70 hover:text-yellow-300 text-xl" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
 
-      {/* Input del mensaje (toma todo el ancho disponible) */}
-      <input
-        type="text"
-        placeholder="Escribe tu mensaje..."
-        className="w-full md:flex-1 bg-white/10 text-white placeholder-white/70 px-4 py-2 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none transition-all"
-        value={mensaje}
-        onChange={(e) => setMensaje(e.target.value)}
-        disabled={isSubmitting}
-      />
+                      {/* Input del mensaje (toma todo el ancho disponible) */}
+                      <input
+                        type="text"
+                        placeholder="Escribe tu mensaje..."
+                        className="w-full md:flex-1 bg-white/10 text-white placeholder-white/70 px-4 py-2 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none transition-all"
+                        value={mensaje}
+                        onChange={(e) => setMensaje(e.target.value)}
+                        disabled={isSubmitting}
+                      />
 
-      {/* Botón de enviar */}
-      <button
-        type="submit"
-        className={`bg-white/90 text-[#2E5F58] font-medium px-4 py-2 rounded-full hover:bg-white transition-all md:self-auto self-end ${
-          isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        title="Enviar reseña"
-        disabled={isSubmitting}
-      >
-        <div className="flex items-center gap-2">
-          <IoMdSend className="text-lg" />
-          <span>Enviar</span>
-        </div>
-      </button>
-    </div>
-  </form>
-</div>
+                      {/* Botón de enviar */}
+                      <button
+                        type="submit"
+                        className={`bg-white/90 text-[#2E5F58] font-medium px-4 py-2 rounded-full hover:bg-white transition-all md:self-auto self-end ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                        title="Enviar reseña"
+                        disabled={isSubmitting}
+                      >
+                        <div className="flex items-center gap-2">
+                          <IoMdSend className="text-lg" />
+                          <span>Enviar</span>
+                        </div>
+                      </button>
+                    </div>
+                  </form>
+                </div>
 
 
 

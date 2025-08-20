@@ -10,7 +10,6 @@ const EstablecimientoForm = () => {
   const [descripcion, setDescripcion] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [tipos, setTipos] = useState([]);
-const [direccionSugerencias, setDireccionSugerencias] = useState([]);
   const [categoria, setCategoria] = useState([]);
   const [tipo, setTipo] = useState([]);
   const [ubicacion, setUbicacion] = useState([
@@ -32,12 +31,7 @@ const [direccionSugerencias, setDireccionSugerencias] = useState([]);
   const primerHorario = horario[0];
   setHorario(horario.map(() => ({ ...primerHorario })));
 };
-const buscarDireccion = async (query) => {
-  if (!query) return setDireccionSugerencias([]);
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-  const data = await res.json();
-  setDireccionSugerencias(data);
-};
+
   const [horario, setHorario] = useState([
     { dia: "", entrada: "", salida: "" },
   ]);
@@ -615,24 +609,6 @@ const buscarDireccion = async (query) => {
   className="border border-gray-300 p-1.5 w-full rounded-md text-xs"
   placeholder="Av. Principal 123"
 />
-{direccionSugerencias.length > 0 && (
-  <ul className="bg-white border rounded shadow max-h-40 overflow-y-auto absolute z-10">
-    {direccionSugerencias.map((s, i) => (
-      <li
-        key={i}
-        className="p-2 hover:bg-blue-100 cursor-pointer"
-        onClick={() => {
-          handleUbicacionChange(index, "direccion", s.display_name);
-          handleUbicacionChange(index, "coordenadas.latitud", parseFloat(s.lat));
-          handleUbicacionChange(index, "coordenadas.longitud", parseFloat(s.lon));
-          setDireccionSugerencias([]);
-        }}
-      >
-        {s.display_name}
-      </li>
-    ))}
-  </ul>
-)}
                   </div>
                   <div>
                     <label className="block text-gray-700 text-xs mb-1">
