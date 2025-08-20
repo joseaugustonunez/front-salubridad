@@ -498,6 +498,7 @@ const PerfilPage = () => {
                 
                 {tieneEstablecimiento ? (
                   <div>
+                  
                     <h3
                       className="text-lg font-medium"
                       style={{ color: "#254A5D" }}
@@ -533,6 +534,9 @@ const PerfilPage = () => {
                   </div>
                 ) : (
                   <div>
+                     <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                      <FaStore size={36} style={{ color: "#49C581" }} />
+                    </div>
                     <h3
                       className="text-lg font-medium"
                       style={{ color: "#254A5D" }}
@@ -649,7 +653,7 @@ const PerfilPage = () => {
                   </div>
                 ) : (
                   <div>
-                    <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                    {/* <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
                       <FaCommentDots size={36} style={{ color: "#F8485E" }} />
                     </div>
                     <h3
@@ -657,7 +661,7 @@ const PerfilPage = () => {
                       style={{ color: "#254A5D" }}
                     >
                       Opiniones de tus establecimientos
-                    </h3>
+                    </h3> */}
 
                     {loading ? (
                       <div className="text-center py-4">
