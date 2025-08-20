@@ -453,7 +453,7 @@ export default function EstablecimientoPage() {
                   <img
                     src={
                       establecimiento.portada
-                        ? `http://localhost:3000/uploads/${establecimiento.portada}`
+                        ? `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`
                         : "https://via.placeholder.com/600x400?text=Imagen+no+disponible"
                     }
                     alt={establecimiento.nombre}
@@ -551,7 +551,7 @@ export default function EstablecimientoPage() {
                       <img
                         src={
                           establecimiento.imagen
-                            ? `http://localhost:3000/uploads/${establecimiento.imagen}`
+                            ? `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`
                             : "https://via.placeholder.com/80x80?text=Logo"
                         }
                         alt="Logo"

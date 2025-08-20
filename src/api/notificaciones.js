@@ -1,20 +1,27 @@
 import axios from "axios";
 
-const API_URL = "https://back-salubridad.sistemasudh.com/notificaciones"; // Ajusta la URL según tu backend
+const API_URL = "https://back-salubridad.sistemasudh.com/notificaciones";
 
-// Obtener todas las notificaciones de un usuario
+const authHeaders = () => {
+  const token = localStorage.getItem("token");
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
+
 export const obtenerNotificaciones = async (usuarioId) => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axios.get(`${API_URL}/${usuarioId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: authHeaders(),
     });
-
     return Array.isArray(response.data) ? response.data : [];
   } catch (error) {
-    console.error('Error al obtener notificaciones:', error);
+    console.error("Error al obtener notificaciones:", error.response?.data || error.message);
+
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login"; // fuerza re-login
+    }
     throw error;
   }
 };

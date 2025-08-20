@@ -123,7 +123,7 @@ const PromocionCard = ({ promocion }) => {
   
   // URL de la imagen
   const imageUrl = promocion.imagen 
-    ? `http://localhost:3000/uploads/${promocion.imagen}` 
+    ? `https://back-salubridad.sistemasudh.com/uploads/${promocion.imagen}` 
     : "/api/placeholder/600/400";
   
   return (

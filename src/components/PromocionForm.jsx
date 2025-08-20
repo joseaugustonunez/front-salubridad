@@ -321,7 +321,7 @@ const PromocionesPage = ({ tieneEstablecimiento, establecimientosData }) => {
                     <div className="relative h-48 overflow-hidden">
                       {promocion.imagen ? (
                         <img 
-                          src={`http://localhost:3000/uploads/${promocion.imagen}`}
+                          src={`https://back-salubridad.sistemasudh.com/uploads/${promocion.imagen}`}
                           alt={promocion.nombre} 
                           className="w-full h-full object-cover"
                           onError={(e) => {
@@ -426,7 +426,7 @@ const PromocionForm = ({ promocion, onSuccess, establecimientoId }) => {
   const [imagenFile, setImagenFile] = useState(null);
   const [preview, setPreview] = useState(
     promocion?.imagen 
-      ? `http://localhost:3000/uploads/${promocion.imagen}`
+      ? `https://back-salubridad.sistemasudh.com/uploads/${promocion.imagen}`
       : '/api/placeholder/400/200'
   );
   const [touchedFields, setTouchedFields] = useState({});

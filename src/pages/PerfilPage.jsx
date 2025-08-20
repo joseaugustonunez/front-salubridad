@@ -331,7 +331,7 @@ const recargarUsuario = async (userId) => {
         {/* Mostrar foto de portada o la imagen por defecto */}
         <div className="absolute inset-0">
           <img
-            src={`http://localhost:3000${user.fotoPortada}${
+            src={`https://back-salubridad.sistemasudh.com${user.fotoPortada}${
               user.fotoPortada?.includes("?") ? "&" : "?"
             }t=${Date.now()}`}
             alt="Portada"
@@ -366,7 +366,7 @@ const recargarUsuario = async (userId) => {
             >
               {user.fotoPerfil ? (
                 <img
-                  src={`http://localhost:3000${user.fotoPerfil}${
+                  src={`https://back-salubridad.sistemasudh.com${user.fotoPerfil}${
                     user.fotoPerfil?.includes("?") ? "&" : "?"
                   }t=${Date.now()}`}
                   alt="Foto de perfil"

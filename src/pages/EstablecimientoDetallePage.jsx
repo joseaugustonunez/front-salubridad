@@ -490,12 +490,12 @@ export default function EstablecimientoDetallePage() {
     ? [
         // Include both the main image and portada if they exist
         establecimiento.imagen &&
-          `http://localhost:3000/uploads/${establecimiento.imagen}`,
+          `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`,
         establecimiento.portada &&
-          `http://localhost:3000/uploads/${establecimiento.portada}`,
+          `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`,
         // Include any additional images from the imagenes array
         ...(establecimiento.imagenes?.map(
-          (img) => `http://localhost:3000/uploads/${img}`
+          (img) => `https://back-salubridad.sistemasudh.com/uploads/${img}`
         ) || []),
       ].filter(Boolean)
     : []; // Remove any undefined/null values
@@ -646,7 +646,7 @@ export default function EstablecimientoDetallePage() {
         {/* Image display */}
         {establecimiento.imagenes && establecimiento.imagenes.length > 0 && (
           <img
-            src={`http://localhost:3000/uploads/${establecimiento.imagenes[currentImageIndex]}`}
+            src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagenes[currentImageIndex]}`}
             alt={establecimiento.nombre}
             className="absolute inset-0 w-full h-full object-cover"
           />

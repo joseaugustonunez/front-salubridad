@@ -15,7 +15,7 @@ const FotosEstablecimiento = ({ establecimientoId, tieneEstablecimiento }) => {
   // Define API URL with a fallback
   const apiUrl = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_API_URL 
     ? process.env.NEXT_PUBLIC_API_URL 
-    : 'http://localhost:3000';
+    : 'https://back-salubridad.sistemasudh.com/';
 
   useEffect(() => {
     // Reset states when the component mounts or props change

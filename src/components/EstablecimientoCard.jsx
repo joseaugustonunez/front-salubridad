@@ -197,14 +197,14 @@ const handleSaveChanges = async () => {
       {/* Portada con imagen de fondo */}
       <div className="relative h-48 w-full bg-gray-200">
         <img 
-          src={`http://localhost:3000/uploads/${establecimiento.portada}`}
+          src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`}
           alt="Portada del establecimiento" 
           className="w-full h-full object-cover"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 flex justify-between items-end">
           <div className="flex items-center">
             <img 
-              src={`http://localhost:3000/uploads/${establecimiento.imagen}`}
+              src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`}
               alt="Logo" 
               className="w-16 h-16 rounded-full border-2 border-white object-cover"
             />

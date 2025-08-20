@@ -6,7 +6,6 @@ const API_URL = "https://back-salubridad.sistemasudh.com/establecimientos";
 // Función para obtener el token desde el almacenamiento local
 const obtenerToken = () => {
   const token = localStorage.getItem("token");
-  console.log("Token obtenido:", token); // Asegúrate de que el token esté disponible
   return token;
 };
 

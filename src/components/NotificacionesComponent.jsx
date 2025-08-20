@@ -86,9 +86,7 @@ const NotificacionesComponent = ({ usuarioId }) => {
     setError(null);
   
     try {
-      console.log("Solicitando notificaciones para usuario:", usuarioId);
       const data = await obtenerNotificaciones(usuarioId);
-      console.log("Datos recibidos de la API:", data);
       
       // Si no hay datos o no es un array, mostrar un mensaje de error amigable
       if (!data || !Array.isArray(data)) {
@@ -105,11 +103,9 @@ const NotificacionesComponent = ({ usuarioId }) => {
         time: formatearFecha(notif.fecha || notif.createdAt || new Date()),
         tipo: notif.tipo || "sistema"
       }));
-  
-      console.log("Notificaciones formateadas:", notificacionesFormateadas);
+
       setNotifications(notificacionesFormateadas);
     } catch (err) {
-      console.error("Error al cargar notificaciones:", err);
       setError("No se pudieron cargar las notificaciones");
     } finally {
       setLoading(false);
@@ -332,19 +328,18 @@ const NotificacionesComponent = ({ usuarioId }) => {
         </div>
       )}
       
-      {/* Agregamos un estilo global para la animación */}
-      <style jsx global>{`
-        @keyframes fadeInScale {
-          from {
-            opacity: 0;
-            transform: scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-      `}</style>
+      <style>{`
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+`}</style>
     </div>
   );
 };

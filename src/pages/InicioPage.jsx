@@ -118,7 +118,7 @@ export default function HomePage() {
   const obtenerImagen = (imagen) => {
     if (!imagen) return "/api/placeholder/400/300";
     // Ajusta esto según cómo sirvas las imágenes desde tu backend
-    return `http://localhost:3000/uploads/${imagen}`; 
+    return `https://back-salubridad.sistemasudh.com/uploads/${imagen}`; 
   };
 
   // Obtener establecimiento destacado (el primero con más seguidores o likes)

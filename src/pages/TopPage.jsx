@@ -363,7 +363,7 @@ const EstablecimientoCard = ({
       <div className="relative overflow-hidden h-40">
         {establecimiento.portada ? (
           <img
-            src={`http://localhost:3000/uploads/${establecimiento.portada}`}
+            src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`}
             alt={establecimiento.nombre}
             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
           />
@@ -462,7 +462,7 @@ const EstablecimientoCard = ({
 const MapPopupContent = ({ establecimiento, onViewDetail }) => (
   <div className="w-48">
   <img
-  src={`http://localhost:3000/uploads/${establecimiento.portada}`}
+  src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`}
   alt={establecimiento.nombre}
   className="w-64 h-40 object-cover transform group-hover:scale-105 transition-transform duration-300 rounded"
 />
