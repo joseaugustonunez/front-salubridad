@@ -457,31 +457,37 @@ const PerfilPage = () => {
           </div> */}
 
           {/* Tabs */}
-          <div className="overflow-x-auto scrollbar-hide border-b border-gray-100">
-            <div className="flex min-w-max px-6">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.name}
-                  className={`flex items-center px-4 py-4 text-sm font-medium transition border-b-2 ${activeTab === tab.name
-                      ? "border-b-2 text-white"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                    }`}
-                  style={
-                    activeTab === tab.name
-                      ? {
-                        borderColor: "#49C581",
-                        color: "#337179",
-                      }
-                      : {}
-                  }
-                  onClick={() => setActiveTab(tab.name)}
-                >
-                  <span className="mr-2">{tab.icon}</span>
-                  {tab.name}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="overflow-x-auto scrollbar-hide border-b border-gray-100">
+  <div className="flex w-full">
+    {tabs.map((tab) => (
+      <button
+        key={tab.name}
+        className={`flex-1 flex flex-col items-center justify-center px-4 py-4 text-sm font-medium transition border-b-2 ${
+          activeTab === tab.name
+            ? "border-b-2 text-white"
+            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        }`}
+        style={
+          activeTab === tab.name
+            ? {
+                borderColor: "#49C581",
+                color: "#337179",
+              }
+            : {}
+        }
+        onClick={() => setActiveTab(tab.name)}
+      >
+        {/* Icono siempre visible */}
+        <span className="text-xl">{tab.icon}</span>
+
+        {/* Texto solo en md y superior */}
+        <span className="hidden md:block mt-1">{tab.name}</span>
+      </button>
+    ))}
+  </div>
+</div>
+
+
 
           {/* Tab Content */}
           <div className="p-6">
@@ -494,7 +500,7 @@ const PerfilPage = () => {
             )}
 
             {activeTab === "Establecimiento" && (
-              <div className="text-center py-10">
+              <div className="text-center ">
                 
                 {tieneEstablecimiento ? (
                   <div>
@@ -517,10 +523,10 @@ const PerfilPage = () => {
                         establecimientosData.map((est, index) => (
                           <div
                             key={index}
-                            className="bg-white shadow-sm rounded-lg p-4 mb-4 text-left border border-gray-100"
+                            className="s"
                           >
                             {/* Aquí integramos el componente EstablecimientoCard */}
-                            <div className="mt-4">
+                            <div className="">
                               <EstablecimientoCard
                                 establecimientoId={est.id}
                                 tieneEstablecimiento={tieneEstablecimiento}
