@@ -484,6 +484,6 @@ actualizarImagenPortada: async (id, portada) => {
   
   obtenerUrlImagen: (nombreImagen) => {
     if (!nombreImagen) return null;
-    return `http://localhost:3000/uploads/${nombreImagen}`;
+    return `https://back-salubridad.sistemasudh.com/uploads/${nombreImagen}`;
   }
 };
