@@ -70,8 +70,8 @@ const Button = ({ children, primary, secondary, onClick, className = "" }) => {
   const colorClasses = primary
     ? "bg-[#49C581] hover:bg-opacity-90 text-white"
     : secondary
-    ? "bg-[#337179] hover:bg-opacity-90 text-white"
-    : "bg-gray-100 hover:bg-gray-200 text-[#254A5D]";
+      ? "bg-[#337179] hover:bg-opacity-90 text-white"
+      : "bg-gray-100 hover:bg-gray-200 text-[#254A5D]";
 
   return (
     <button
@@ -136,9 +136,8 @@ const Schedule = ({ days }) => (
       {days.map((day) => (
         <div key={day.name} className="flex justify-between text-sm">
           <span
-            className={`font-medium ${
-              day.isToday ? "text-[#49C581]" : "text-[#254A5D]"
-            }`}
+            className={`font-medium ${day.isToday ? "text-[#49C581]" : "text-[#254A5D]"
+              }`}
           >
             {day.name}
           </span>
@@ -378,53 +377,53 @@ export default function EstablecimientoDetallePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      
+
     if (newRating === 0) {
       setError("Por favor, selecciona una calificación");
       return;
     }
-      
+
     if (!mensaje.trim()) {
       setError("Por favor, escribe un comentario");
       return;
     }
-      
+
     try {
       setIsSubmitting(true);
       setError(null);
-          
+
       const usuarioString = localStorage.getItem("user");
       if (!usuarioString) {
         setError("Debes iniciar sesión para comentar");
         return;
       }
-          
+
       const usuarioData = JSON.parse(usuarioString);
       const usuarioId = usuarioData._id;
-          
+
       console.log("ID que intento usar:", id); // Verifica si id existe
-          
+
       const nuevoComentario = {
         usuario: usuarioId,
         establecimiento: id, // Usa la variable id existente en tu componente
         comentario: mensaje,
         calificacion: newRating,
       };
-          
+
       const resultado = await crearComentario(nuevoComentario);
       console.log("Respuesta del servidor:", resultado); // Verifica la estructura de la respuesta
-      
+
       // Crear el objeto de comentario para la UI con manejo seguro de la respuesta
       // Generar un ID temporal en caso de que no venga en la respuesta
-      const comentarioId = 
-        resultado && resultado.data && resultado.data._id 
-        ? resultado.data._id 
-        : `temp-${Date.now()}`;
-      
+      const comentarioId =
+        resultado && resultado.data && resultado.data._id
+          ? resultado.data._id
+          : `temp-${Date.now()}`;
+
       const comentarioParaUI = {
         _id: comentarioId,
         usuario: {
-          nombreUsuario: usuarioData.nombreUsuario || "Usuario", 
+          nombreUsuario: usuarioData.nombreUsuario || "Usuario",
           _id: usuarioId
         },
         fecha: new Date(),
@@ -432,33 +431,33 @@ export default function EstablecimientoDetallePage() {
         comentario: mensaje,
         perfil: usuarioData.fotoPerfil || null
       };
-      
+
       // Actualizar el estado del establecimiento añadiendo el nuevo comentario
       setEstablecimiento(prevEstado => {
         // Verificar que prevEstado existe y tiene la estructura esperada
         if (!prevEstado) return prevEstado;
-        
+
         const nuevosComentarios = [comentarioParaUI, ...(prevEstado.comentarios || [])];
-        
+
         // Recalcular promedio de calificaciones
         const totalComentarios = nuevosComentarios.length;
         const sumaCalificaciones = nuevosComentarios.reduce(
-          (sum, com) => sum + (com.calificacion || 0), 
+          (sum, com) => sum + (com.calificacion || 0),
           0
         );
         const nuevoPromedio = totalComentarios > 0 ? sumaCalificaciones / totalComentarios : 0;
-        
+
         return {
           ...prevEstado,
           comentarios: nuevosComentarios,
           promedioCalificaciones: parseFloat(nuevoPromedio.toFixed(1))
         };
       });
-          
+
       setMensaje("");
       setNewRating(0);
       setShowReviewForm(false); // Opcional: ocultar el formulario después de enviar
-          
+
     } catch (err) {
       setError(err.message || "Error al crear el comentario");
       console.error("Error al crear comentario:", err);
@@ -488,16 +487,16 @@ export default function EstablecimientoDetallePage() {
 
   const allImages = establecimiento
     ? [
-        // Include both the main image and portada if they exist
-        establecimiento.imagen &&
-          `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`,
-        establecimiento.portada &&
-          `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`,
-        // Include any additional images from the imagenes array
-        ...(establecimiento.imagenes?.map(
-          (img) => `https://back-salubridad.sistemasudh.com/uploads/${img}`
-        ) || []),
-      ].filter(Boolean)
+      // Include both the main image and portada if they exist
+      establecimiento.imagen &&
+      `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`,
+      establecimiento.portada &&
+      `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`,
+      // Include any additional images from the imagenes array
+      ...(establecimiento.imagenes?.map(
+        (img) => `https://back-salubridad.sistemasudh.com/uploads/${img}`
+      ) || []),
+    ].filter(Boolean)
     : []; // Remove any undefined/null values
 
   const diasTransformados =
@@ -599,46 +598,46 @@ export default function EstablecimientoDetallePage() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-       {selectedImage && (
-              <div
-              className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-                onClick={closeModal}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={closeModal}
+        >
+          <div className="relative max-w-4xl max-h-full">
+            {/* Botón para cerrar el modal */}
+            <button
+              className="absolute top-2 right-2 bg-white rounded-full p-2 text-black z-10"
+              onClick={(e) => {
+                e.stopPropagation(); // Evita que el clic se propague al fondo
+                closeModal();
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <div className="relative max-w-4xl max-h-full">
-                  {/* Botón para cerrar el modal */}
-                  <button
-                    className="absolute top-2 right-2 bg-white rounded-full p-2 text-black z-10"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Evita que el clic se propague al fondo
-                      closeModal();
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
 
-                  {/* Imagen a tamaño completo */}
-                  <img
-                    src={selectedImage}
-                    alt="Imagen ampliada"
-                    className="max-h-screen max-w-full object-contain"
-                    onClick={(e) => e.stopPropagation()} // Evita que el clic en la imagen cierre el modal
-                  />
-                </div>
-              </div>
-            )}
+            {/* Imagen a tamaño completo */}
+            <img
+              src={selectedImage}
+              alt="Imagen ampliada"
+              className="max-h-screen max-w-full object-contain"
+              onClick={(e) => e.stopPropagation()} // Evita que el clic en la imagen cierre el modal
+            />
+          </div>
+        </div>
+      )}
       {/* Header con la imagen principal y controles de navegación */}
       <div className="relative h-72 md:h-96 bg-[#254A5D] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#254A5D] opacity-70 z-10"></div>
@@ -701,11 +700,10 @@ export default function EstablecimientoDetallePage() {
               {establecimiento.imagenes.map((_, i) => (
                 <button
                   key={i}
-                  className={`w-2 h-2 rounded-full ${
-                    i === currentImageIndex
+                  className={`w-2 h-2 rounded-full ${i === currentImageIndex
                       ? "bg-white"
                       : "bg-white bg-opacity-50"
-                  }`}
+                    }`}
                   onClick={() => setCurrentImageIndex(i)}
                 ></button>
               ))}
@@ -731,11 +729,11 @@ export default function EstablecimientoDetallePage() {
               </div>
 
               <h1 className="text-2xl md:text-3xl font-bold text-[#254A5D] flex items-center gap-2">
-  {establecimiento.nombre}
-  {establecimiento.verificado && (
-    <MdOutlineVerified className="text-green-500" />
-  )}
-</h1>
+                {establecimiento.nombre}
+                {establecimiento.verificado && (
+                  <MdOutlineVerified className="text-green-500" />
+                )}
+              </h1>
               <p className="text-[#337179] mb-2">
                 {establecimiento.descripcion}
               </p>
@@ -777,20 +775,19 @@ export default function EstablecimientoDetallePage() {
               </div>
 
               <div className="flex items-center text-sm text-gray-600 mt-2">
-  <FaMapMarkerAlt className="mr-1" />
-  {establecimiento.ubicacion?.[0]
-    ? `${establecimiento.ubicacion[0].direccion}, ${establecimiento.ubicacion[0].ciudad}, ${establecimiento.ubicacion[0].distrito}`
-    : "Ubicación no disponible"}
-</div>
+                <FaMapMarkerAlt className="mr-1" />
+                {establecimiento.ubicacion?.[0]
+                  ? `${establecimiento.ubicacion[0].direccion}, ${establecimiento.ubicacion[0].ciudad}, ${establecimiento.ubicacion[0].distrito}`
+                  : "Ubicación no disponible"}
+              </div>
             </div>
 
             <div className="flex flex-col md:items-end gap-2">
               <div className="flex gap-2">
                 <Button
                   onClick={handleLike}
-                  className={`group ${
-                    liked ? "bg-red-50 hover:bg-red-100" : ""
-                  }`}
+                  className={`group ${liked ? "bg-red-50 hover:bg-red-100" : ""
+                    }`}
                 >
                   {liked ? (
                     <FaHeart className="text-[#F8485E]" />
@@ -808,30 +805,30 @@ export default function EstablecimientoDetallePage() {
                 </Button>
               </div>
               <div className="flex gap-2 mb-6">
-        <button 
-          onClick={toggleShareOptions}
-          className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200"
-        >
-          <FaShare className="text-2xl text-gray-700" />
-        </button>
-        <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200">
-          <IoShareSocialOutline className="text-2xl text-gray-700" />
-        </button>
-        <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-blue-100 hover:bg-blue-200">
-          <FaFacebook className="text-2xl text-blue-600" />
-        </button>
-        <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-pink-100 hover:bg-pink-200">
-          <FaInstagram className="text-2xl text-pink-600" />
-        </button>
-        <a 
-          href={`https://wa.me/${establecimiento.telefono}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-green-100 hover:bg-green-200"
-        >
-          <FaWhatsapp className="text-2xl text-green-600" />
-        </a>
-      </div>
+                <button
+                  onClick={toggleShareOptions}
+                  className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200"
+                >
+                  <FaShare className="text-2xl text-gray-700" />
+                </button>
+                <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200">
+                  <IoShareSocialOutline className="text-2xl text-gray-700" />
+                </button>
+                <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-blue-100 hover:bg-blue-200">
+                  <FaFacebook className="text-2xl text-blue-600" />
+                </button>
+                <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-pink-100 hover:bg-pink-200">
+                  <FaInstagram className="text-2xl text-pink-600" />
+                </button>
+                <a
+                  href={`https://wa.me/${establecimiento.telefono}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-green-100 hover:bg-green-200"
+                >
+                  <FaWhatsapp className="text-2xl text-green-600" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -840,41 +837,37 @@ export default function EstablecimientoDetallePage() {
         <div className="mb-6 border-b border-gray-200">
           <div className="flex overflow-x-auto">
             <button
-              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${
-                activeTab === "info"
+              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "info"
                   ? "text-[#49C581] border-b-2 border-[#49C581]"
                   : "text-gray-500 hover:text-[#337179]"
-              }`}
+                }`}
               onClick={() => setActiveTab("info")}
             >
               Información
             </button>
             <button
-              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${
-                activeTab === "photos"
+              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "photos"
                   ? "text-[#49C581] border-b-2 border-[#49C581]"
                   : "text-gray-500 hover:text-[#337179]"
-              }`}
+                }`}
               onClick={() => setActiveTab("photos")}
             >
               Fotos
             </button>
             <button
-              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${
-                activeTab === "reviews"
+              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "reviews"
                   ? "text-[#49C581] border-b-2 border-[#49C581]"
                   : "text-gray-500 hover:text-[#337179]"
-              }`}
+                }`}
               onClick={() => setActiveTab("reviews")}
             >
               Reseñas ({establecimiento.comentarios?.length || 0} )
             </button>
             <button
-              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${
-                activeTab === "offers"
+              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "offers"
                   ? "text-[#49C581] border-b-2 border-[#49C581]"
                   : "text-gray-500 hover:text-[#337179]"
-              }`}
+                }`}
               onClick={() => setActiveTab("offers")}
             >
               Ofertas
@@ -918,7 +911,7 @@ export default function EstablecimientoDetallePage() {
                       style={{ height: "300px" }}
                     >
                       {establecimiento.ubicacion &&
-                      establecimiento.ubicacion.length > 0 ? (
+                        establecimiento.ubicacion.length > 0 ? (
                         <MapContainer
                           center={[
                             establecimiento.ubicacion[0].coordenadas.latitud,
@@ -973,7 +966,7 @@ export default function EstablecimientoDetallePage() {
                   {/* Verificar que comentarios tenga elementos antes de intentar renderizar */}
                   <div>
                     {establecimiento.comentarios &&
-                    establecimiento.comentarios.length > 0 ? (
+                      establecimiento.comentarios.length > 0 ? (
                       <div>
                         {establecimiento.comentarios
                           .slice(0, 3)
@@ -1026,7 +1019,7 @@ export default function EstablecimientoDetallePage() {
                 </div>
               </div>
             )}
-           
+
             {activeTab === "reviews" && (
               <div className="bg-white rounded-xl p-5 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
@@ -1044,90 +1037,67 @@ export default function EstablecimientoDetallePage() {
                   </div>
                 </div>
 
-                <div className="mb-6">
-                  <Button
-                    primary
-                    className="w-full"
-                    onClick={() => setShowReviewForm((prev) => !prev)}
-                  >
-                    {showReviewForm ? "Cancelar" : "Escribir una reseña"}
-                  </Button>
-                </div>
+        <div className="bg-[#f2f8f7] p-4 rounded-lg mb-6 border border-gray-100">
+  <h4 className="font-medium text-[#254A5D] mb-3">Escribe tu reseña</h4>
 
-                {showReviewForm && (
-                  <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-100">
-                    <h4 className="font-medium text-[#254A5D] mb-3">
-                      Escribe tu reseña
-                    </h4>
-                    <form onSubmit={handleSubmit}>
-      {error && (
-        <div className="text-red-500 mb-2 text-sm">{error}</div>
-      )}
-      <div className="bg-gradient-to-r from-[#337179] to-[#254A5D] p-4 rounded-xl flex items-center gap-3 shadow-lg">
-        {/* Área de iconos */}
-        <div className="flex gap-2">
+  <form onSubmit={handleSubmit}>
+    {error && <div className="text-red-500 mb-2 text-sm">{error}</div>}
+
+    {/* Contenedor principal: móvil en columna, desktop en fila */}
+    <div className="bg-gradient-to-r from-[#337179] to-[#254A5D] p-4 rounded-xl flex flex-col md:flex-row md:items-center gap-3 shadow-lg">
+
+      {/* Estrellas de valoración */}
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
           <button
             type="button"
-            className="text-white bg-indigo-500/30 p-2 rounded-full hover:bg-indigo-500/50 transition-all"
+            key={star}
+            onClick={() => setNewRating(star)}
+            className="focus:outline-none transition-transform hover:scale-110"
+            aria-label={`Calificación ${star}`}
           >
-            <FaImage className="text-lg" />
+            {star <= newRating ? (
+              <FaStar className="text-yellow-300 text-xl" />
+            ) : (
+              <FaRegStar className="text-white/70 hover:text-yellow-300 text-xl" />
+            )}
           </button>
-          <button
-            type="button"
-            className="text-white bg-indigo-500/30 p-2 rounded-full hover:bg-indigo-500/50 transition-all"
-          >
-            <FaSmile className="text-lg" />
-          </button>
-        </div>
-        
-        {/* Separador vertical */}
-        <div className="w-px h-8 bg-white/20 mx-1"></div>
-        
-        {/* Estrellas de valoración */}
-        <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              type="button"
-              key={star}
-              onClick={() => setNewRating(star)}
-              className="focus:outline-none transition-transform hover:scale-110"
-            >
-              {star <= newRating ? (
-                <FaStar className="text-yellow-300" />
-              ) : (
-                <FaRegStar className="text-gray-300 hover:text-yellow-300" />
-              )}
-            </button>
-          ))}
-        </div>
-        
-        {/* Input del mensaje */}
-        <input
-          type="text"
-          placeholder="Escribe tu mensaje..."
-          className="flex-1 bg-white/10 text-white placeholder-white/60 px-4 py-2 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none transition-all"
-          value={mensaje}
-          onChange={(e) => setMensaje(e.target.value)}
-          disabled={isSubmitting}
-        />
-        
-        {/* Botón de enviar */}
-        <button
-          type="submit"
-          className={`bg-gradient-to-r from-blue-500 to-green-500 p-3 rounded-full hover:shadow-lg hover:from-blue-600 hover:to-green-600 transition-all ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-          title="Enviar mensaje"
-          disabled={isSubmitting}
-        >
-          <IoMdSend className="text-white text-lg" />
-        </button>
+        ))}
       </div>
-    </form>
-                  </div>
-                )}
+
+      {/* Input del mensaje (toma todo el ancho disponible) */}
+      <input
+        type="text"
+        placeholder="Escribe tu mensaje..."
+        className="w-full md:flex-1 bg-white/10 text-white placeholder-white/70 px-4 py-2 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none transition-all"
+        value={mensaje}
+        onChange={(e) => setMensaje(e.target.value)}
+        disabled={isSubmitting}
+      />
+
+      {/* Botón de enviar */}
+      <button
+        type="submit"
+        className={`bg-white/90 text-[#2E5F58] font-medium px-4 py-2 rounded-full hover:bg-white transition-all md:self-auto self-end ${
+          isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        title="Enviar reseña"
+        disabled={isSubmitting}
+      >
+        <div className="flex items-center gap-2">
+          <IoMdSend className="text-lg" />
+          <span>Enviar</span>
+        </div>
+      </button>
+    </div>
+  </form>
+</div>
+
+
 
                 <div>
                   {establecimiento.comentarios &&
-                  establecimiento.comentarios.length > 0 ? (
+                    establecimiento.comentarios.length > 0 ? (
                     <div>
                       {establecimiento.comentarios.map((comentario) => (
                         <Review
@@ -1157,60 +1127,60 @@ export default function EstablecimientoDetallePage() {
 
             {activeTab === "offers" && (
               <div className="bg-white rounded-xl p-5 shadow-sm">
-              <h3 className="font-medium text-lg mb-4 text-[#254A5D] flex items-center gap-2">
-                <MdOutlineLocalOffer /> Ofertas y promociones
-              </h3>
-        
-              {promociones.length === 0 ? (
-                <div className="text-center py-4 text-gray-500">
-                  No hay promociones disponibles en este momento
-                </div>
-              ) : (
-                promociones.map((promocion, index) => {
-                  const esHoy = esPromocionHoy(promocion.fechaInicio, promocion.fechaFin);
-                  const esNuevo = (new Date() - new Date(promocion.createdAt)) < 7 * 24 * 60 * 60 * 1000; // 7 días
-                  
-                  return (
-                    <div 
-                      key={promocion._id}
-                      className={`bg-gradient-to-r ${getGradientColors(index)} p-5 rounded-lg text-white mb-4 last:mb-0`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-bold text-xl mb-1">
-                            {promocion.nombre}
-                          </h4>
-                          <p className="text-white text-opacity-90">
-                            {promocion.descripcion}
-                          </p>
-                          <p className="text-white text-opacity-90 text-sm mt-2">
-                            Válido: {new Date(promocion.fechaInicio).toLocaleDateString()} al {new Date(promocion.fechaFin).toLocaleDateString()}
-                          </p>
-                          {promocion.condiciones && (
-                            <p className="text-white text-opacity-80 text-xs mt-1 italic">
-                              Condiciones: {promocion.condiciones}
+                <h3 className="font-medium text-lg mb-4 text-[#254A5D] flex items-center gap-2">
+                  <MdOutlineLocalOffer /> Ofertas y promociones
+                </h3>
+
+                {promociones.length === 0 ? (
+                  <div className="text-center py-4 text-gray-500">
+                    No hay promociones disponibles en este momento
+                  </div>
+                ) : (
+                  promociones.map((promocion, index) => {
+                    const esHoy = esPromocionHoy(promocion.fechaInicio, promocion.fechaFin);
+                    const esNuevo = (new Date() - new Date(promocion.createdAt)) < 7 * 24 * 60 * 60 * 1000; // 7 días
+
+                    return (
+                      <div
+                        key={promocion._id}
+                        className={`bg-gradient-to-r ${getGradientColors(index)} p-5 rounded-lg text-white mb-4 last:mb-0`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-bold text-xl mb-1">
+                              {promocion.nombre}
+                            </h4>
+                            <p className="text-white text-opacity-90">
+                              {promocion.descripcion}
                             </p>
-                          )}
+                            <p className="text-white text-opacity-90 text-sm mt-2">
+                              Válido: {new Date(promocion.fechaInicio).toLocaleDateString()} al {new Date(promocion.fechaFin).toLocaleDateString()}
+                            </p>
+                            {promocion.condiciones && (
+                              <p className="text-white text-opacity-80 text-xs mt-1 italic">
+                                Condiciones: {promocion.condiciones}
+                              </p>
+                            )}
+                          </div>
+                          {esHoy ? (
+                            <span className="bg-white text-[#F8485E] px-3 py-1 rounded-full font-bold text-sm">
+                              HOY
+                            </span>
+                          ) : esNuevo ? (
+                            <span className="bg-white text-[#49C581] px-3 py-1 rounded-full font-bold text-sm">
+                              NUEVO
+                            </span>
+                          ) : promocion.descuento > 0 ? (
+                            <span className="bg-white text-[#8A63FF] px-3 py-1 rounded-full font-bold text-sm">
+                              {promocion.descuento}% OFF
+                            </span>
+                          ) : null}
                         </div>
-                        {esHoy ? (
-                          <span className="bg-white text-[#F8485E] px-3 py-1 rounded-full font-bold text-sm">
-                            HOY
-                          </span>
-                        ) : esNuevo ? (
-                          <span className="bg-white text-[#49C581] px-3 py-1 rounded-full font-bold text-sm">
-                            NUEVO
-                          </span>
-                        ) : promocion.descuento > 0 ? (
-                          <span className="bg-white text-[#8A63FF] px-3 py-1 rounded-full font-bold text-sm">
-                            {promocion.descuento}% OFF
-                          </span>
-                        ) : null}
                       </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
+                    );
+                  })
+                )}
+              </div>
             )}
           </div>
 
@@ -1257,9 +1227,8 @@ export default function EstablecimientoDetallePage() {
                 </Button>
                 <Button
                   onClick={handleLike}
-                  className={`group ${
-                    liked ? "bg-red-50 hover:bg-red-100" : ""
-                  }`}
+                  className={`group ${liked ? "bg-red-50 hover:bg-red-100" : ""
+                    }`}
                 >
                   {liked ? (
                     <FaHeart className="text-[#F8485E]" />

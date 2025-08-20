@@ -206,7 +206,7 @@ const AdminEstablecimientoDetalle = () => {
   <div
     className="w-full h-full bg-cover bg-center relative"
     style={{
-      backgroundImage: `url(http://localhost:3000/uploads/${establecimiento.portada})`
+      backgroundImage: `url(https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada})`
     }}
   >
     <div className="absolute inset-0 bg-black bg-opacity-30"></div>
@@ -221,7 +221,7 @@ const AdminEstablecimientoDetalle = () => {
               <div className="flex items-end">
                 <div className="h-24 w-24 rounded-lg overflow-hidden border-4 border-white bg-white shadow-lg">
                   {establecimiento.imagen ? (
-                    <img src={`http://localhost:3000/uploads/${establecimiento.imagen}`} alt={establecimiento.nombre} className="w-full h-full object-cover" />
+                    <img src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`} alt={establecimiento.nombre} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-100">
                       <span className="text-sm text-gray-500">Sin logo</span>
@@ -870,7 +870,7 @@ const AdminEstablecimientoDetalle = () => {
                       <div className="h-24 w-24 rounded-lg overflow-hidden bg-gray-200">
                         {establecimiento.imagen ? (
                           <img 
-                            src={`http://localhost:3000/uploads/${establecimiento.imagen}`} 
+                            src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`} 
                             alt="Imagen principal" 
                             className="h-full w-full object-cover" 
                           />
@@ -912,7 +912,7 @@ const AdminEstablecimientoDetalle = () => {
                     <div className="h-40 rounded-lg overflow-hidden bg-gray-200">
                       {establecimiento.portada ? (
                         <img 
-                          src={`http://localhost:3000/uploads/${establecimiento.portada}`} 
+                          src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`} 
                           alt="Imagen de portada" 
                           className="h-full w-full object-cover" 
                         />
@@ -956,7 +956,7 @@ const AdminEstablecimientoDetalle = () => {
                           <div key={index} className="relative group">
                             <div className="h-32 rounded-lg overflow-hidden bg-gray-200">
                               <img 
-                                src={`http://localhost:3000/uploads/${img}`} 
+                                src={`https://back-salubridad.sistemasudh.com/uploads/${img}`} 
                                 alt={`Imagen ${index + 1}`} 
                                 className="h-full w-full object-cover" 
                               />

@@ -19,19 +19,16 @@ const configurarHeaders = () => {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  console.log("Headers configurados:", headers); // Asegúrate de que los headers sean correctos
   return { headers };
 };
 
 // Obtener todos los comentarios de un establecimiento
 export const obtenerComentariosPorEstablecimiento = async (establecimientoId) => {
-  console.log("ID de establecimiento:", establecimientoId);
   try {
     const response = await axios.get(
       `${API_URL}/establecimiento/${establecimientoId}`,
       configurarHeaders()
     );
-    console.log("Comentarios del establecimiento:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error al obtener los comentarios:", error);

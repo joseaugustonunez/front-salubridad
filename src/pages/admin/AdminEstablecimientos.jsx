@@ -276,7 +276,7 @@ export default function AdminEstablecimientos() {
               {/* Cabecera con imagen de portada */}
               <div className="relative h-40 w-full">
                 <img
-                  src={`http://localhost:3000/uploads/${establecimiento.portada}`}
+                  src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`}
                   alt={`Portada de ${establecimiento.nombre}`}
                   className="h-full w-full object-cover"
                   onError={(e) => (e.target.src = "/placeholder-banner.png")}
@@ -314,7 +314,7 @@ export default function AdminEstablecimientos() {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-white shadow-md">
                     <img
-                      src={`http://localhost:3000/uploads/${establecimiento.imagen}`}
+                      src={`https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`}
                       alt={establecimiento.nombre}
                       className="h-full w-full object-cover"
                       onError={(e) => (e.target.src = "/placeholder.png")}
@@ -451,7 +451,7 @@ export default function AdminEstablecimientos() {
                                 className="h-20 rounded overflow-hidden"
                               >
                                 <img
-                                  src={`http://localhost:3000/uploads/${img}`}
+                                  src={`https://back-salubridad.sistemasudh.com/uploads/${img}`}
                                   alt={`Imagen ${idx + 1}`}
                                   className="h-full w-full object-cover"
                                   onError={(e) =>

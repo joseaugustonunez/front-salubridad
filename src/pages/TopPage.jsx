@@ -179,7 +179,7 @@ const TopPage = () => {
   }, [establecimientos, filter]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br ">
       {/* Encabezado normal (no sticky) */}
 
       <div
@@ -276,62 +276,64 @@ const TopPage = () => {
         </div>
 
         {/* Mapa mejorado - Se muestra debajo en móvil y al lado en desktop */}
-        <div className="w-full md:w-1/3 mt-6 md:mt-0">
-          <div className="h-96 md:h-full rounded-2xl overflow-hidden shadow-lg border-4 border-white relative">
-            <MapContainer
-              center={mapCenter}
-              zoom={13}
-              className="w-full h-full z-0"
-              zoomControl={false}
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+       <div className="w-full md:w-1/3 mt-6 md:mt-0">
+  <div className="h-96 md:h-[32rem] rounded-2xl overflow-hidden shadow-lg border-4 border-white relative">
+    <MapContainer
+      center={mapCenter}
+      zoom={13}
+      className="w-full h-full z-0"
+      zoomControl={false}
+      whenReady={(map) => {
+        // Arregla renders dentro de tabs/accordion/condicionales
+        setTimeout(() => map.target.invalidateSize(), 0);
+      }}
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-              {establecimientos.map((establecimiento) => {
-                const lat =
-                  establecimiento.ubicacion?.[0]?.coordenadas?.latitud;
-                const lon =
-                  establecimiento.ubicacion?.[0]?.coordenadas?.longitud;
+      {establecimientos.map((establecimiento) => {
+        const lat = establecimiento.ubicacion?.[0]?.coordenadas?.latitud;
+        const lon = establecimiento.ubicacion?.[0]?.coordenadas?.longitud;
+        if (lat == null || lon == null) return null;
 
-                if (!lat || !lon) return null;
-
-                return (
-                  <Marker
-                    key={establecimiento._id}
-                    position={[lat, lon]}
-                    eventHandlers={{
-                      click: () => handleEstablecimientoClick(establecimiento),
-                    }}
-                  >
-                    <Popup>
-                      <MapPopupContent
-                        establecimiento={establecimiento}
-                        onViewDetail={(e) =>
-                          goToEstablecimientoDetail(establecimiento._id, e)
-                        }
-                      />
-                    </Popup>
-                  </Marker>
-                );
-              })}
-
-              <CenterMapOnMarker position={mapCenter} />
-            </MapContainer>
-
-            {/* Overlay con detalles del establecimiento seleccionado */}
-            {selectedEstablecimiento && (
-              <MapOverlay
-                establecimiento={selectedEstablecimiento}
-                onClose={(e) => {
-                  e.stopPropagation();
-                  setSelectedEstablecimiento(null);
-                }}
+        return (
+          <Marker
+            key={establecimiento._id}
+            position={[lat, lon]}
+            eventHandlers={{
+              click: () => handleEstablecimientoClick(establecimiento),
+            }}
+          >
+            <Popup>
+              <MapPopupContent
+                establecimiento={establecimiento}
                 onViewDetail={(e) =>
-                  goToEstablecimientoDetail(selectedEstablecimiento._id, e)
+                  goToEstablecimientoDetail(establecimiento._id, e)
                 }
               />
-            )}
-          </div>
-        </div>
+            </Popup>
+          </Marker>
+        );
+      })}
+
+      <CenterMapOnMarker position={mapCenter} />
+    </MapContainer>
+
+    {/* Overlay con detalles */}
+    {selectedEstablecimiento && (
+      <MapOverlay
+        establecimiento={selectedEstablecimiento}
+        onClose={(e) => {
+          e.stopPropagation();
+          setSelectedEstablecimiento(null);
+        }}
+        onViewDetail={(e) =>
+          goToEstablecimientoDetail(selectedEstablecimiento._id, e)
+        }
+      />
+    )}
+  </div>
+</div>
+
       </div>
     </div>
   );
@@ -347,9 +349,9 @@ const EstablecimientoCard = ({
 }) => {
   return (
     <div
-      className={`rounded-xl overflow-hidden transition transform hover:-translate-y-1 hover:shadow-xl cursor-pointer group ${
-        isSelected ? "ring-2 ring-[#337179] ring-offset-2" : ""
-      }`}
+      className={`w-[400px] rounded-xl overflow-hidden transition transform hover:-translate-y-1 hover:shadow-xl cursor-pointer group ${
+  isSelected ? "ring-2 ring-[#337179] ring-offset-2" : ""
+}`}
       style={{
         boxShadow:
           "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",

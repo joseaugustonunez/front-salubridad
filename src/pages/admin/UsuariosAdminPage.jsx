@@ -42,9 +42,7 @@ export default function AdminUsuariosView() {
         setLoading(true);
         const datosUsuarios = await obtenerUsuarios();
         const datosEstablecimientos = await obtenerEstablecimientos();
-        
-        console.log("Establecimientos cargados:", datosEstablecimientos);
-        
+      
         // Mapear los datos para adaptarlos al formato esperado
         const usuariosAdaptados = datosUsuarios.map(usuario => ({
           id: usuario._id,

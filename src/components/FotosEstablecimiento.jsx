@@ -33,7 +33,7 @@ const FotosEstablecimiento = ({ establecimientoId, tieneEstablecimiento }) => {
 
   // Debug function to help see what's happening
   const logDebugInfo = (message, data) => {
-    console.log(`DEBUG - ${message}:`, data);
+    
   };
 
   // Función para obtener las fotos del establecimiento
