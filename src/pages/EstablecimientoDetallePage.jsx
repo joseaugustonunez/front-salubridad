@@ -39,6 +39,7 @@ delete L.Icon.Default.prototype._getIconUrl;
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import toast from "react-hot-toast";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
@@ -274,97 +275,95 @@ export default function EstablecimientoDetallePage() {
   }, [id, userId]);
 
   // Función para manejar likes
-  const handleLike = async () => {
-    if (!isAuthenticated) {
-      alert("Debes iniciar sesión para dar like");
-      return;
+const handleLike = async () => {
+  if (!isAuthenticated) {
+    toast.error("Debes iniciar sesión para dar like");
+    return;
+  }
+
+  try {
+    const establecimientoId = establecimiento._id;
+
+    if (liked) {
+      // Quitar like
+      await quitarLikeEstablecimiento(establecimientoId);
+
+      setLikes((prev) => ({
+        ...prev,
+        [establecimientoId]: Math.max(0, (prev[establecimientoId] || 0) - 1),
+      }));
+      setEstablecimiento((prev) => ({
+        ...prev,
+        likes: prev.likes.filter((id) => id !== userId),
+      }));
+
+      toast("Quitaste tu like 👍"); // neutral
+    } else {
+      // Dar like
+      await likeEstablecimiento(establecimientoId);
+
+      setLikes((prev) => ({
+        ...prev,
+        [establecimientoId]: (prev[establecimientoId] || 0) + 1,
+      }));
+      setEstablecimiento((prev) => ({
+        ...prev,
+        likes: [...(prev.likes || []), userId],
+      }));
+
+      toast.success("¡Te gustó este establecimiento! ❤️");
     }
 
-    try {
-      const establecimientoId = establecimiento._id;
-
-      if (liked) {
-        // Quitar like
-        await quitarLikeEstablecimiento(establecimientoId);
-
-        // Actualizar el estado local de likes y del establecimiento
-        setLikes((prev) => ({
-          ...prev,
-          [establecimientoId]: Math.max(0, (prev[establecimientoId] || 0) - 1),
-        }));
-        setEstablecimiento((prev) => ({
-          ...prev,
-          likes: prev.likes.filter((id) => id !== userId),
-        }));
-      } else {
-        // Dar like
-        await likeEstablecimiento(establecimientoId);
-
-        // Actualizar el estado local de likes y del establecimiento
-        setLikes((prev) => ({
-          ...prev,
-          [establecimientoId]: (prev[establecimientoId] || 0) + 1,
-        }));
-        setEstablecimiento((prev) => ({
-          ...prev,
-          likes: [...(prev.likes || []), userId],
-        }));
-      }
-
-      // Actualizar estado local
-      setLiked(!liked);
-    } catch (error) {
-      console.error("Error al gestionar like:", error);
-      alert("Hubo un problema al procesar tu solicitud");
-    }
-  };
-
+    setLiked(!liked);
+  } catch (error) {
+    console.error("Error al gestionar like:", error);
+    toast.error("Hubo un problema al procesar tu solicitud");
+  }
+};
   // Función para manejar seguimiento
-  const handleFollow = async () => {
-    if (!isAuthenticated) {
-      alert("Debes iniciar sesión para seguir este establecimiento");
-      return;
+const handleFollow = async () => {
+  if (!isAuthenticated) {
+    toast.error("Debes iniciar sesión para seguir este establecimiento");
+    return;
+  }
+
+  try {
+    const establecimientoId = establecimiento._id;
+
+    if (followed) {
+      await dejarDeSeguirEstablecimiento(establecimientoId);
+
+      setSeguidores((prev) => ({
+        ...prev,
+        [establecimientoId]: Math.max(0, (prev[establecimientoId] || 0) - 1),
+      }));
+      setEstablecimiento((prev) => ({
+        ...prev,
+        seguidores: prev.seguidores.filter((id) => id !== userId),
+      }));
+
+      toast("Has dejado de seguir este establecimiento 👋");
+    } else {
+      await seguirEstablecimiento(establecimientoId);
+
+      setSeguidores((prev) => ({
+        ...prev,
+        [establecimientoId]: (prev[establecimientoId] || 0) + 1,
+      }));
+      setEstablecimiento((prev) => ({
+        ...prev,
+        seguidores: [...(prev.seguidores || []), userId],
+      }));
+
+      toast.success("Ahora sigues este establecimiento 🎉");
     }
 
-    try {
-      const establecimientoId = establecimiento._id;
-
-      if (followed) {
-        // Dejar de seguir
-        await dejarDeSeguirEstablecimiento(establecimientoId);
-
-        // Actualizar el estado local de seguidores y del establecimiento
-        setSeguidores((prev) => ({
-          ...prev,
-          [establecimientoId]: Math.max(0, (prev[establecimientoId] || 0) - 1),
-        }));
-        setEstablecimiento((prev) => ({
-          ...prev,
-          seguidores: prev.seguidores.filter((id) => id !== userId),
-        }));
-      } else {
-        // Seguir
-        await seguirEstablecimiento(establecimientoId);
-
-        // Actualizar el estado local de seguidores y del establecimiento
-        setSeguidores((prev) => ({
-          ...prev,
-          [establecimientoId]: (prev[establecimientoId] || 0) + 1,
-        }));
-        setEstablecimiento((prev) => ({
-          ...prev,
-          seguidores: [...(prev.seguidores || []), userId],
-        }));
-      }
-
-      // Actualizar estado local
-      setFollowed(!followed);
-    } catch (error) {
-      console.error("Error al gestionar seguimiento:", error);
-      alert("Hubo un problema al procesar tu solicitud");
-    }
-  };
-
+    setFollowed(!followed);
+  } catch (error) {
+    console.error("Error al gestionar seguimiento:", error);
+    toast.error("Hubo un problema al procesar tu solicitud");
+  }
+};
   // Función para abrir el modal con la imagen seleccionada
   const openModal = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -375,96 +374,98 @@ export default function EstablecimientoDetallePage() {
     setSelectedImage(null);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (newRating === 0) {
-      setError("Por favor, selecciona una calificación");
+  if (newRating === 0) {
+    toast.error("Por favor, selecciona una calificación");
+    return;
+  }
+
+  if (!mensaje.trim()) {
+    toast.error("Por favor, escribe un comentario");
+    return;
+  }
+
+  try {
+    setIsSubmitting(true);
+    setError(null);
+
+    const usuarioString = localStorage.getItem("user");
+    if (!usuarioString) {
+      toast.error("Debes iniciar sesión para comentar");
       return;
     }
 
-    if (!mensaje.trim()) {
-      setError("Por favor, escribe un comentario");
-      return;
-    }
+    const usuarioData = JSON.parse(usuarioString);
+    const usuarioId = usuarioData._id;
 
-    try {
-      setIsSubmitting(true);
-      setError(null);
+    console.log("ID que intento usar:", id); // Debug opcional
 
-      const usuarioString = localStorage.getItem("user");
-      if (!usuarioString) {
-        setError("Debes iniciar sesión para comentar");
-        return;
-      }
+    const nuevoComentario = {
+      usuario: usuarioId,
+      establecimiento: id,
+      comentario: mensaje,
+      calificacion: newRating,
+    };
 
-      const usuarioData = JSON.parse(usuarioString);
-      const usuarioId = usuarioData._id;
+    const resultado = await crearComentario(nuevoComentario);
+    console.log("Respuesta del servidor:", resultado); // Debug opcional
 
-      console.log("ID que intento usar:", id); // Verifica si id existe
+    // Crear objeto de comentario para la UI
+    const comentarioId =
+      resultado && resultado.data && resultado.data._id
+        ? resultado.data._id
+        : `temp-${Date.now()}`;
 
-      const nuevoComentario = {
-        usuario: usuarioId,
-        establecimiento: id, // Usa la variable id existente en tu componente
-        comentario: mensaje,
-        calificacion: newRating,
+    const comentarioParaUI = {
+      _id: comentarioId,
+      usuario: {
+        nombreUsuario: usuarioData.nombreUsuario || "Usuario",
+        _id: usuarioId,
+      },
+      fecha: new Date(),
+      calificacion: newRating,
+      comentario: mensaje,
+      perfil: usuarioData.fotoPerfil || null,
+    };
+
+    // Actualizar estado
+    setEstablecimiento((prevEstado) => {
+      if (!prevEstado) return prevEstado;
+
+      const nuevosComentarios = [
+        comentarioParaUI,
+        ...(prevEstado.comentarios || []),
+      ];
+
+      const totalComentarios = nuevosComentarios.length;
+      const sumaCalificaciones = nuevosComentarios.reduce(
+        (sum, com) => sum + (com.calificacion || 0),
+        0
+      );
+      const nuevoPromedio =
+        totalComentarios > 0 ? sumaCalificaciones / totalComentarios : 0;
+
+      return {
+        ...prevEstado,
+        comentarios: nuevosComentarios,
+        promedioCalificaciones: parseFloat(nuevoPromedio.toFixed(1)),
       };
+    });
 
-      const resultado = await crearComentario(nuevoComentario);
-      console.log("Respuesta del servidor:", resultado); // Verifica la estructura de la respuesta
+    setMensaje("");
+    setNewRating(0);
+    setShowReviewForm(false);
 
-      // Crear el objeto de comentario para la UI con manejo seguro de la respuesta
-      // Generar un ID temporal en caso de que no venga en la respuesta
-      const comentarioId =
-        resultado && resultado.data && resultado.data._id
-          ? resultado.data._id
-          : `temp-${Date.now()}`;
-
-      const comentarioParaUI = {
-        _id: comentarioId,
-        usuario: {
-          nombreUsuario: usuarioData.nombreUsuario || "Usuario",
-          _id: usuarioId
-        },
-        fecha: new Date(),
-        calificacion: newRating,
-        comentario: mensaje,
-        perfil: usuarioData.fotoPerfil || null
-      };
-
-      // Actualizar el estado del establecimiento añadiendo el nuevo comentario
-      setEstablecimiento(prevEstado => {
-        // Verificar que prevEstado existe y tiene la estructura esperada
-        if (!prevEstado) return prevEstado;
-
-        const nuevosComentarios = [comentarioParaUI, ...(prevEstado.comentarios || [])];
-
-        // Recalcular promedio de calificaciones
-        const totalComentarios = nuevosComentarios.length;
-        const sumaCalificaciones = nuevosComentarios.reduce(
-          (sum, com) => sum + (com.calificacion || 0),
-          0
-        );
-        const nuevoPromedio = totalComentarios > 0 ? sumaCalificaciones / totalComentarios : 0;
-
-        return {
-          ...prevEstado,
-          comentarios: nuevosComentarios,
-          promedioCalificaciones: parseFloat(nuevoPromedio.toFixed(1))
-        };
-      });
-
-      setMensaje("");
-      setNewRating(0);
-      setShowReviewForm(false); // Opcional: ocultar el formulario después de enviar
-
-    } catch (err) {
-      setError(err.message || "Error al crear el comentario");
-      console.error("Error al crear comentario:", err);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    toast.success("¡Comentario agregado con éxito!");
+  } catch (err) {
+    console.error("Error al crear comentario:", err);
+    toast.error(err.message || "Error al crear el comentario");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   const formatearFecha = (fechaString) => {
     if (!fechaString) return "Fecha desconocida";
 
