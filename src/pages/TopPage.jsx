@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import {
   Star,
   Map,
@@ -20,6 +24,13 @@ import { obtenerEstablecimientosAprobados } from "../api/establecimientos";
 import { obtenerCategorias } from "../api/categorias";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+
+// Asegurar que los iconos por defecto de Leaflet se usen correctamente
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 // Componente para centrar el mapa en un marcador seleccionado
 const CenterMapOnMarker = ({ position }) => {
@@ -87,6 +98,8 @@ const COLOR_MAP = {
 
 const TopPage = () => {
   const navigate = useNavigate();
+  const mapRef = useRef(null);
+  const containerRef = useRef(null);
   const [establecimientos, setEstablecimientos] = useState([]);
   const [selectedEstablecimiento, setSelectedEstablecimiento] = useState(null);
   const [mapCenter, setMapCenter] = useState([-12.05, -75.2]);
@@ -131,6 +144,50 @@ const TopPage = () => {
 
     fetchEstablecimientos();
   }, []);
+
+  // Invalidar tamaño del mapa cuando cambie el centro o la selección
+  useEffect(() => {
+    const mapa = mapRef.current;
+    if (!mapa) return;
+
+    // Force an initial invalidate after a small delay (layout/animations)
+    const t = setTimeout(() => {
+      try {
+        mapa.invalidateSize();
+      } catch (e) {
+        // noop
+      }
+    }, 200);
+
+    // Use ResizeObserver on the container to detect layout changes reliably
+    let ro;
+    const el = containerRef.current;
+    if (typeof ResizeObserver !== "undefined" && el) {
+      ro = new ResizeObserver(() => {
+        try {
+          mapa.invalidateSize();
+        } catch (e) {
+          // noop
+        }
+      });
+      ro.observe(el);
+    }
+
+    const handleResize = () => {
+      try {
+        mapa.invalidateSize();
+      } catch (e) {
+        // noop
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("resize", handleResize);
+      if (ro && el) ro.unobserve(el);
+    };
+  }, [mapCenter, selectedEstablecimiento]);
 
   const handleEstablecimientoClick = useCallback((establecimiento) => {
     setSelectedEstablecimiento(establecimiento);
@@ -414,14 +471,23 @@ const TopPage = () => {
         {/* Mapa responsivo */}
         <div className="w-full lg:w-1/3">
           <div className="sticky top-4">
-            <div className="h-64 sm:h-80 lg:h-96 xl:h-[32rem] rounded-2xl overflow-hidden shadow-xl border border-gray-200 relative bg-white">
-              <MapContainer
+            <div ref={containerRef} className="h-64 sm:h-80 lg:h-96 xl:h-[32rem] rounded-2xl overflow-hidden shadow-xl border border-gray-200 relative bg-white">
+                <MapContainer
                 center={mapCenter}
                 zoom={13}
+                style={{ width: "100%", height: "100%" }}
                 className="w-full h-full z-0"
                 zoomControl={false}
-                whenReady={(map) => {
-                  setTimeout(() => map.target.invalidateSize(), 100);
+                whenCreated={(m) => {
+                  // guardar referencia al mapa Leaflet y forzar redraw
+                  mapRef.current = m;
+                  setTimeout(() => {
+                    try {
+                      m.invalidateSize();
+                    } catch (e) {
+                      // noop
+                    }
+                  }, 150);
                 }}
               >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -431,12 +497,23 @@ const TopPage = () => {
                   const lon = establecimiento.ubicacion?.[0]?.coordenadas?.longitud;
                   if (lat == null || lon == null) return null;
 
-                  return (
+                    return (
                     <Marker
                       key={establecimiento._id}
                       position={[lat, lon]}
+                      riseOnHover={true}
+                      autoPan={true}
                       eventHandlers={{
-                        click: () => handleEstablecimientoClick(establecimiento),
+                        click: (e) => {
+                          // centrar y seleccionar
+                          handleEstablecimientoClick(establecimiento);
+                          // abrir el popup asociado
+                          try {
+                            e.target.openPopup();
+                          } catch (err) {
+                            // noop
+                          }
+                        },
                       }}
                     >
                       <Popup>
@@ -643,83 +720,87 @@ const MapOverlay = ({ establecimiento, onClose, onViewDetail }) => (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: "100%" }}
     transition={{ type: "spring", damping: 25, stiffness: 200 }}
-    className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm p-3 sm:p-4 rounded-t-lg shadow-2xl border-t border-gray-200"
+    className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm p-3 sm:p-4 rounded-t-lg shadow-2xl border-t border-gray-200 pointer-events-none"
   >
-    <div className="flex justify-between items-start">
-      <h3 className="font-bold text-gray-800 text-sm sm:text-base pr-2">
-        {establecimiento.nombre}
-      </h3>
-      <button 
-        className="text-gray-400 hover:text-gray-600 text-lg sm:text-xl transition-colors p-1" 
-        onClick={onClose}
-      >
-        <X size={18} />
-      </button>
-    </div>
-
-    <div className="flex items-center space-x-4 mt-2">
-      <div className="flex items-center">
-        <RatingStars
-          rating={parseFloat(establecimiento.promedioCalificaciones || "0")}
-          size={14}
-        />
-        <span className="ml-1 text-sm">
-          ({establecimiento.promedioCalificaciones || "0"})
-        </span>
+    {/* Wrapper con pointer-events-auto para que sólo el contenido capture clicks;
+        el resto del overlay permitirá pasar clicks al mapa (markers) */}
+    <div className="pointer-events-auto">
+      <div className="flex justify-between items-start">
+        <h3 className="font-bold text-gray-800 text-sm sm:text-base pr-2">
+          {establecimiento.nombre}
+        </h3>
+        <button 
+          className="text-gray-400 hover:text-gray-600 text-lg sm:text-xl transition-colors p-1" 
+          onClick={onClose}
+        >
+          <X size={18} />
+        </button>
       </div>
 
-      <div className="flex items-center text-rose-500">
-        <Heart size={14} className="fill-rose-500" />
-        <span className="ml-1 text-sm">
-          {establecimiento.likes?.length || 0}
-        </span>
-      </div>
-    </div>
-
-    <p className="text-xs sm:text-sm text-gray-600 mt-2 line-clamp-2">
-      {establecimiento.descripcion}
-    </p>
-
-    <div className="mt-2 sm:mt-3 space-y-1 text-xs sm:text-sm">
-      <div className="flex items-start text-gray-600">
-        <Map size={14} className="mr-2 text-indigo-600 flex-shrink-0 mt-0.5" />
-        <span className="line-clamp-2">
-          {establecimiento.ubicacion?.[0]?.direccion ||
-            "Dirección no disponible"}
-        </span>
-      </div>
-
-      {establecimiento.telefono && (
-        <div className="flex items-center text-gray-600">
-          <Phone size={14} className="mr-2 text-indigo-600" />
-          <span>{establecimiento.telefono}</span>
-        </div>
-      )}
-
-      {establecimiento.horario && establecimiento.horario.length > 0 && (
-        <div className="flex items-center text-gray-600">
-          <Clock size={14} className="mr-2 text-indigo-600" />
-          <span className="text-xs">
-            {establecimiento.horario[0].dia}:{" "}
-            {establecimiento.horario[0].entrada} -{" "}
-            {establecimiento.horario[0].salida}
+      <div className="flex items-center space-x-4 mt-2">
+        <div className="flex items-center">
+          <RatingStars
+            rating={parseFloat(establecimiento.promedioCalificaciones || "0")}
+            size={14}
+          />
+          <span className="ml-1 text-sm">
+            ({establecimiento.promedioCalificaciones || "0"})
           </span>
         </div>
-      )}
-    </div>
 
-    <div className="mt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-      <span className="text-xs text-gray-500">
-        {establecimiento.comentarios?.length || 0} comentarios
-      </span>
+        <div className="flex items-center text-rose-500">
+          <Heart size={14} className="fill-rose-500" />
+          <span className="ml-1 text-sm">
+            {establecimiento.likes?.length || 0}
+          </span>
+        </div>
+      </div>
 
-      <button
-        className="text-indigo-600 text-sm font-medium flex items-center hover:text-indigo-800 transition-colors duration-200 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-full"
-        onClick={onViewDetail}
-      >
-        Ver perfil completo
-        <ExternalLink size={12} className="ml-1" />
-      </button>
+      <p className="text-xs sm:text-sm text-gray-600 mt-2 line-clamp-2">
+        {establecimiento.descripcion}
+      </p>
+
+      <div className="mt-2 sm:mt-3 space-y-1 text-xs sm:text-sm">
+        <div className="flex items-start text-gray-600">
+          <Map size={14} className="mr-2 text-indigo-600 flex-shrink-0 mt-0.5" />
+          <span className="line-clamp-2">
+            {establecimiento.ubicacion?.[0]?.direccion ||
+              "Dirección no disponible"}
+          </span>
+        </div>
+
+        {establecimiento.telefono && (
+          <div className="flex items-center text-gray-600">
+            <Phone size={14} className="mr-2 text-indigo-600" />
+            <span>{establecimiento.telefono}</span>
+          </div>
+        )}
+
+        {establecimiento.horario && establecimiento.horario.length > 0 && (
+          <div className="flex items-center text-gray-600">
+            <Clock size={14} className="mr-2 text-indigo-600" />
+            <span className="text-xs">
+              {establecimiento.horario[0].dia}:{" "}
+              {establecimiento.horario[0].entrada} -{" "}
+              {establecimiento.horario[0].salida}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <span className="text-xs text-gray-500">
+          {establecimiento.comentarios?.length || 0} comentarios
+        </span>
+
+        <button
+          className="text-indigo-600 text-sm font-medium flex items-center hover:text-indigo-800 transition-colors duration-200 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-full"
+          onClick={onViewDetail}
+        >
+          Ver perfil completo
+          <ExternalLink size={12} className="ml-1" />
+        </button>
+      </div>
     </div>
   </motion.div>
 );

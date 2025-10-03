@@ -15,6 +15,7 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import { SiTiktok } from 'react-icons/si';
+import toast from "react-hot-toast";
 import { MdOutlineVerified } from "react-icons/md";
 import { IoMdSend } from "react-icons/io";
 import { MdComment, MdOutlineLocalOffer } from "react-icons/md";
@@ -275,8 +276,10 @@ export default function EstablecimientoDetallePage() {
 
   // Función para manejar likes
   const handleLike = async () => {
+
+
     if (!isAuthenticated) {
-      alert("Debes iniciar sesión para dar like");
+      toast.error("Debes iniciar sesión para dar like");
       return;
     }
 
@@ -322,10 +325,9 @@ export default function EstablecimientoDetallePage() {
   // Función para manejar seguimiento
   const handleFollow = async () => {
     if (!isAuthenticated) {
-      alert("Debes iniciar sesión para seguir este establecimiento");
+      toast.error("Debes iniciar sesión para seguir este establecimiento");
       return;
     }
-
     try {
       const establecimientoId = establecimiento._id;
 
@@ -579,9 +581,10 @@ export default function EstablecimientoDetallePage() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        Cargando...
-      </div>
+     <div className="flex justify-center items-center h-screen">
+  <div className="w-16 h-16 bg-green-500 rounded-full animate-ping"></div>
+</div>
+
     );
   if (error)
     return (
@@ -731,7 +734,20 @@ export default function EstablecimientoDetallePage() {
               <h1 className="text-2xl md:text-3xl font-bold text-[#254A5D] flex items-center gap-2">
                 {establecimiento.nombre}
                 {establecimiento.verificado && (
-                  <MdOutlineVerified className="text-green-500" />
+                  <div className="relative group flex items-center">
+                    <MdOutlineVerified className="text-green-500 cursor-pointer" />
+                    {/* Tooltip */}
+                    <span className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 
+                       opacity-0 group-hover:opacity-100 
+                       bg-white text-black text-sm font-medium 
+                       px-3 py-1 rounded-md shadow-lg 
+                       transition-opacity duration-200 whitespace-nowrap">
+                      Establecimiento verificado
+                      {/* Flecha */}
+                      <span className="absolute top-full left-1/2 -translate-x-1/2 
+                         w-2 h-2 bg-white rotate-45 shadow-md"></span>
+                    </span>
+                  </div>
                 )}
               </h1>
               <p className="text-[#337179] mb-2">

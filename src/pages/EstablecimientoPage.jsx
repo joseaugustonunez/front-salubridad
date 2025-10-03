@@ -24,7 +24,7 @@ import {
   buscarEstablecimientosPorNombre,
 } from "../api/establecimientos";
 import { obtenerCategorias } from "../api/categorias";
-
+import toast from "react-hot-toast";
 export default function EstablecimientoPage() {
   const navigate = useNavigate();
   const [establecimientos, setEstablecimientos] = useState([]);
@@ -161,9 +161,9 @@ export default function EstablecimientoPage() {
     e.stopPropagation();
 
     // Verificar si el usuario está autenticado
-    if (!isAuthenticated) {
-      alert("Debes iniciar sesión para seguir establecimientos");
-      navigate("/login"); // Redirigir al login
+   if (!isAuthenticated) {
+      toast.error("Debes iniciar sesión para seguir establecimientos");
+      navigate("/login"); 
       return;
     }
 
@@ -201,7 +201,7 @@ export default function EstablecimientoPage() {
         }));
       }
 
-      alert("Hubo un error al actualizar el seguimiento. Inténtalo de nuevo.");
+      toast.error("Hubo un error al actualizar el seguimiento. Inténtalo de nuevo.");
     }
   };
 
@@ -210,11 +210,11 @@ export default function EstablecimientoPage() {
     e.stopPropagation();
 
     // Verificar si el usuario está autenticado
-    if (!isAuthenticated) {
-      alert("Debes iniciar sesión para dar like a establecimientos");
-      navigate("/login"); // Redirigir al login
-      return;
-    }
+   if (!isAuthenticated) {
+  toast.error("Debes iniciar sesión para dar like a establecimientos");
+  navigate("/login"); // Redirigir al login
+  return;
+}
 
     try {
       if (likesDados.includes(id)) {
@@ -250,7 +250,7 @@ export default function EstablecimientoPage() {
         }));
       }
 
-      alert("Hubo un error al actualizar el like. Inténtalo de nuevo.");
+      toast.error("Hubo un error al actualizar el like. Inténtalo de nuevo.");
     }
   };
 

@@ -51,9 +51,9 @@ function AppWrapper() {
         <Route
           path="/establecimientos"
           element={
-            <PrivateRoute>
+            
               <EstablecimientoPage />
-            </PrivateRoute>
+            
           }
         />
         <Route
@@ -83,9 +83,7 @@ function AppWrapper() {
         <Route
           path="/establecimientodetalle/:id"
           element={
-            <PrivateRoute>
               <EstablecimientoDetallePage />
-            </PrivateRoute>
           }
         />
         <Route
@@ -116,9 +114,7 @@ function AppWrapper() {
         <Route
           path="/top"
           element={
-            <PrivateRoute>
               <TopEstablecimientos />
-            </PrivateRoute>
           }
         />
       </Routes>
