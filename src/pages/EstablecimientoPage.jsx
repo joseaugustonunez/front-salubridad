@@ -161,9 +161,9 @@ export default function EstablecimientoPage() {
     e.stopPropagation();
 
     // Verificar si el usuario está autenticado
-   if (!isAuthenticated) {
+    if (!isAuthenticated) {
       toast.error("Debes iniciar sesión para seguir establecimientos");
-      navigate("/login"); 
+      navigate("/login");
       return;
     }
 
@@ -201,7 +201,9 @@ export default function EstablecimientoPage() {
         }));
       }
 
-      toast.error("Hubo un error al actualizar el seguimiento. Inténtalo de nuevo.");
+      toast.error(
+        "Hubo un error al actualizar el seguimiento. Inténtalo de nuevo."
+      );
     }
   };
 
@@ -210,11 +212,11 @@ export default function EstablecimientoPage() {
     e.stopPropagation();
 
     // Verificar si el usuario está autenticado
-   if (!isAuthenticated) {
-  toast.error("Debes iniciar sesión para dar like a establecimientos");
-  navigate("/login"); // Redirigir al login
-  return;
-}
+    if (!isAuthenticated) {
+      toast.error("Debes iniciar sesión para dar like a establecimientos");
+      navigate("/login"); // Redirigir al login
+      return;
+    }
 
     try {
       if (likesDados.includes(id)) {

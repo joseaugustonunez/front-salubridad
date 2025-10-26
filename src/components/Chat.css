@@ -1,0 +1,31 @@
+/* Halo luminoso elegante con colores de la paleta */
+@keyframes glow-palette {
+  0%,
+  100% {
+    box-shadow: 0 0 8px #49c581, 0 0 16px #337179, 0 0 24px #37a6ca;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 16px #49c581, 0 0 32px #337179, 0 0 48px #37a6ca;
+    transform: scale(1.05);
+  }
+}
+
+.animate-glow-palette {
+  animation: glow-palette 2.5s ease-in-out infinite;
+}
+
+/* Pulso suave del botón */
+@keyframes pulse-slow {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2.5s ease-in-out infinite;
+}

@@ -1,39 +1,59 @@
-import { useState, useEffect } from 'react';
-import { obtenerUsuarios } from '../../api/usuario';
-import { obtenerEstablecimientos } from '../../api/establecimientos';
-import { Search, Edit, Check, X, Building, UserPlus, RefreshCcw } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { obtenerUsuarios } from "../../api/usuario";
+import { obtenerEstablecimientos } from "../../api/establecimientos";
+import {
+  Search,
+  Edit,
+  Check,
+  X,
+  Building,
+  UserPlus,
+  RefreshCcw,
+} from "lucide-react";
 import { motion } from "framer-motion";
+import { actualizarRolUsuario, actualizarUsuario } from "../../api/usuario";
 // Colores del tema
 const colors = {
   primary: "#49C581",
   secondary: "#337179",
   dark: "#254A5D",
   accent: "#F8485E",
-  info: "#37a6ca"
+  info: "#37a6ca",
 };
 
-// Simulación de API para cambiar roles y asignar establecimientos
+// Llamadas al backend para cambiar rol y asignar establecimiento
 const cambiarRol = async (userId, nuevoRol) => {
-  // En producción, aquí iría la llamada a la API real
-  console.log(`Cambiando rol del usuario ${userId} a ${nuevoRol}`);
-  return { success: true };
+  try {
+    await actualizarRolUsuario(userId, nuevoRol);
+    return { success: true };
+  } catch (err) {
+    console.error("Error actualizar rol:", err);
+    return { success: false, error: err };
+  }
 };
 
 const asignarEstablecimiento = async (userId, establecimientoId) => {
-  // En producción, aquí iría la llamada a la API real
-  console.log(`Asignando establecimiento ${establecimientoId} al usuario ${userId}`);
-  return { success: true };
+  try {
+    // Reutilizamos la ruta de actualización de usuario para setear establecimientosCreados
+    await actualizarUsuario(userId, {
+      establecimientosCreados: [establecimientoId],
+    });
+    return { success: true };
+  } catch (err) {
+    console.error("Error asignar establecimiento:", err);
+    return { success: false, error: err };
+  }
 };
 
 export default function AdminUsuariosView() {
   const [usuarios, setUsuarios] = useState([]);
   const [establecimientos, setEstablecimientos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [editingUser, setEditingUser] = useState(null);
-  const [selectedRole, setSelectedRole] = useState('');
-  const [selectedEstablecimiento, setSelectedEstablecimiento] = useState('');
-  const [mensaje, setMensaje] = useState({ texto: '', tipo: '' });
+  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedEstablecimiento, setSelectedEstablecimiento] = useState("");
+  const [mensaje, setMensaje] = useState({ texto: "", tipo: "" });
 
   // Cargar usuarios y establecimientos
   useEffect(() => {
@@ -42,25 +62,27 @@ export default function AdminUsuariosView() {
         setLoading(true);
         const datosUsuarios = await obtenerUsuarios();
         const datosEstablecimientos = await obtenerEstablecimientos();
-      
+
         // Mapear los datos para adaptarlos al formato esperado
-        const usuariosAdaptados = datosUsuarios.map(usuario => ({
+        const usuariosAdaptados = datosUsuarios.map((usuario) => ({
           id: usuario._id,
           email: usuario.email,
           nombreUsuario: usuario.nombreUsuario,
           rol: usuario.rol,
-          establecimientosCreados: usuario.establecimientosCreados || []
+          establecimientosCreados: usuario.establecimientosCreados || [],
         }));
-        
+
         // Asegurarse de que todos los establecimientos tengan id o _id
-        const establecimientosNormalizados = datosEstablecimientos.map(est => {
-          // Si el establecimiento no tiene id, pero tiene _id, usamos _id como id
-          if (!est.id && est._id) {
-            return { ...est, id: est._id };
+        const establecimientosNormalizados = datosEstablecimientos.map(
+          (est) => {
+            // Si el establecimiento no tiene id, pero tiene _id, usamos _id como id
+            if (!est.id && est._id) {
+              return { ...est, id: est._id };
+            }
+            return est;
           }
-          return est;
-        });
-        
+        );
+
         setUsuarios(usuariosAdaptados);
         setEstablecimientos(establecimientosNormalizados);
       } catch (error) {
@@ -70,32 +92,33 @@ export default function AdminUsuariosView() {
         setLoading(false);
       }
     };
-    
+
     cargarDatos();
   }, []);
 
   // Filtrar usuarios según término de búsqueda
-  const usuariosFiltrados = usuarios.filter(usuario => 
-    usuario.nombreUsuario?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    usuario.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    usuario.rol?.toLowerCase().includes(searchTerm.toLowerCase())
+  const usuariosFiltrados = usuarios.filter(
+    (usuario) =>
+      usuario.nombreUsuario?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usuario.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usuario.rol?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const mostrarMensaje = (texto, tipo) => {
     setMensaje({ texto, tipo });
-    setTimeout(() => setMensaje({ texto: '', tipo: '' }), 3000);
+    setTimeout(() => setMensaje({ texto: "", tipo: "" }), 3000);
   };
 
   const handleEditClick = (usuario) => {
     setEditingUser(usuario);
-    setSelectedRole(usuario.rol || '');
-    setSelectedEstablecimiento(usuario.establecimientosCreados?.[0] || '');
+    setSelectedRole(usuario.rol || "");
+    setSelectedEstablecimiento(usuario.establecimientosCreados?.[0] || "");
   };
 
   const handleCancelEdit = () => {
     setEditingUser(null);
-    setSelectedRole('');
-    setSelectedEstablecimiento('');
+    setSelectedRole("");
+    setSelectedEstablecimiento("");
   };
 
   const handleSaveChanges = async () => {
@@ -104,31 +127,39 @@ export default function AdminUsuariosView() {
         const resultRol = await cambiarRol(editingUser.id, selectedRole);
         if (resultRol.success) {
           // Actualizar el rol en el estado local
-          setUsuarios(prevUsuarios => 
-            prevUsuarios.map(u => 
-              u.id === editingUser.id ? {...u, rol: selectedRole} : u
+          setUsuarios((prevUsuarios) =>
+            prevUsuarios.map((u) =>
+              u.id === editingUser.id ? { ...u, rol: selectedRole } : u
             )
           );
         }
       }
-      
-      const currentEstabId = editingUser.establecimientosCreados?.[0] || '';
-      
-      if (selectedEstablecimiento && selectedEstablecimiento !== currentEstabId) {
-        const resultEstab = await asignarEstablecimiento(editingUser.id, selectedEstablecimiento);
+
+      const currentEstabId = editingUser.establecimientosCreados?.[0] || "";
+
+      if (
+        selectedEstablecimiento &&
+        selectedEstablecimiento !== currentEstabId
+      ) {
+        const resultEstab = await asignarEstablecimiento(
+          editingUser.id,
+          selectedEstablecimiento
+        );
         if (resultEstab.success) {
           // Actualizar el establecimiento en el estado local
-          setUsuarios(prevUsuarios => 
-            prevUsuarios.map(u => 
-              u.id === editingUser.id ? {
-                ...u, 
-                establecimientosCreados: [selectedEstablecimiento]
-              } : u
+          setUsuarios((prevUsuarios) =>
+            prevUsuarios.map((u) =>
+              u.id === editingUser.id
+                ? {
+                    ...u,
+                    establecimientosCreados: [selectedEstablecimiento],
+                  }
+                : u
             )
           );
         }
       }
-      
+
       mostrarMensaje("Cambios guardados correctamente", "success");
       setEditingUser(null);
     } catch (error) {
@@ -141,16 +172,16 @@ export default function AdminUsuariosView() {
     try {
       setLoading(true);
       const datosUsuarios = await obtenerUsuarios();
-      
+
       // Adaptar datos al recargar
-      const usuariosAdaptados = datosUsuarios.map(usuario => ({
+      const usuariosAdaptados = datosUsuarios.map((usuario) => ({
         id: usuario._id,
         email: usuario.email,
         nombreUsuario: usuario.nombreUsuario,
         rol: usuario.rol,
-        establecimientosCreados: usuario.establecimientosCreados || []
+        establecimientosCreados: usuario.establecimientosCreados || [],
       }));
-      
+
       setUsuarios(usuariosAdaptados);
       mostrarMensaje("Usuarios actualizados correctamente", "success");
     } catch (error) {
@@ -163,22 +194,29 @@ export default function AdminUsuariosView() {
 
   // Obtener el nombre del establecimiento según su ID
   const obtenerNombreEstablecimiento = (establecimientoId) => {
-    if (!establecimientoId) return 'No asignado';
-    
+    if (!establecimientoId) return "No asignado";
+
     // Primero intentamos buscar por ID directo
-    const establecimiento = establecimientos.find(e => {
+    const establecimiento = establecimientos.find((e) => {
       // Manejar posibles formatos diferentes de ID
       const eId = e.id || e._id;
       const estId = establecimientoId.toString();
-      
+
       return eId && eId.toString() === estId;
     });
-    
-    return establecimiento ? establecimiento.nombre : 'Establecimiento desconocido';
+
+    return establecimiento
+      ? establecimiento.nombre
+      : "Establecimiento desconocido";
   };
 
-  // Opciones de rol para el select
-  const opcionesRol = ["admin", "gerente", "empleado", "usuario", "cliente"];
+  // Opciones de rol permitidas (solo 3)
+  const opcionesRol = ["admin", "vendedor", "usuario"];
+  const rolLabels = {
+    admin: "Administrador",
+    vendedor: "Vendedor",
+    usuario: "Usuario",
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 ">
@@ -196,7 +234,8 @@ export default function AdminUsuariosView() {
             transition={{ duration: 0.5 }}
             className="text-4xl md:text-5xl font-bold text-white mb-4 text-center"
           >
-            Administración de <span style={{ color: colors.primary }}>Usuarios</span>
+            Administración de{" "}
+            <span style={{ color: colors.primary }}>Usuarios</span>
           </motion.h1>
 
           <motion.p
@@ -219,11 +258,13 @@ export default function AdminUsuariosView() {
         <div className="max-w-7xl mx-auto">
           {/* Mensaje de notificación */}
           {mensaje.texto && (
-            <div 
+            <div
               className={`mb-4 p-3 rounded-md ${
-                mensaje.tipo === 'success' ? 'bg-green-100 text-green-800' : 
-                mensaje.tipo === 'error' ? 'bg-red-100 text-red-800' : 
-                'bg-blue-100 text-blue-800'
+                mensaje.tipo === "success"
+                  ? "bg-green-100 text-green-800"
+                  : mensaje.tipo === "error"
+                  ? "bg-red-100 text-red-800"
+                  : "bg-blue-100 text-blue-800"
               }`}
             >
               {mensaje.texto}
@@ -255,7 +296,7 @@ export default function AdminUsuariosView() {
               disabled={loading}
             >
               <RefreshCcw className="h-5 w-5" />
-              <span>{loading ? 'Cargando...' : 'Actualizar lista'}</span>
+              <span>{loading ? "Cargando..." : "Actualizar lista"}</span>
             </button>
           </div>
 
@@ -285,13 +326,19 @@ export default function AdminUsuariosView() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {loading ? (
                     <tr>
-                      <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
+                      <td
+                        colSpan="5"
+                        className="px-6 py-4 text-center text-sm text-gray-500"
+                      >
                         Cargando usuarios...
                       </td>
                     </tr>
                   ) : usuariosFiltrados.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
+                      <td
+                        colSpan="5"
+                        className="px-6 py-4 text-center text-sm text-gray-500"
+                      >
                         No se encontraron usuarios
                       </td>
                     </tr>
@@ -302,18 +349,20 @@ export default function AdminUsuariosView() {
                           <div className="flex items-center">
                             <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
                               <span className="text-lg font-medium text-gray-600">
-                                {usuario.nombreUsuario?.charAt(0).toUpperCase() || '?'}
+                                {usuario.nombreUsuario
+                                  ?.charAt(0)
+                                  .toUpperCase() || "?"}
                               </span>
                             </div>
                             <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">
-                                {usuario.nombreUsuario || 'Sin nombre'}
+                                {usuario.nombreUsuario || "Sin nombre"}
                               </div>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {usuario.email || 'No disponible'}
+                          {usuario.email || "No disponible"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {editingUser && editingUser.id === usuario.id ? (
@@ -324,20 +373,25 @@ export default function AdminUsuariosView() {
                               style={{ focusRingColor: colors.primary }}
                             >
                               <option value="">Seleccionar rol</option>
-                              {opcionesRol.map(rol => (
+                              {opcionesRol.map((rol) => (
                                 <option key={rol} value={rol}>
-                                  {rol.charAt(0).toUpperCase() + rol.slice(1)}
+                                  {rolLabels[rol] || rol}
                                 </option>
                               ))}
                             </select>
                           ) : (
-                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                              ${usuario.rol === 'admin' ? 'bg-purple-100 text-purple-800' : 
-                                usuario.rol === 'gerente' ? 'bg-blue-100 text-blue-800' : 
-                                usuario.rol === 'empleado' ? 'bg-green-100 text-green-800' : 
-                                usuario.rol === 'usuario' ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-gray-100 text-gray-800'}`}>
-                              {usuario.rol || 'No asignado'}
+                            <span
+                              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                usuario.rol === "admin"
+                                  ? "bg-purple-100 text-purple-800"
+                                  : usuario.rol === "vendedor"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {rolLabels[usuario.rol] ||
+                                usuario.rol ||
+                                "No asignado"}
                             </span>
                           )}
                         </td>
@@ -345,28 +399,39 @@ export default function AdminUsuariosView() {
                           {editingUser && editingUser.id === usuario.id ? (
                             <select
                               value={selectedEstablecimiento}
-                              onChange={(e) => setSelectedEstablecimiento(e.target.value)}
+                              onChange={(e) =>
+                                setSelectedEstablecimiento(e.target.value)
+                              }
                               className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:text-sm"
                               style={{ focusRingColor: colors.primary }}
                             >
                               <option value="">Sin establecimiento</option>
-                              {establecimientos.map(est => (
-                                <option key={est.id || est._id} value={est.id || est._id}>
+                              {establecimientos.map((est) => (
+                                <option
+                                  key={est.id || est._id}
+                                  value={est.id || est._id}
+                                >
                                   {est.nombre}
                                 </option>
                               ))}
                             </select>
                           ) : (
                             <div className="flex items-center">
-                              {usuario.establecimientosCreados && usuario.establecimientosCreados.length > 0 ? (
+                              {usuario.establecimientosCreados &&
+                              usuario.establecimientosCreados.length > 0 ? (
                                 <>
-                                  <Building className="h-4 w-4 mr-1" style={{ color: colors.info }} />
+                                  <Building
+                                    className="h-4 w-4 mr-1"
+                                    style={{ color: colors.info }}
+                                  />
                                   <span>
-                                    {obtenerNombreEstablecimiento(usuario.establecimientosCreados[0])}
+                                    {obtenerNombreEstablecimiento(
+                                      usuario.establecimientosCreados[0]
+                                    )}
                                   </span>
                                 </>
                               ) : (
-                                'No asignado'
+                                "No asignado"
                               )}
                             </div>
                           )}

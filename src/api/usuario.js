@@ -125,6 +125,27 @@ export const actualizarUsuario = async (id, data) => {
   }
 };
 
+// Actualizar rol de un usuario
+export const actualizarRolUsuario = async (id, role) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.patch(
+      `${API_URL}/${id}/role`,
+      { role },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar rol:", error);
+    throw error;
+  }
+};
+
 // Eliminar un usuario
 export const eliminarUsuario = async (id) => {
   try {

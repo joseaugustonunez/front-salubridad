@@ -14,7 +14,7 @@ import {
   FaYoutube,
   FaLinkedin,
 } from "react-icons/fa";
-import { SiTiktok } from 'react-icons/si';
+import { SiTiktok } from "react-icons/si";
 import toast from "react-hot-toast"; // <-- conservar ESTA import
 import { MdOutlineVerified } from "react-icons/md";
 import { IoMdSend } from "react-icons/io";
@@ -68,8 +68,8 @@ const Button = ({ children, primary, secondary, onClick, className = "" }) => {
   const colorClasses = primary
     ? "bg-[#49C581] hover:bg-opacity-90 text-white"
     : secondary
-      ? "bg-[#337179] hover:bg-opacity-90 text-white"
-      : "bg-gray-100 hover:bg-gray-200 text-[#254A5D]";
+    ? "bg-[#337179] hover:bg-opacity-90 text-white"
+    : "bg-gray-100 hover:bg-gray-200 text-[#254A5D]";
 
   return (
     <button
@@ -134,8 +134,9 @@ const Schedule = ({ days }) => (
       {days.map((day) => (
         <div key={day.name} className="flex justify-between text-sm">
           <span
-            className={`font-medium ${day.isToday ? "text-[#49C581]" : "text-[#254A5D]"
-              }`}
+            className={`font-medium ${
+              day.isToday ? "text-[#49C581]" : "text-[#254A5D]"
+            }`}
           >
             {day.name}
           </span>
@@ -182,7 +183,7 @@ export default function EstablecimientoDetallePage() {
         const data = await obtenerPromocionesPorEstablecimiento(id);
         setPromociones(data);
       } catch (err) {
-        setError('Error al cargar las promociones');
+        setError("Error al cargar las promociones");
         console.error(err);
       } finally {
         setLoading(false);
@@ -202,11 +203,11 @@ export default function EstablecimientoDetallePage() {
   // Función para generar un color de gradiente aleatorio pero consistente para cada promoción
   const getGradientColors = (index) => {
     const gradients = [
-      'from-[#F8485E] to-[#337179]',
-      'from-[#49C581] to-[#337179]',
-      'from-[#8A63FF] to-[#337179]',
-      'from-[#FFBA63] to-[#337179]',
-      'from-[#63B9FF] to-[#337179]',
+      "from-[#F8485E] to-[#337179]",
+      "from-[#49C581] to-[#337179]",
+      "from-[#8A63FF] to-[#337179]",
+      "from-[#FFBA63] to-[#337179]",
+      "from-[#63B9FF] to-[#337179]",
     ];
     return gradients[index % gradients.length];
   };
@@ -276,52 +277,50 @@ export default function EstablecimientoDetallePage() {
   }, [id, userId]);
 
   const handleLike = async () => {
-
-
     if (!isAuthenticated) {
       toast.error("Debes iniciar sesión para dar like");
       return;
     }
 
-  try {
-    const establecimientoId = establecimiento._id;
+    try {
+      const establecimientoId = establecimiento._id;
 
-    if (liked) {
-      // Quitar like
-      await quitarLikeEstablecimiento(establecimientoId);
+      if (liked) {
+        // Quitar like
+        await quitarLikeEstablecimiento(establecimientoId);
 
-      setLikes((prev) => ({
-        ...prev,
-        [establecimientoId]: Math.max(0, (prev[establecimientoId] || 0) - 1),
-      }));
-      setEstablecimiento((prev) => ({
-        ...prev,
-        likes: prev.likes.filter((id) => id !== userId),
-      }));
+        setLikes((prev) => ({
+          ...prev,
+          [establecimientoId]: Math.max(0, (prev[establecimientoId] || 0) - 1),
+        }));
+        setEstablecimiento((prev) => ({
+          ...prev,
+          likes: prev.likes.filter((id) => id !== userId),
+        }));
 
-      toast("Quitaste tu like 👍"); // neutral
-    } else {
-      // Dar like
-      await likeEstablecimiento(establecimientoId);
+        toast("Quitaste tu like 👍"); // neutral
+      } else {
+        // Dar like
+        await likeEstablecimiento(establecimientoId);
 
-      setLikes((prev) => ({
-        ...prev,
-        [establecimientoId]: (prev[establecimientoId] || 0) + 1,
-      }));
-      setEstablecimiento((prev) => ({
-        ...prev,
-        likes: [...(prev.likes || []), userId],
-      }));
+        setLikes((prev) => ({
+          ...prev,
+          [establecimientoId]: (prev[establecimientoId] || 0) + 1,
+        }));
+        setEstablecimiento((prev) => ({
+          ...prev,
+          likes: [...(prev.likes || []), userId],
+        }));
 
-      toast.success("¡Te gustó este establecimiento! ❤️");
+        toast.success("¡Te gustó este establecimiento! ❤️");
+      }
+
+      setLiked(!liked);
+    } catch (error) {
+      console.error("Error al gestionar like:", error);
+      toast.error("Hubo un problema al procesar tu solicitud");
     }
-
-    setLiked(!liked);
-  } catch (error) {
-    console.error("Error al gestionar like:", error);
-    toast.error("Hubo un problema al procesar tu solicitud");
-  }
-};
+  };
   const handleFollow = async () => {
     if (!isAuthenticated) {
       toast.error("Debes iniciar sesión para seguir este establecimiento");
@@ -330,40 +329,40 @@ export default function EstablecimientoDetallePage() {
     try {
       const establecimientoId = establecimiento._id;
 
-    if (followed) {
-      await dejarDeSeguirEstablecimiento(establecimientoId);
+      if (followed) {
+        await dejarDeSeguirEstablecimiento(establecimientoId);
 
-      setSeguidores((prev) => ({
-        ...prev,
-        [establecimientoId]: Math.max(0, (prev[establecimientoId] || 0) - 1),
-      }));
-      setEstablecimiento((prev) => ({
-        ...prev,
-        seguidores: prev.seguidores.filter((id) => id !== userId),
-      }));
+        setSeguidores((prev) => ({
+          ...prev,
+          [establecimientoId]: Math.max(0, (prev[establecimientoId] || 0) - 1),
+        }));
+        setEstablecimiento((prev) => ({
+          ...prev,
+          seguidores: prev.seguidores.filter((id) => id !== userId),
+        }));
 
-      toast("Has dejado de seguir este establecimiento 👋");
-    } else {
-      await seguirEstablecimiento(establecimientoId);
+        toast("Has dejado de seguir este establecimiento 👋");
+      } else {
+        await seguirEstablecimiento(establecimientoId);
 
-      setSeguidores((prev) => ({
-        ...prev,
-        [establecimientoId]: (prev[establecimientoId] || 0) + 1,
-      }));
-      setEstablecimiento((prev) => ({
-        ...prev,
-        seguidores: [...(prev.seguidores || []), userId],
-      }));
+        setSeguidores((prev) => ({
+          ...prev,
+          [establecimientoId]: (prev[establecimientoId] || 0) + 1,
+        }));
+        setEstablecimiento((prev) => ({
+          ...prev,
+          seguidores: [...(prev.seguidores || []), userId],
+        }));
 
-      toast.success("Ahora sigues este establecimiento 🎉");
+        toast.success("Ahora sigues este establecimiento 🎉");
+      }
+
+      setFollowed(!followed);
+    } catch (error) {
+      console.error("Error al gestionar seguimiento:", error);
+      toast.error("Hubo un problema al procesar tu solicitud");
     }
-
-    setFollowed(!followed);
-  } catch (error) {
-    console.error("Error al gestionar seguimiento:", error);
-    toast.error("Hubo un problema al procesar tu solicitud");
-  }
-};
+  };
   // Función para abrir el modal con la imagen seleccionada
   const openModal = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -374,98 +373,98 @@ export default function EstablecimientoDetallePage() {
     setSelectedImage(null);
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (newRating === 0) {
-    toast.error("Por favor, selecciona una calificación");
-    return;
-  }
-
-  if (!mensaje.trim()) {
-    toast.error("Por favor, escribe un comentario");
-    return;
-  }
-
-  try {
-    setIsSubmitting(true);
-    setError(null);
-
-    const usuarioString = localStorage.getItem("user");
-    if (!usuarioString) {
-      toast.error("Debes iniciar sesión para comentar");
+    if (newRating === 0) {
+      toast.error("Por favor, selecciona una calificación");
       return;
     }
 
-    const usuarioData = JSON.parse(usuarioString);
-    const usuarioId = usuarioData._id;
+    if (!mensaje.trim()) {
+      toast.error("Por favor, escribe un comentario");
+      return;
+    }
 
-    console.log("ID que intento usar:", id); // Debug opcional
+    try {
+      setIsSubmitting(true);
+      setError(null);
 
-    const nuevoComentario = {
-      usuario: usuarioId,
-      establecimiento: id,
-      comentario: mensaje,
-      calificacion: newRating,
-    };
+      const usuarioString = localStorage.getItem("user");
+      if (!usuarioString) {
+        toast.error("Debes iniciar sesión para comentar");
+        return;
+      }
 
-    const resultado = await crearComentario(nuevoComentario);
-    console.log("Respuesta del servidor:", resultado); // Debug opcional
+      const usuarioData = JSON.parse(usuarioString);
+      const usuarioId = usuarioData._id;
 
-    // Crear objeto de comentario para la UI
-    const comentarioId =
-      resultado && resultado.data && resultado.data._id
-        ? resultado.data._id
-        : `temp-${Date.now()}`;
+      console.log("ID que intento usar:", id); // Debug opcional
 
-    const comentarioParaUI = {
-      _id: comentarioId,
-      usuario: {
-        nombreUsuario: usuarioData.nombreUsuario || "Usuario",
-        _id: usuarioId,
-      },
-      fecha: new Date(),
-      calificacion: newRating,
-      comentario: mensaje,
-      perfil: usuarioData.fotoPerfil || null,
-    };
-
-    // Actualizar estado
-    setEstablecimiento((prevEstado) => {
-      if (!prevEstado) return prevEstado;
-
-      const nuevosComentarios = [
-        comentarioParaUI,
-        ...(prevEstado.comentarios || []),
-      ];
-
-      const totalComentarios = nuevosComentarios.length;
-      const sumaCalificaciones = nuevosComentarios.reduce(
-        (sum, com) => sum + (com.calificacion || 0),
-        0
-      );
-      const nuevoPromedio =
-        totalComentarios > 0 ? sumaCalificaciones / totalComentarios : 0;
-
-      return {
-        ...prevEstado,
-        comentarios: nuevosComentarios,
-        promedioCalificaciones: parseFloat(nuevoPromedio.toFixed(1)),
+      const nuevoComentario = {
+        usuario: usuarioId,
+        establecimiento: id,
+        comentario: mensaje,
+        calificacion: newRating,
       };
-    });
 
-    setMensaje("");
-    setNewRating(0);
-    setShowReviewForm(false);
+      const resultado = await crearComentario(nuevoComentario);
+      console.log("Respuesta del servidor:", resultado); // Debug opcional
 
-    toast.success("¡Comentario agregado con éxito!");
-  } catch (err) {
-    console.error("Error al crear comentario:", err);
-    toast.error(err.message || "Error al crear el comentario");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      // Crear objeto de comentario para la UI
+      const comentarioId =
+        resultado && resultado.data && resultado.data._id
+          ? resultado.data._id
+          : `temp-${Date.now()}`;
+
+      const comentarioParaUI = {
+        _id: comentarioId,
+        usuario: {
+          nombreUsuario: usuarioData.nombreUsuario || "Usuario",
+          _id: usuarioId,
+        },
+        fecha: new Date(),
+        calificacion: newRating,
+        comentario: mensaje,
+        perfil: usuarioData.fotoPerfil || null,
+      };
+
+      // Actualizar estado
+      setEstablecimiento((prevEstado) => {
+        if (!prevEstado) return prevEstado;
+
+        const nuevosComentarios = [
+          comentarioParaUI,
+          ...(prevEstado.comentarios || []),
+        ];
+
+        const totalComentarios = nuevosComentarios.length;
+        const sumaCalificaciones = nuevosComentarios.reduce(
+          (sum, com) => sum + (com.calificacion || 0),
+          0
+        );
+        const nuevoPromedio =
+          totalComentarios > 0 ? sumaCalificaciones / totalComentarios : 0;
+
+        return {
+          ...prevEstado,
+          comentarios: nuevosComentarios,
+          promedioCalificaciones: parseFloat(nuevoPromedio.toFixed(1)),
+        };
+      });
+
+      setMensaje("");
+      setNewRating(0);
+      setShowReviewForm(false);
+
+      toast.success("¡Comentario agregado con éxito!");
+    } catch (err) {
+      console.error("Error al crear comentario:", err);
+      toast.error(err.message || "Error al crear el comentario");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const formatearFecha = (fechaString) => {
     if (!fechaString) return "Fecha desconocida";
 
@@ -488,16 +487,16 @@ const handleSubmit = async (e) => {
 
   const allImages = establecimiento
     ? [
-      // Include both the main image and portada if they exist
-      establecimiento.imagen &&
-      `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`,
-      establecimiento.portada &&
-      `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`,
-      // Include any additional images from the imagenes array
-      ...(establecimiento.imagenes?.map(
-        (img) => `https://back-salubridad.sistemasudh.com/uploads/${img}`
-      ) || []),
-    ].filter(Boolean)
+        // Include both the main image and portada if they exist
+        establecimiento.imagen &&
+          `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.imagen}`,
+        establecimiento.portada &&
+          `https://back-salubridad.sistemasudh.com/uploads/${establecimiento.portada}`,
+        // Include any additional images from the imagenes array
+        ...(establecimiento.imagenes?.map(
+          (img) => `https://back-salubridad.sistemasudh.com/uploads/${img}`
+        ) || []),
+      ].filter(Boolean)
     : []; // Remove any undefined/null values
 
   const diasTransformados =
@@ -580,10 +579,9 @@ const handleSubmit = async (e) => {
 
   if (loading)
     return (
-     <div className="flex justify-center items-center h-screen">
-  <div className="w-16 h-16 bg-green-500 rounded-full animate-ping"></div>
-</div>
-
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-16 h-16 bg-green-500 rounded-full animate-ping"></div>
+      </div>
     );
   if (error)
     return (
@@ -702,10 +700,11 @@ const handleSubmit = async (e) => {
               {establecimiento.imagenes.map((_, i) => (
                 <button
                   key={i}
-                  className={`w-2 h-2 rounded-full ${i === currentImageIndex
-                    ? "bg-white"
-                    : "bg-white bg-opacity-50"
-                    }`}
+                  className={`w-2 h-2 rounded-full ${
+                    i === currentImageIndex
+                      ? "bg-white"
+                      : "bg-white bg-opacity-50"
+                  }`}
                   onClick={() => setCurrentImageIndex(i)}
                 ></button>
               ))}
@@ -726,8 +725,6 @@ const handleSubmit = async (e) => {
                     establecimiento.categoria[0]?.nombre) ||
                     "Sin categoría"}
                 </Badge>
-
-                <Badge className="bg-gray-100 text-gray-600">$$</Badge>
               </div>
 
               <h1 className="text-2xl md:text-3xl font-bold text-[#254A5D] flex items-center gap-2">
@@ -736,15 +733,19 @@ const handleSubmit = async (e) => {
                   <div className="relative group flex items-center">
                     <MdOutlineVerified className="text-green-500 cursor-pointer" />
                     {/* Tooltip */}
-                    <span className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 
+                    <span
+                      className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 
                        opacity-0 group-hover:opacity-100 
                        bg-white text-black text-sm font-medium 
                        px-3 py-1 rounded-md shadow-lg 
-                       transition-opacity duration-200 whitespace-nowrap">
+                       transition-opacity duration-200 whitespace-nowrap"
+                    >
                       Establecimiento verificado
                       {/* Flecha */}
-                      <span className="absolute top-full left-1/2 -translate-x-1/2 
-                         w-2 h-2 bg-white rotate-45 shadow-md"></span>
+                      <span
+                        className="absolute top-full left-1/2 -translate-x-1/2 
+                         w-2 h-2 bg-white rotate-45 shadow-md"
+                      ></span>
                     </span>
                   </div>
                 )}
@@ -801,8 +802,9 @@ const handleSubmit = async (e) => {
               <div className="flex gap-2">
                 <Button
                   onClick={handleLike}
-                  className={`group ${liked ? "bg-red-50 hover:bg-red-100" : ""
-                    }`}
+                  className={`group ${
+                    liked ? "bg-red-50 hover:bg-red-100" : ""
+                  }`}
                 >
                   {liked ? (
                     <FaHeart className="text-[#F8485E]" />
@@ -852,37 +854,41 @@ const handleSubmit = async (e) => {
         <div className="mb-6 border-b border-gray-200">
           <div className="flex overflow-x-auto">
             <button
-              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "info"
-                ? "text-[#49C581] border-b-2 border-[#49C581]"
-                : "text-gray-500 hover:text-[#337179]"
-                }`}
+              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${
+                activeTab === "info"
+                  ? "text-[#49C581] border-b-2 border-[#49C581]"
+                  : "text-gray-500 hover:text-[#337179]"
+              }`}
               onClick={() => setActiveTab("info")}
             >
               Información
             </button>
             <button
-              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "photos"
-                ? "text-[#49C581] border-b-2 border-[#49C581]"
-                : "text-gray-500 hover:text-[#337179]"
-                }`}
+              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${
+                activeTab === "photos"
+                  ? "text-[#49C581] border-b-2 border-[#49C581]"
+                  : "text-gray-500 hover:text-[#337179]"
+              }`}
               onClick={() => setActiveTab("photos")}
             >
               Fotos
             </button>
             <button
-              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "reviews"
-                ? "text-[#49C581] border-b-2 border-[#49C581]"
-                : "text-gray-500 hover:text-[#337179]"
-                }`}
+              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${
+                activeTab === "reviews"
+                  ? "text-[#49C581] border-b-2 border-[#49C581]"
+                  : "text-gray-500 hover:text-[#337179]"
+              }`}
               onClick={() => setActiveTab("reviews")}
             >
               Reseñas ({establecimiento.comentarios?.length || 0} )
             </button>
             <button
-              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${activeTab === "offers"
-                ? "text-[#49C581] border-b-2 border-[#49C581]"
-                : "text-gray-500 hover:text-[#337179]"
-                }`}
+              className={`px-4 py-3 font-medium text-sm whitespace-nowrap ${
+                activeTab === "offers"
+                  ? "text-[#49C581] border-b-2 border-[#49C581]"
+                  : "text-gray-500 hover:text-[#337179]"
+              }`}
               onClick={() => setActiveTab("offers")}
             >
               Ofertas
@@ -926,7 +932,7 @@ const handleSubmit = async (e) => {
                       style={{ height: "300px" }}
                     >
                       {establecimiento.ubicacion &&
-                        establecimiento.ubicacion.length > 0 ? (
+                      establecimiento.ubicacion.length > 0 ? (
                         <MapContainer
                           center={[
                             establecimiento.ubicacion[0].coordenadas.latitud,
@@ -981,7 +987,7 @@ const handleSubmit = async (e) => {
                   {/* Verificar que comentarios tenga elementos antes de intentar renderizar */}
                   <div>
                     {establecimiento.comentarios &&
-                      establecimiento.comentarios.length > 0 ? (
+                    establecimiento.comentarios.length > 0 ? (
                       <div>
                         {establecimiento.comentarios
                           .slice(0, 3)
@@ -1053,14 +1059,17 @@ const handleSubmit = async (e) => {
                 </div>
 
                 <div className="bg-[#f2f8f7] p-4 rounded-lg mb-6 border border-gray-100">
-                  <h4 className="font-medium text-[#254A5D] mb-3">Escribe tu reseña</h4>
+                  <h4 className="font-medium text-[#254A5D] mb-3">
+                    Escribe tu reseña
+                  </h4>
 
                   <form onSubmit={handleSubmit}>
-                    {error && <div className="text-red-500 mb-2 text-sm">{error}</div>}
+                    {error && (
+                      <div className="text-red-500 mb-2 text-sm">{error}</div>
+                    )}
 
                     {/* Contenedor principal: móvil en columna, desktop en fila */}
                     <div className="bg-gradient-to-r from-[#337179] to-[#254A5D] p-4 rounded-xl flex flex-col md:flex-row md:items-center gap-3 shadow-lg">
-
                       {/* Estrellas de valoración */}
                       <div className="flex gap-1">
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -1093,8 +1102,9 @@ const handleSubmit = async (e) => {
                       {/* Botón de enviar */}
                       <button
                         type="submit"
-                        className={`bg-white/90 text-[#2E5F58] font-medium px-4 py-2 rounded-full hover:bg-white transition-all md:self-auto self-end ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-                          }`}
+                        className={`bg-white/90 text-[#2E5F58] font-medium px-4 py-2 rounded-full hover:bg-white transition-all md:self-auto self-end ${
+                          isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                         title="Enviar reseña"
                         disabled={isSubmitting}
                       >
@@ -1107,11 +1117,9 @@ const handleSubmit = async (e) => {
                   </form>
                 </div>
 
-
-
                 <div>
                   {establecimiento.comentarios &&
-                    establecimiento.comentarios.length > 0 ? (
+                  establecimiento.comentarios.length > 0 ? (
                     <div>
                       {establecimiento.comentarios.map((comentario) => (
                         <Review
@@ -1151,13 +1159,20 @@ const handleSubmit = async (e) => {
                   </div>
                 ) : (
                   promociones.map((promocion, index) => {
-                    const esHoy = esPromocionHoy(promocion.fechaInicio, promocion.fechaFin);
-                    const esNuevo = (new Date() - new Date(promocion.createdAt)) < 7 * 24 * 60 * 60 * 1000; // 7 días
+                    const esHoy = esPromocionHoy(
+                      promocion.fechaInicio,
+                      promocion.fechaFin
+                    );
+                    const esNuevo =
+                      new Date() - new Date(promocion.createdAt) <
+                      7 * 24 * 60 * 60 * 1000; // 7 días
 
                     return (
                       <div
                         key={promocion._id}
-                        className={`bg-gradient-to-r ${getGradientColors(index)} p-5 rounded-lg text-white mb-4 last:mb-0`}
+                        className={`bg-gradient-to-r ${getGradientColors(
+                          index
+                        )} p-5 rounded-lg text-white mb-4 last:mb-0`}
                       >
                         <div className="flex justify-between items-start">
                           <div>
@@ -1168,7 +1183,14 @@ const handleSubmit = async (e) => {
                               {promocion.descripcion}
                             </p>
                             <p className="text-white text-opacity-90 text-sm mt-2">
-                              Válido: {new Date(promocion.fechaInicio).toLocaleDateString()} al {new Date(promocion.fechaFin).toLocaleDateString()}
+                              Válido:{" "}
+                              {new Date(
+                                promocion.fechaInicio
+                              ).toLocaleDateString()}{" "}
+                              al{" "}
+                              {new Date(
+                                promocion.fechaFin
+                              ).toLocaleDateString()}
                             </p>
                             {promocion.condiciones && (
                               <p className="text-white text-opacity-80 text-xs mt-1 italic">
@@ -1241,8 +1263,9 @@ const handleSubmit = async (e) => {
                 </Button>
                 <Button
                   onClick={handleLike}
-                  className={`group ${liked ? "bg-red-50 hover:bg-red-100" : ""
-                    }`}
+                  className={`group ${
+                    liked ? "bg-red-50 hover:bg-red-100" : ""
+                  }`}
                 >
                   {liked ? (
                     <FaHeart className="text-[#F8485E]" />

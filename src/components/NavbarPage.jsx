@@ -94,7 +94,13 @@ export default function NavbarPage() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isMenuOpen, isSearchOpen, isUserMenuOpen, isNotificationsOpen, searchResults]);
+  }, [
+    isMenuOpen,
+    isSearchOpen,
+    isUserMenuOpen,
+    isNotificationsOpen,
+    searchResults,
+  ]);
 
   // Effect to set active link based on current pathname when component mounts
   useEffect(() => {
@@ -129,6 +135,8 @@ export default function NavbarPage() {
       setActiveLink("promociones-admin");
     } else if (path.includes("/perfil")) {
       setActiveLink("perfil");
+    } else if (path.includes("/asociate")) {
+      setActiveLink("asociate");
     }
   }, []); // Empty dependency array means this runs once on mount
 
@@ -162,25 +170,29 @@ export default function NavbarPage() {
   };
 
   // Count unread notifications
-  const unreadCount = notifications.filter(notif => !notif.read).length;
+  const unreadCount = notifications.filter((notif) => !notif.read).length;
 
   // Function to mark a notification as read
   const markAsRead = (id) => {
-    setNotifications(notifications.map(notif =>
-      notif.id === id ? { ...notif, read: true } : notif
-    ));
+    setNotifications(
+      notifications.map((notif) =>
+        notif.id === id ? { ...notif, read: true } : notif
+      )
+    );
   };
 
   // Function to mark all notifications as read
   const markAllAsRead = () => {
-    setNotifications(notifications.map(notif => ({ ...notif, read: true })));
+    setNotifications(notifications.map((notif) => ({ ...notif, read: true })));
   };
 
   // Normalizar rol y comprobar tipos admitidos (evita diferencias como "admin" vs "administrador")
   const rol = user?.rol?.toString?.().toLowerCase?.() || "";
   const isAdmin = Boolean(user && (rol === "administrador" || rol === "admin"));
   // Check if user is business owner
-  const isBusinessOwner = Boolean(user && (rol === "propietario" || rol === "propietary" || rol === "owner"));
+  const isBusinessOwner = Boolean(
+    user && (rol === "propietario" || rol === "propietary" || rol === "owner")
+  );
 
   // Handle link click - update state and allow default navigation
   const handleLinkClick = (linkName) => {
@@ -206,14 +218,20 @@ export default function NavbarPage() {
         const categorias = await obtenerCategorias();
         const tipos = await obtenerTipos();
 
-        const normalizados = (res || []).map(item => ({
+        const normalizados = (res || []).map((item) => ({
           ...item,
-          categorias: (item.categorias || item.categoria || []).map(catId =>
-            categorias.find(cat => cat._id === catId) || { nombre: "Desconocido" }
+          categorias: (item.categorias || item.categoria || []).map(
+            (catId) =>
+              categorias.find((cat) => cat._id === catId) || {
+                nombre: "Desconocido",
+              }
           ),
-          tipos: (item.tipos || item.tipo || []).map(tipoId =>
-            tipos.find(tipo => tipo._id === tipoId) || { tipo_nombre: "Desconocido" }
-          )
+          tipos: (item.tipos || item.tipo || []).map(
+            (tipoId) =>
+              tipos.find((tipo) => tipo._id === tipoId) || {
+                tipo_nombre: "Desconocido",
+              }
+          ),
         }));
         setSearchResults(normalizados.slice(0, 6));
       } catch (error) {
@@ -228,7 +246,7 @@ export default function NavbarPage() {
   }, [searchQuery]);
   const goToEstablecimiento = (id) => {
     if (!id) return;
-    console.log('Navegando a:', id);
+    console.log("Navegando a:", id);
     // Navegación inmediata (no limpiar antes)
     window.location.href = `/establecimientodetalle/${id}`;
   };
@@ -275,43 +293,58 @@ export default function NavbarPage() {
                 <>
                   <a
                     href="/"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "inicio"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "inicio"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => handleLinkClick("inicio")}
                   >
                     Inicio
                   </a>
                   <a
                     href="/establecimientos"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "establecimientos"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "establecimientos"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => handleLinkClick("establecimientos")}
                   >
                     Establecimientos
                   </a>
                   <a
                     href="/top"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "top"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "top"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => handleLinkClick("top")}
                   >
                     Top
                   </a>
                   <a
                     href="/promociones"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "promociones"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "promociones"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => handleLinkClick("promociones")}
                   >
                     Promociones
+                  </a>
+                  <a
+                    href="/asociate"
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "asociate"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
+                    onClick={() => handleLinkClick("asociate")}
+                  >
+                    ¡Asóciate ya!
                   </a>
                 </>
               )}
@@ -321,40 +354,44 @@ export default function NavbarPage() {
                 <>
                   <a
                     href="/admin/tipos"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "tipos"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "tipos"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => handleLinkClick("tipos")}
                   >
                     Tipos
                   </a>
                   <a
                     href="/admin/categorias"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "categorias"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "categorias"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => handleLinkClick("categorias")}
                   >
                     Categorias
                   </a>
                   <a
                     href="/admin/usuarios"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "usuarios"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "usuarios"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => handleLinkClick("usuarios")}
                   >
                     Gestionar Usuarios
                   </a>
                   <a
                     href="/admin/establecimientos"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${activeLink === "establecimientos-admin"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                      activeLink === "establecimientos-admin"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => handleLinkClick("establecimientos-admin")}
                   >
                     Establecimientos
@@ -367,8 +404,18 @@ export default function NavbarPage() {
                 <div className="relative group">
                   <button className="px-3 py-1.5 rounded-3xl transition duration-200 text-gray-700 hover:bg-[#254A5D] hover:text-white flex items-center">
                     Mi Negocio
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    <svg
+                      className="w-4 h-4 ml-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </button>
                   <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-10 hidden group-hover:block">
@@ -463,11 +510,16 @@ export default function NavbarPage() {
 
                 {/* Search results dropdown (desktop) */}
                 {(searchResults.length > 0 || isSearching) && (
-                  <div ref={searchDropdownRef} className="absolute left-0 mt-2 w-[320px] bg-white shadow-lg rounded-md py-1 z-20">
+                  <div
+                    ref={searchDropdownRef}
+                    className="absolute left-0 mt-2 w-[320px] bg-white shadow-lg rounded-md py-1 z-20"
+                  >
                     {isSearching && (
-                      <div className="px-4 py-2 text-sm text-gray-500">Buscando...</div>
+                      <div className="px-4 py-2 text-sm text-gray-500">
+                        Buscando...
+                      </div>
                     )}
-                    {searchResults.map(item => (
+                    {searchResults.map((item) => (
                       <button
                         key={item._id}
                         onClick={() => goToEstablecimiento(item._id)}
@@ -483,9 +535,11 @@ export default function NavbarPage() {
                           className="w-10 h-10 rounded-md object-cover mr-3"
                         />
                         <div className="truncate">
-                          <div className="text-sm font-medium text-gray-800">{item.nombre}</div>
+                          <div className="text-sm font-medium text-gray-800">
+                            {item.nombre}
+                          </div>
                           <div className="flex flex-wrap gap-1 mt-1">
-                            {item.categorias?.map(cat => (
+                            {item.categorias?.map((cat) => (
                               <span
                                 key={cat._id}
                                 className="px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full"
@@ -493,7 +547,7 @@ export default function NavbarPage() {
                                 {cat.nombre}
                               </span>
                             ))}
-                            {item.tipos?.map(tipo => (
+                            {item.tipos?.map((tipo) => (
                               <span
                                 key={tipo._id}
                                 className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full"
@@ -583,7 +637,9 @@ export default function NavbarPage() {
                       <>
                         {/* User info section */}
                         <div className="px-4 py-2 border-b border-gray-200">
-                          <p className="text-sm font-semibold text-gray-800">{user.nombreUsuario}</p>
+                          <p className="text-sm font-semibold text-gray-800">
+                            {user.nombreUsuario}
+                          </p>
                           <p className="text-xs text-gray-500">{user.email}</p>
                           <div className="mt-1">
                             {isAdmin && (
@@ -620,7 +676,9 @@ export default function NavbarPage() {
                             {isBusinessOwner && (
                               <>
                                 <hr className="my-2 border-gray-200" />
-                                <div className="px-4 py-1 text-sm text-gray-500">Mi Negocio</div>
+                                <div className="px-4 py-1 text-sm text-gray-500">
+                                  Mi Negocio
+                                </div>
                                 <a
                                   href="/negocio/dashboard"
                                   className="block px-4 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white rounded-3xl transition duration-200 mx-2"
@@ -657,7 +715,9 @@ export default function NavbarPage() {
                         {isAdmin && (
                           <>
                             <hr className="my-2 border-gray-200" />
-                            <div className="px-4 py-1 text-sm text-gray-500">Administración</div>
+                            <div className="px-4 py-1 text-sm text-gray-500">
+                              Administración
+                            </div>
                             <a
                               href="/admin/tipos"
                               className="block px-4 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white rounded-3xl transition duration-200 mx-2"
@@ -715,11 +775,8 @@ export default function NavbarPage() {
           </div>
 
           {/* Mobile search (expanded) */}
-           {isSearchOpen && (
-            <div
-              ref={searchRef}
-              className="mt-4 md:hidden"
-            >
+          {isSearchOpen && (
+            <div ref={searchRef} className="mt-4 md:hidden">
               <div className="relative">
                 <input
                   type="text"
@@ -745,8 +802,12 @@ export default function NavbarPage() {
                 {/* Mobile results (cuando está abierto el search) */}
                 {(searchResults.length > 0 || isSearching) && (
                   <div className="mt-2 bg-white rounded-md shadow py-1 max-h-60 overflow-y-auto z-50">
-                    {isSearching && <div className="px-4 py-2 text-sm text-gray-500">Buscando...</div>}
-                    {searchResults.map(item => (
+                    {isSearching && (
+                      <div className="px-4 py-2 text-sm text-gray-500">
+                        Buscando...
+                      </div>
+                    )}
+                    {searchResults.map((item) => (
                       <a
                         key={item._id}
                         href={`/establecimientodetalle/${item._id}`}
@@ -773,9 +834,11 @@ export default function NavbarPage() {
                           className="w-10 h-10 rounded-md object-cover mr-3"
                         />
                         <div className="truncate">
-                          <div className="text-sm font-medium text-gray-800">{item.nombre}</div>
+                          <div className="text-sm font-medium text-gray-800">
+                            {item.nombre}
+                          </div>
                           <div className="flex flex-wrap gap-1 mt-1">
-                            {item.categorias?.map(cat => (
+                            {item.categorias?.map((cat) => (
                               <span
                                 key={cat._id}
                                 className="px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full"
@@ -783,7 +846,7 @@ export default function NavbarPage() {
                                 {cat.nombre}
                               </span>
                             ))}
-                            {item.tipos?.map(tipo => (
+                            {item.tipos?.map((tipo) => (
                               <span
                                 key={tipo._id}
                                 className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full"
@@ -803,94 +866,112 @@ export default function NavbarPage() {
 
           {/* Mobile menu (expanded) */}
           {isMenuOpen && (
-            <div
-              ref={menuRef}
-              className="mt-4 pb-4 md:hidden"
-            >
+            <div ref={menuRef} className="mt-4 pb-4 md:hidden">
               <a
                 href="/"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "inicio"
-                  ? "bg-[#254A5D] text-white"
-                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                  }`}
+                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                  activeLink === "inicio"
+                    ? "bg-[#254A5D] text-white"
+                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                }`}
                 onClick={() => handleLinkClick("inicio")}
               >
                 Inicio
               </a>
               <a
                 href="/establecimientos"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "establecimientos"
-                  ? "bg-[#254A5D] text-white"
-                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                  }`}
+                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                  activeLink === "establecimientos"
+                    ? "bg-[#254A5D] text-white"
+                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                }`}
                 onClick={() => handleLinkClick("establecimientos")}
               >
                 Establecimientos
               </a>
               <a
                 href="/top"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "top"
-                  ? "bg-[#254A5D] text-white"
-                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                  }`}
+                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                  activeLink === "top"
+                    ? "bg-[#254A5D] text-white"
+                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                }`}
                 onClick={() => handleLinkClick("top")}
               >
                 Top
               </a>
               <a
                 href="/promociones"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "promociones"
-                  ? "bg-[#254A5D] text-white"
-                  : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                  }`}
+                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                  activeLink === "promociones"
+                    ? "bg-[#254A5D] text-white"
+                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                }`}
                 onClick={() => handleLinkClick("promociones")}
               >
                 Promociones
               </a>
-
+              <a
+                href="/asociate"
+                className={`block py-3 px-6 rounded-full font-semibold text-white text-lg transition-all duration-300 mx-2 my-1
+    ${
+      activeLink === "asociate"
+        ? "bg-gradient-to-r from-[#49C581] via-[#37c6a6] to-[#00f0b5] shadow-lg transform scale-105"
+        : "bg-gradient-to-r from-[#37c6a6] via-[#00f0b5] to-[#49C581] hover:shadow-xl hover:scale-105"
+    }`}
+                onClick={() => handleLinkClick("asociate")}
+              >
+                ¡Asóciate ya!
+              </a>
 
               {/* Business Owner specific options in mobile menu */}
               {isBusinessOwner && (
                 <>
                   <div className="my-2 border-t border-gray-200 pt-2">
-                    <div className="mx-2 text-sm text-gray-500 mb-1">Mi Negocio</div>
+                    <div className="mx-2 text-sm text-gray-500 mb-1">
+                      Mi Negocio
+                    </div>
                   </div>
                   <a
                     href="/negocio/dashboard"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-dashboard"
-                      ? "bg-[#2A9D8F] text-white"
-                      : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "negocio-dashboard"
+                        ? "bg-[#2A9D8F] text-white"
+                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("negocio-dashboard")}
                   >
                     Dashboard
                   </a>
                   <a
                     href="/negocio/reservas"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-reservas"
-                      ? "bg-[#2A9D8F] text-white"
-                      : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "negocio-reservas"
+                        ? "bg-[#2A9D8F] text-white"
+                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("negocio-reservas")}
                   >
                     Gestionar Reservas
                   </a>
                   <a
                     href="/negocio/promociones"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-promociones"
-                      ? "bg-[#2A9D8F] text-white"
-                      : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "negocio-promociones"
+                        ? "bg-[#2A9D8F] text-white"
+                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("negocio-promociones")}
                   >
                     Mis Promociones
                   </a>
                   <a
                     href="/negocio/estadisticas"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "negocio-estadisticas"
-                      ? "bg-[#2A9D8F] text-white"
-                      : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "negocio-estadisticas"
+                        ? "bg-[#2A9D8F] text-white"
+                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("negocio-estadisticas")}
                   >
                     Estadísticas
@@ -902,54 +983,61 @@ export default function NavbarPage() {
               {isAdmin && (
                 <>
                   <div className="my-2 border-t border-gray-200 pt-2">
-                    <div className="mx-2 text-sm text-gray-500 mb-1">Administración</div>
+                    <div className="mx-2 text-sm text-gray-500 mb-1">
+                      Administración
+                    </div>
                   </div>
                   <a
                     href="/admin/tipos"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "tipos"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "tipos"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("tipos")}
                   >
                     Tipos
                   </a>
                   <a
                     href="/admin/categorias"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "categorias"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "categorias"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("categorias")}
                   >
                     Categorias
                   </a>
                   <a
                     href="/admin/usuarios"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "usuarios"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "usuarios"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("usuarios")}
                   >
                     Gestionar Usuarios
                   </a>
                   <a
                     href="/admin/establecimientos"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "establecimientos-admin"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "establecimientos-admin"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("establecimientos-admin")}
                   >
                     Gestionar Establecimientos
                   </a>
                   <a
                     href="/admin/promociones"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "promociones"
-                      ? "bg-[#254A5D] text-white"
-                      : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                      }`}
+                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                      activeLink === "promociones"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                    }`}
                     onClick={() => setActiveLink("promociones")}
                   >
                     Promociones
@@ -964,10 +1052,11 @@ export default function NavbarPage() {
                     {!isAdmin && (
                       <a
                         href="/perfil"
-                        className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${activeLink === "perfil"
-                          ? "bg-[#254A5D] text-white"
-                          : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                          }`}
+                        className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                          activeLink === "perfil"
+                            ? "bg-[#254A5D] text-white"
+                            : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                        }`}
                         onClick={() => setActiveLink("perfil")}
                       >
                         Mi Perfil

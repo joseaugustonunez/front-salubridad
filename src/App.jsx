@@ -1,26 +1,26 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import LoginPage from './pages/LoginPage';
-import RegistroPage from './pages/RegistroPage';
-import InicioPage from './pages/InicioPage';
-import NavbarPage from './components/NavbarPage';
-import EstablecimientoPage from './pages/EstablecimientoPage';
-import TopEstablecimientos from './pages/TopPage';
-import EstablecimientoDetallePage from './pages/EstablecimientoDetallePage';
-import PerfilPage from './pages/PerfilPage';
-import RecuperarPage from './pages/RecuperarPage';
-import CambiarPage from './pages/CambiarPage';
-import PromocionPage from './pages/PromocionPage';
-import AdminEstablecimientos from './pages/admin/AdminEstablecimientos';
-import UsuariosAdminPage from './pages/admin/UsuariosAdminPage';
-import AdminEstablecimientoDetalle from './pages/admin/AdminEstablecimientoDetalle';
-import AdminTipos from './pages/admin/AdminTipos';
-import AdminCategorias from './pages/admin/AdminCategorias';
-import FooterPage from './components/FooterPage';
+import LoginPage from "./pages/LoginPage";
+import RegistroPage from "./pages/RegistroPage";
+import InicioPage from "./pages/InicioPage";
+import NavbarPage from "./components/NavbarPage";
+import EstablecimientoPage from "./pages/EstablecimientoPage";
+import TopEstablecimientos from "./pages/TopPage";
+import EstablecimientoDetallePage from "./pages/EstablecimientoDetallePage";
+import PerfilPage from "./pages/PerfilPage";
+import RecuperarPage from "./pages/RecuperarPage";
+import CambiarPage from "./pages/CambiarPage";
+import PromocionPage from "./pages/PromocionPage";
+import AdminEstablecimientos from "./pages/admin/AdminEstablecimientos";
+import UsuariosAdminPage from "./pages/admin/UsuariosAdminPage";
+import AdminEstablecimientoDetalle from "./pages/admin/AdminEstablecimientoDetalle";
+import AdminTipos from "./pages/admin/AdminTipos";
+import AdminCategorias from "./pages/admin/AdminCategorias";
+import FooterPage from "./components/FooterPage";
 import { useEffect } from "react";
-import { AuthProvider } from './context/AuthContext';
-import PrivateRoute from './components/PrivateRoute'; // Ajusta la ruta si es necesario
-import { Toaster } from 'react-hot-toast';
-
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute"; // Ajusta la ruta si es necesario
+import { Toaster } from "react-hot-toast";
+import Asociate from "./pages/Asociate";
 function AppWrapper() {
   const location = useLocation();
 
@@ -48,14 +48,7 @@ function AppWrapper() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/establecimientos"
-          element={
-            
-              <EstablecimientoPage />
-            
-          }
-        />
+        <Route path="/establecimientos" element={<EstablecimientoPage />} />
         <Route
           path="/admin/establecimientos"
           element={
@@ -64,7 +57,7 @@ function AppWrapper() {
             </PrivateRoute>
           }
         />
-          <Route
+        <Route
           path="/admin/usuarios"
           element={
             <PrivateRoute>
@@ -72,19 +65,11 @@ function AppWrapper() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/promociones"
-          element={
-            <PrivateRoute>
-              <PromocionPage />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/promociones" element={<PromocionPage />} />
+        <Route path="/asociate" element={<Asociate />} />
         <Route
           path="/establecimientodetalle/:id"
-          element={
-              <EstablecimientoDetallePage />
-          }
+          element={<EstablecimientoDetallePage />}
         />
         <Route
           path="/admin/establecimientodetalle/:id"
@@ -110,15 +95,10 @@ function AppWrapper() {
             </PrivateRoute>
           }
         />
-        
-        <Route
-          path="/top"
-          element={
-              <TopEstablecimientos />
-          }
-        />
+
+        <Route path="/top" element={<TopEstablecimientos />} />
       </Routes>
-      
+
       <FooterPage />
     </>
   );
