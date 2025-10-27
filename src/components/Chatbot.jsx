@@ -229,14 +229,6 @@ export default function Chatbot(props) {
                     placeholder={placeholder}
                     className="w-full border border-slate-300 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#49C581] bg-slate-50"
                   />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex gap-2">
-                    <button className="text-slate-400 hover:text-[#37a6ca]">
-                      <FaSmile />
-                    </button>
-                    <button className="text-slate-400 hover:text-[#37a6ca]">
-                      <FaPaperclip />
-                    </button>
-                  </div>
                 </div>
 
                 <button

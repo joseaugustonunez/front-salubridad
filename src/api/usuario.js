@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://back-salubridad.sistemasudh.com/users";
+//const API_URL = "https://back-salubridad.sistemasudh.com/users";
+const API_URL = "http://localhost:3000/users"; // usar localhost para desarrollo
 
 // Obtener token del localStorage
 const obtenerToken = () => {
@@ -12,10 +13,10 @@ const obtenerToken = () => {
 };
 
 // Configurar headers con token
-const configurarHeaders = () => {
+const configurarHeaders = (isMultipart = false) => {
   const token = obtenerToken();
   const headers = {
-    "Content-Type": "multipart/form-data",
+    "Content-Type": isMultipart ? "multipart/form-data" : "application/json",
   };
 
   if (token) {
@@ -126,22 +127,17 @@ export const actualizarUsuario = async (id, data) => {
 };
 
 // Actualizar rol de un usuario
-export const actualizarRolUsuario = async (id, role) => {
+export const actualizarRolUsuario = async (id, nuevoRol) => {
   try {
-    const token = localStorage.getItem("token");
+    const headers = configurarHeaders(); // ahora application/json
     const response = await axios.patch(
       `${API_URL}/${id}/role`,
-      { role },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-      }
+      { rol: nuevoRol }, // coincide con backend
+      headers
     );
     return response.data;
   } catch (error) {
-    console.error("Error al actualizar rol:", error);
+    console.error("Error al actualizar rol:", error.response?.data || error);
     throw error;
   }
 };

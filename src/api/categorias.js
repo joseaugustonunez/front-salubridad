@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://back-salubridad.sistemasudh.com/categorias"; // Asegúrate de que esta URL sea correcta
-
+//const API_URL = "https://back-salubridad.sistemasudh.com/categorias"; // Asegúrate de que esta URL sea correcta
+const API_URL = "http://localhost:3000/categorias";
 // Obtener todas las Categorías
 export const obtenerCategorias = async () => {
   try {

@@ -16,7 +16,7 @@ import {
   Filter,
   Search,
 } from "lucide-react";
-
+import { motion } from "framer-motion";
 // Definición de colores principales
 const colors = {
   primary: "#49C581",
@@ -44,37 +44,39 @@ const OfferBadge = ({ descuento }) => (
 // Componente para mostrar el contador regresivo
 const CountdownTimer = ({ endDate }) => {
   const [timeLeft, setTimeLeft] = useState("");
-  
+
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date();
       const end = new Date(endDate);
       const difference = end - now;
-      
+
       if (difference <= 0) {
         return "Finalizado";
       }
-      
+
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hours = Math.floor(
+        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      
+
       if (days > 0) {
         return `${days}d ${hours}h`;
       } else {
         return `${hours}h ${minutes}m`;
       }
     };
-    
+
     setTimeLeft(calculateTimeLeft());
-    
+
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 60000); // Actualizar cada minuto
-    
+
     return () => clearInterval(timer);
   }, [endDate]);
-  
+
   return (
     <div className="flex items-center gap-1 text-xs font-medium bg-gray-800 bg-opacity-75 text-white px-2 py-1 rounded-full">
       <Clock size={12} />
@@ -100,9 +102,7 @@ const RatingStars = ({ rating = 4.5 }) => {
           />
         ))}
       </div>
-      <span className="text-gray-700 ml-2 text-sm font-medium">
-        {rating}
-      </span>
+      <span className="text-gray-700 ml-2 text-sm font-medium">{rating}</span>
     </div>
   );
 };
@@ -110,22 +110,22 @@ const RatingStars = ({ rating = 4.5 }) => {
 // Componente para la tarjeta de promoción
 const PromocionCard = ({ promocion }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Formatear fechas
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
+    return date.toLocaleDateString("es-ES", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     });
   };
-  
+
   // URL de la imagen
-  const imageUrl = promocion.imagen 
-    ? `https://back-salubridad.sistemasudh.com/uploads/${promocion.imagen}` 
+  const imageUrl = promocion.imagen
+    ? `https://back-salubridad.sistemasudh.com/uploads/${promocion.imagen}`
     : "/api/placeholder/600/400";
-  
+
   return (
     <div
       className="relative bg-white rounded-xl overflow-hidden shadow-xl transition-all duration-500 hover:shadow-2xl group"
@@ -163,7 +163,8 @@ const PromocionCard = ({ promocion }) => {
             className="px-3 py-1 rounded-full text-white text-xs font-extrabold tracking-wider uppercase flex items-center gap-1"
             style={{ backgroundColor: colors.light }}
           >
-            {promocion.establecimiento?.nombre?.substring(0, 15) || "Establecimiento"}
+            {promocion.establecimiento?.nombre?.substring(0, 15) ||
+              "Establecimiento"}
             {promocion.establecimiento?.verificado && <Zap size={12} />}
           </div>
         </div>
@@ -172,8 +173,6 @@ const PromocionCard = ({ promocion }) => {
         <div className="absolute bottom-4 right-4">
           <CountdownTimer endDate={promocion.fechaFin} />
         </div>
-
-       
       </div>
 
       {/* Contenido de la tarjeta */}
@@ -215,11 +214,19 @@ const PromocionCard = ({ promocion }) => {
         {/* Fechas de la promoción */}
         <div className="flex flex-col space-y-2 mb-4">
           <div className="flex items-center text-sm text-gray-600">
-            <Calendar size={16} className="mr-2" style={{ color: colors.primary }} />
+            <Calendar
+              size={16}
+              className="mr-2"
+              style={{ color: colors.primary }}
+            />
             <span>Desde: {formatDate(promocion.fechaInicio)}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
-            <Calendar size={16} className="mr-2" style={{ color: colors.accent }} />
+            <Calendar
+              size={16}
+              className="mr-2"
+              style={{ color: colors.accent }}
+            />
             <span>Hasta: {formatDate(promocion.fechaFin)}</span>
           </div>
         </div>
@@ -239,7 +246,9 @@ const PromocionCard = ({ promocion }) => {
               </p>
               <Tag size={16} className="text-gray-400" />
             </div>
-            <p className="text-sm text-gray-500">{promocion.condiciones.substring(0, 20)}...</p>
+            <p className="text-sm text-gray-500">
+              {promocion.condiciones.substring(0, 20)}...
+            </p>
           </div>
           <button
             className="p-3 rounded-full text-white shadow-lg transform transition-all duration-300 hover:scale-110 hover:shadow-xl flex items-center justify-center"
@@ -264,8 +273,11 @@ const PromocionCard = ({ promocion }) => {
               const now = new Date();
               const total = end - start;
               const elapsed = now - start;
-              const percent = Math.max(0, Math.min(100, (elapsed / total) * 100));
-              
+              const percent = Math.max(
+                0,
+                Math.min(100, (elapsed / total) * 100)
+              );
+
               return (
                 <div
                   className="h-full rounded-full"
@@ -283,7 +295,7 @@ const PromocionCard = ({ promocion }) => {
   );
 };
 
-// Componente para filtros 
+// Componente para filtros
 const PromocionesFiltros = ({ activeFilter, setActiveFilter }) => {
   const filters = ["Todos", "Activas", "Finalizadas", "Próximas"];
 
@@ -344,7 +356,8 @@ const PromocionesBanner = () => {
           </span>
         </h2>
         <p className="mb-6 text-gray-200">
-          Las mejores promociones de establecimientos verificados. ¡No te pierdas estas increíbles ofertas por tiempo limitado!
+          Las mejores promociones de establecimientos verificados. ¡No te
+          pierdas estas increíbles ofertas por tiempo limitado!
         </p>
 
         {/* Botones con efectos */}
@@ -396,9 +409,8 @@ export default function PromocionesView() {
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   // Ejemplo de promoción para mostrar mientras se cargan los datos
-  
 
   useEffect(() => {
     async function cargarPromociones() {
@@ -422,15 +434,15 @@ export default function PromocionesView() {
   // Filtrar promociones según estado y término de búsqueda
   const filtrarPromociones = () => {
     let result = promociones;
-    
+
     // Filtrar por estado
     if (activeFilter !== "Todos") {
       const now = new Date();
-      
-      result = result.filter(promo => {
+
+      result = result.filter((promo) => {
         const inicio = new Date(promo.fechaInicio);
         const fin = new Date(promo.fechaFin);
-        
+
         if (activeFilter === "Activas") {
           return now >= inicio && now <= fin && promo.estado === "activa";
         } else if (activeFilter === "Finalizadas") {
@@ -441,21 +453,21 @@ export default function PromocionesView() {
         return true;
       });
     }
-    
+
     // Filtrar por término de búsqueda
     if (searchTerm.trim() !== "") {
       const term = searchTerm.toLowerCase();
       result = result.filter(
-        promo => 
+        (promo) =>
           promo.nombre.toLowerCase().includes(term) ||
           promo.descripcion.toLowerCase().includes(term) ||
           promo.establecimiento.nombre.toLowerCase().includes(term)
       );
     }
-    
+
     return result;
   };
-  
+
   const promocionesFiltradas = filtrarPromociones();
 
   // Mostrar mensaje de carga o error
@@ -471,7 +483,7 @@ export default function PromocionesView() {
         <div className="p-6 bg-white rounded-lg shadow-md">
           <h2 className="text-xl font-bold text-red-500 mb-2">Error</h2>
           <p className="text-gray-600">{error}</p>
-          <button 
+          <button
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
             onClick={() => window.location.reload()}
           >
@@ -489,40 +501,67 @@ export default function PromocionesView() {
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-b from-blue-300 to-transparent rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-t from-green-300 to-transparent rounded-full blur-3xl"></div>
       </div>
-      
+
       {/* Cabecera */}
       <div
-        className="pt-32 pb-12 relative overflow-hidden"
+        className="pt-24 sm:pt-28 md:pt-32 pb-10 sm:pb-12 md:pb-14 relative overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, ${colors.dark} 0%, ${colors.secondary} 100%)`,
+          background: `linear-gradient(135deg, ${colors.dark} 0%, ${colors.secondary} 50%, ${colors.primary} 100%)`,
         }}
       >
-        <div className="max-w-6xl mx-auto relative z-10">
-          <h1 className="text-5xl font-black mb-4 text-white text-center">
-            Promociones <span style={{ color: colors.primary }}>Especiales</span>
-          </h1>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="text-center"
+          >
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold text-white mb-4 sm:mb-5 leading-tight">
+              Promociones{" "}
+              <span
+                className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent"
+                style={{
+                  background: `linear-gradient(45deg, ${colors.primary}, #ffffff)`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Especiales
+              </span>
+            </h1>
 
-          <p className="text-lg text-white/90 max-w-xl mx-auto mb-8 text-center">
-            Descubre las mejores promociones de tus establecimientos favoritos.
-            Actualizado diariamente con ofertas exclusivas.
-          </p>
-        </div>
-        <div className="flex justify-center mt-6">
-          <div
-            className="w-20 h-1 rounded-full"
-            style={{ backgroundColor: colors.primary }}
-          ></div>
+            <motion.p
+              initial={{ opacity: 0, y: -15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto mb-8 sm:mb-10 px-4"
+            >
+              Descubre las mejores promociones de tus establecimientos
+              favoritos. Actualizado diariamente con ofertas exclusivas.
+            </motion.p>
+
+            {/* Línea decorativa animada */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mx-auto w-24 h-1 rounded-full origin-center"
+              style={{ backgroundColor: colors.primary }}
+            ></motion.div>
+          </motion.div>
         </div>
 
         {/* Elementos decorativos */}
-        <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-10 bg-white/20 -mr-20 -mt-20"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-10 bg-white/20 -ml-20 -mb-20"></div>
+        <div className="absolute top-0 right-0 w-40 h-40 sm:w-60 sm:h-60 md:w-72 md:h-72 rounded-full opacity-10 bg-white/20 -mr-10 -mt-10 sm:-mr-20 sm:-mt-20"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 rounded-full opacity-10 bg-white/20 -ml-8 -mb-8 sm:-ml-20 sm:-mb-20"></div>
+        <div className="absolute top-1/2 left-1/4 w-2 h-2 sm:w-3 sm:h-3 bg-white/30 rounded-full"></div>
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 sm:w-2 sm:h-2 bg-white/40 rounded-full"></div>
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10 px-4 py-8">
         {/* Banner principal */}
         <PromocionesBanner />
-        
+
         <div className="flex flex-col md:flex-row gap-8">
           {/* Panel lateral */}
           <div className="w-full md:w-1/4">
@@ -539,7 +578,7 @@ export default function PromocionesView() {
               </h3>
 
               <div className="space-y-6">
-                <PromocionesSearchBar 
+                <PromocionesSearchBar
                   searchTerm={searchTerm}
                   setSearchTerm={setSearchTerm}
                 />
@@ -614,7 +653,8 @@ export default function PromocionesView() {
                 ¡Suscríbete!
               </h4>
               <p className="mb-4 text-sm opacity-90 relative z-10">
-                Recibe notificaciones de nuevas promociones directamente en tu email.
+                Recibe notificaciones de nuevas promociones directamente en tu
+                email.
               </p>
 
               <div className="relative z-10">
@@ -652,7 +692,10 @@ export default function PromocionesView() {
             {promocionesFiltradas.length === 0 ? (
               <div className="bg-white p-8 rounded-xl shadow-md text-center">
                 <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-bold mb-2" style={{ color: colors.dark }}>
+                <h3
+                  className="text-xl font-bold mb-2"
+                  style={{ color: colors.dark }}
+                >
                   No se encontraron promociones
                 </h3>
                 <p className="text-gray-600">
@@ -666,11 +709,9 @@ export default function PromocionesView() {
                 ))}
               </div>
             )}
-
           </div>
         </div>
       </div>
     </div>
   );
-
 }

@@ -8,6 +8,11 @@ import {
   FaCommentDots,
   FaStore,
   FaPlusCircle,
+  FaHeart,
+  FaStar,
+  FaTags,
+  FaPercent,
+  FaRegCommentDots,
 } from "react-icons/fa";
 import EstablecimientoForm from "../components/EstablecimientoForm";
 import PromocionForm from "../components/PromocionForm";
@@ -121,7 +126,16 @@ const PerfilPage = () => {
 
     return baseTabs;
   };
+  const generateTabsUser = () => {
+    const baseTabs = [
+      { name: "Favoritos", icon: <FaStore size={18} /> },
+      { name: "Reseñas", icon: <FaRegCommentDots size={18} /> },
+      { name: "Ofertas", icon: <FaPercent size={18} /> },
+    ];
 
+    return baseTabs;
+  };
+  const tabsUser = generateTabsUser();
   const tabs = generateTabs();
 
   const [refreshKey, setRefreshKey] = useState(Date.now());
@@ -669,10 +683,153 @@ const PerfilPage = () => {
               </div>
             </>
           ) : (
-            <div className="p-6 text-center">
-              <p className="text-gray-600">
-                Tu cuenta no tiene acceso a la gestión de establecimientos.
-              </p>
+            <div className="p-6">
+              <div className="overflow-x-auto scrollbar-hide border-b border-gray-100">
+                <div className="flex w-full">
+                  {tabsUser.map((tab) => (
+                    <button
+                      key={tab.name}
+                      className={`flex-1 flex flex-col items-center justify-center px-4 py-4 text-sm font-medium transition border-b-2 ${
+                        activeTab === tab.name
+                          ? "border-b-2 text-white"
+                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
+                      style={
+                        activeTab === tab.name
+                          ? {
+                              borderColor: "#49C581",
+                              color: "#337179",
+                            }
+                          : {}
+                      }
+                      onClick={() => setActiveTab(tab.name)}
+                    >
+                      <span className="text-xl">{tab.icon}</span>
+                      <span className="hidden md:block mt-1">{tab.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6">
+                {activeTab === "Promociones" && (
+                  <div className="bg-white rounded-lg shadow p-6">
+                    {tieneEstablecimiento ? (
+                      <PromocionForm
+                        tieneEstablecimiento={tieneEstablecimiento}
+                        establecimientosData={establecimientosData}
+                      />
+                    ) : (
+                      <div className="text-center py-6">
+                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                          <FaPercentage
+                            size={36}
+                            style={{ color: "#F8485E" }}
+                          />
+                        </div>
+                        <h3
+                          className="text-lg font-medium"
+                          style={{ color: "#254A5D" }}
+                        >
+                          Necesitas un establecimiento para crear promociones
+                        </h3>
+                        <p className="text-gray-500 mt-1">
+                          Crea primero tu establecimiento para poder añadir
+                          promociones
+                        </p>
+                        <button
+                          onClick={() => setActiveTab("Crear Establecimiento")}
+                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
+                          style={{ backgroundColor: "#49C581" }}
+                        >
+                          Crear Establecimiento
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === "Fotos" && (
+                  <div className="space-y-6">
+                    {!tieneEstablecimiento ? (
+                      <div className="text-center py-6 bg-white rounded-lg shadow">
+                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                          <FaImages size={36} style={{ color: "#37a6ca" }} />
+                        </div>
+                        <h3
+                          className="text-lg font-medium"
+                          style={{ color: "#254A5D" }}
+                        >
+                          Necesitas un establecimiento para gestionar fotos
+                        </h3>
+                        <p className="text-gray-500 mt-1">
+                          Crea primero tu establecimiento para poder añadir
+                          fotos
+                        </p>
+                        <button
+                          onClick={() => setActiveTab("Crear Establecimiento")}
+                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
+                          style={{ backgroundColor: "#49C581" }}
+                        >
+                          Crear Establecimiento
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="bg-white rounded-lg shadow">
+                        <FotosEstablecimiento
+                          establecimientoId={user?.establecimientosCreados?.[0]}
+                          tieneEstablecimiento={tieneEstablecimiento}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === "Opiniones" && (
+                  <div className="text-center py-10">
+                    {!tieneEstablecimiento ? (
+                      <div>
+                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                          <FaCommentDots
+                            size={36}
+                            style={{ color: "#F8485E" }}
+                          />
+                        </div>
+                        <h3
+                          className="text-lg font-medium"
+                          style={{ color: "#254A5D" }}
+                        >
+                          Necesitas un establecimiento para recibir opiniones
+                        </h3>
+                        <p className="text-gray-500 mt-1">
+                          Crea primero tu establecimiento para poder recibir
+                          opiniones de tus clientes
+                        </p>
+                        <button
+                          onClick={() => setActiveTab("Crear Establecimiento")}
+                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
+                          style={{ backgroundColor: "#49C581" }}
+                        >
+                          Crear Establecimiento
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        {loading ? (
+                          <div className="text-center py-4">
+                            <p>Cargando opiniones...</p>
+                          </div>
+                        ) : (
+                          <ComentariosEstablecimiento
+                            tieneEstablecimiento={tieneEstablecimiento}
+                            establecimientosData={establecimientosData}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>

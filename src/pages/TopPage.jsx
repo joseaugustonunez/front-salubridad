@@ -241,7 +241,7 @@ const TopPage = () => {
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header responsivo y moderno */}
       <div
-        className="pt-20 sm:pt-24 md:pt-32 pb-8 sm:pb-10 md:pb-12 relative overflow-hidden"
+        className="pt-24 sm:pt-28 md:pt-32 pb-10 sm:pb-12 md:pb-14 relative overflow-hidden"
         style={{
           background: `linear-gradient(135deg, ${colors.dark} 0%, ${colors.secondary} 50%, ${colors.primary} 100%)`,
         }}
@@ -253,14 +253,14 @@ const TopPage = () => {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="text-center"
           >
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold text-white mb-4 sm:mb-5 leading-tight">
               Top{" "}
-              <span 
+              <span
                 className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent"
-                style={{ 
+                style={{
                   background: `linear-gradient(45deg, ${colors.primary}, #ffffff)`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
                 }}
               >
                 Establecimientos
@@ -271,7 +271,7 @@ const TopPage = () => {
               initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base sm:text-lg text-white/90 max-w-2xl mx-auto mb-6 sm:mb-8 px-4"
+              className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto mb-8 sm:mb-10 px-4"
             >
               Descubre los lugares mejor valorados por la comunidad
             </motion.p>
@@ -281,19 +281,28 @@ const TopPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mt-6"
+              className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mt-8"
             >
               <div className="bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 sm:px-4 sm:py-3">
-                <div className="text-lg sm:text-xl font-bold text-white">{establecimientos.length}</div>
+                <div className="text-lg sm:text-xl font-bold text-white">
+                  {establecimientos.length}
+                </div>
                 <div className="text-xs sm:text-sm text-white/80">Lugares</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 sm:px-4 sm:py-3">
-                <div className="text-lg sm:text-xl font-bold text-white">{availableCategories.length}</div>
-                <div className="text-xs sm:text-sm text-white/80">Categorías</div>
+                <div className="text-lg sm:text-xl font-bold text-white">
+                  {availableCategories.length}
+                </div>
+                <div className="text-xs sm:text-sm text-white/80">
+                  Categorías
+                </div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 sm:px-4 sm:py-3">
                 <div className="text-lg sm:text-xl font-bold text-white">
-                  {establecimientos.reduce((acc, est) => acc + (est.likes?.length || 0), 0)}
+                  {establecimientos.reduce(
+                    (acc, est) => acc + (est.likes?.length || 0),
+                    0
+                  )}
                 </div>
                 <div className="text-xs sm:text-sm text-white/80">Me gusta</div>
               </div>
@@ -301,7 +310,7 @@ const TopPage = () => {
           </motion.div>
         </div>
 
-        {/* Elementos decorativos mejorados */}
+        {/* Elementos decorativos */}
         <div className="absolute top-0 right-0 w-40 h-40 sm:w-60 sm:h-60 md:w-72 md:h-72 rounded-full opacity-10 bg-white/20 -mr-10 -mt-10 sm:-mr-20 sm:-mt-20"></div>
         <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 rounded-full opacity-10 bg-white/20 -ml-8 -mb-8 sm:-ml-20 sm:-mb-20"></div>
         <div className="absolute top-1/2 left-1/4 w-2 h-2 sm:w-3 sm:h-3 bg-white/30 rounded-full"></div>
@@ -337,10 +346,12 @@ const TopPage = () => {
             Todos ({establecimientos.length})
           </button>
           {availableCategories.map((cat) => {
-            const count = establecimientos.filter(est => 
-              est.categoria?.some(category => category.nombre.toLowerCase() === cat)
+            const count = establecimientos.filter((est) =>
+              est.categoria?.some(
+                (category) => category.nombre.toLowerCase() === cat
+              )
             ).length;
-            
+
             return (
               <button
                 key={cat}
@@ -373,7 +384,9 @@ const TopPage = () => {
               className="md:hidden bg-white rounded-lg shadow-lg p-4 mt-2"
             >
               <div className="flex justify-between items-center mb-3">
-                <h3 className="font-medium text-gray-800">Filtrar por categoría</h3>
+                <h3 className="font-medium text-gray-800">
+                  Filtrar por categoría
+                </h3>
                 <button
                   onClick={() => setShowMobileFilters(false)}
                   className="p-1 hover:bg-gray-100 rounded"
@@ -396,10 +409,12 @@ const TopPage = () => {
                   Todos ({establecimientos.length})
                 </button>
                 {availableCategories.map((cat) => {
-                  const count = establecimientos.filter(est => 
-                    est.categoria?.some(category => category.nombre.toLowerCase() === cat)
+                  const count = establecimientos.filter((est) =>
+                    est.categoria?.some(
+                      (category) => category.nombre.toLowerCase() === cat
+                    )
                   ).length;
-                  
+
                   return (
                     <button
                       key={cat}
@@ -438,7 +453,7 @@ const TopPage = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#49C581]"></div>
             </div>
           ) : (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
@@ -471,8 +486,11 @@ const TopPage = () => {
         {/* Mapa responsivo */}
         <div className="w-full lg:w-1/3">
           <div className="sticky top-4">
-            <div ref={containerRef} className="h-64 sm:h-80 lg:h-96 xl:h-[32rem] rounded-2xl overflow-hidden shadow-xl border border-gray-200 relative bg-white">
-                <MapContainer
+            <div
+              ref={containerRef}
+              className="h-64 sm:h-80 lg:h-96 xl:h-[32rem] rounded-2xl overflow-hidden shadow-xl border border-gray-200 relative bg-white"
+            >
+              <MapContainer
                 center={mapCenter}
                 zoom={13}
                 style={{ width: "100%", height: "100%" }}
@@ -493,11 +511,13 @@ const TopPage = () => {
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
                 {establecimientos.map((establecimiento) => {
-                  const lat = establecimiento.ubicacion?.[0]?.coordenadas?.latitud;
-                  const lon = establecimiento.ubicacion?.[0]?.coordenadas?.longitud;
+                  const lat =
+                    establecimiento.ubicacion?.[0]?.coordenadas?.latitud;
+                  const lon =
+                    establecimiento.ubicacion?.[0]?.coordenadas?.longitud;
                   if (lat == null || lon == null) return null;
 
-                    return (
+                  return (
                     <Marker
                       key={establecimiento._id}
                       position={[lat, lon]}
@@ -565,7 +585,9 @@ const EstablecimientoCard = ({
   return (
     <div
       className={`w-full max-w-none rounded-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer group ${
-        isSelected ? "ring-2 ring-[#337179] ring-offset-2 shadow-2xl" : "shadow-lg"
+        isSelected
+          ? "ring-2 ring-[#337179] ring-offset-2 shadow-2xl"
+          : "shadow-lg"
       }`}
       style={{
         borderTop: `4px solid ${establecimiento.color}`,
@@ -585,7 +607,7 @@ const EstablecimientoCard = ({
             <span className="text-gray-400 text-sm">Sin imagen</span>
           </div>
         )}
-        
+
         {/* Badge de posición */}
         <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm rounded-full px-2 py-1 sm:px-3 text-xs font-bold shadow-lg">
           <span style={{ color: establecimiento.color }}>#{index + 1}</span>
@@ -686,7 +708,9 @@ const MapPopupContent = ({ establecimiento, onViewDetail }) => (
         className="w-full h-24 sm:h-28 object-cover rounded mb-2"
       />
     )}
-    <h3 className="font-bold text-gray-800 text-sm mb-1">{establecimiento.nombre}</h3>
+    <h3 className="font-bold text-gray-800 text-sm mb-1">
+      {establecimiento.nombre}
+    </h3>
     <div className="flex items-center my-1">
       <RatingStars
         rating={parseFloat(establecimiento.promedioCalificaciones || "0")}
@@ -696,7 +720,9 @@ const MapPopupContent = ({ establecimiento, onViewDetail }) => (
         ({establecimiento.promedioCalificaciones || "0"})
       </span>
     </div>
-    <p className="text-xs text-gray-600 mb-2 line-clamp-2">{establecimiento.descripcion}</p>
+    <p className="text-xs text-gray-600 mb-2 line-clamp-2">
+      {establecimiento.descripcion}
+    </p>
     <div className="flex items-center text-xs text-gray-500 mt-2">
       <Map size={10} className="mr-1" />
       <span className="truncate">
@@ -729,8 +755,8 @@ const MapOverlay = ({ establecimiento, onClose, onViewDetail }) => (
         <h3 className="font-bold text-gray-800 text-sm sm:text-base pr-2">
           {establecimiento.nombre}
         </h3>
-        <button 
-          className="text-gray-400 hover:text-gray-600 text-lg sm:text-xl transition-colors p-1" 
+        <button
+          className="text-gray-400 hover:text-gray-600 text-lg sm:text-xl transition-colors p-1"
           onClick={onClose}
         >
           <X size={18} />
@@ -762,7 +788,10 @@ const MapOverlay = ({ establecimiento, onClose, onViewDetail }) => (
 
       <div className="mt-2 sm:mt-3 space-y-1 text-xs sm:text-sm">
         <div className="flex items-start text-gray-600">
-          <Map size={14} className="mr-2 text-indigo-600 flex-shrink-0 mt-0.5" />
+          <Map
+            size={14}
+            className="mr-2 text-indigo-600 flex-shrink-0 mt-0.5"
+          />
           <span className="line-clamp-2">
             {establecimiento.ubicacion?.[0]?.direccion ||
               "Dirección no disponible"}

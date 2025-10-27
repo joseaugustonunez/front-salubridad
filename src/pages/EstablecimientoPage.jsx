@@ -331,57 +331,73 @@ export default function EstablecimientoPage() {
     <div className="min-h-screen" style={{ backgroundColor: "#f8f9fa" }}>
       {/* Header con gradiente */}
       <div
-        className="pt-32 pb-12 relative overflow-hidden"
+        className="relative overflow-hidden pt-28 sm:pt-32 md:pt-40 pb-14 sm:pb-16 md:pb-20"
         style={{
-          background: `linear-gradient(135deg, ${colors.dark} 0%, ${colors.secondary} 100%)`,
+          background: `linear-gradient(135deg, ${colors.dark} 0%, ${colors.secondary} 50%, ${colors.primary} 100%)`,
         }}
       >
-        <div className="max-w-6xl mx-auto relative z-10 px-4">
+        {/* Contenido principal */}
+        <div className="max-w-6xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8 text-center">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-4 text-center"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-5 leading-tight"
           >
-            Descubre <span style={{ color: colors.primary }}>Amarilis</span>
+            Descubre{" "}
+            <span
+              style={{
+                background: `linear-gradient(45deg, ${colors.primary}, #ffffff)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Amarilis
+            </span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg text-white/90 max-w-xl mx-auto mb-8 text-center"
+            className="text-lg sm:text-xl text-white/90 max-w-xl mx-auto mb-10"
           >
             Los mejores establecimientos con experiencias inolvidables
           </motion.p>
 
           {/* Barra de búsqueda */}
-          <div className="relative max-w-2xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="relative max-w-2xl mx-auto"
+          >
             <input
               type="text"
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleBuscar()}
               placeholder="Buscar establecimientos o lugares..."
-              className="w-full bg-white/90 backdrop-blur-md py-3 pl-6 pr-12 rounded-full border-none shadow-lg focus:outline-none focus:ring-2"
+              className="w-full bg-white/90 backdrop-blur-md py-3 pl-6 pr-12 rounded-full border-none shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-0"
               style={{
-                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                focusRing: colors.primary,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
               }}
             />
             <button
               onClick={handleBuscar}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-full text-white"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-full text-white transition-all duration-200 hover:scale-105 hover:shadow-md"
               style={{ backgroundColor: colors.blue }}
             >
               <FaSearch size={16} />
             </button>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Elementos decorativos */}
-        <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-10 bg-white/20 -mr-20 -mt-20"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-10 bg-white/20 -ml-20 -mb-20"></div>
+        {/* Elementos decorativos suaves */}
+        <div className="absolute top-0 right-0 w-52 h-52 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-full opacity-10 bg-white/20 -mr-20 -mt-20"></div>
+        <div className="absolute bottom-0 left-0 w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-full opacity-10 bg-white/20 -ml-16 -mb-16"></div>
+        <div className="absolute top-1/3 left-1/4 w-2 h-2 sm:w-3 sm:h-3 bg-white/30 rounded-full"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/40 rounded-full"></div>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8">

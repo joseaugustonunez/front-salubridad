@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://back-salubridad.sistemasudh.com/tipos"; // Asegúrate de que esta URL sea correcta
-
+//const API_URL = "https://back-salubridad.sistemasudh.com/tipos"; // Asegúrate de que esta URL sea correcta
+const API_URL = "http://localhost:3000/tipos";
 // Obtener todos los Tipos
 export const obtenerTipos = async () => {
   const response = await axios.get(API_URL);

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://back-salubridad.sistemasudh.com/comentarios";
-
+//const API_URL = "https://back-salubridad.sistemasudh.com/comentarios";
+const API_URL = "http://localhost:3000/comentarios";
 // Obtener token del localStorage
 const obtenerToken = () => {
   const token = localStorage.getItem("token");

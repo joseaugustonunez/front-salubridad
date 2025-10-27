@@ -211,7 +211,7 @@ export default function AdminUsuariosView() {
   };
 
   // Opciones de rol permitidas (solo 3)
-  const opcionesRol = ["admin", "vendedor", "usuario"];
+  const opcionesRol = ["usuario", "administrador", "vendedor"];
   const rolLabels = {
     admin: "Administrador",
     vendedor: "Vendedor",

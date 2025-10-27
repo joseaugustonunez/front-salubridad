@@ -160,7 +160,7 @@ export default function HomePage() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         >
-          <source src="../public/video.mp4" type="video/mp4" />
+          <source src="/video.mp4" type="video/mp4" />
           Tu navegador no soporta videos en HTML5.
         </video>
 

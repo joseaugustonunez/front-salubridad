@@ -68,37 +68,16 @@ const Asociate = () => {
     },
   ];
 
-  const testimonials = [
-    {
-      name: "María González",
-      business: "Sabor Casero",
-      text: "Desde que me uní, mis ventas aumentaron un 200%. ¡La plataforma es increíble!",
-      rating: 5,
-    },
-    {
-      name: "Carlos Ruiz",
-      business: "Parrilla Don Carlos",
-      text: "Mis clientes ahora me encuentran fácilmente. La mejor decisión para mi negocio.",
-      rating: 5,
-    },
-    {
-      name: "Ana Martínez",
-      business: "Postres Delicia",
-      text: "Gestionar pedidos nunca fue tan fácil. Totalmente recomendado.",
-      rating: 5,
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden  "
         style={{
           background: "linear-gradient(135deg, #254A5D 0%, #337179 100%)",
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 mt-10 sm:mt-10 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
               <div
@@ -106,9 +85,7 @@ const Asociate = () => {
                 style={{ backgroundColor: "#49C581" }}
               >
                 <Utensils className="w-4 h-4" />
-                <span className="text-sm font-semibold">
-                  100% Gratuito por 30 días
-                </span>
+                <span className="text-sm font-semibold">100% Gratuito</span>
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
                 Haz Crecer tu Emprendimiento de Comida
@@ -146,6 +123,8 @@ const Asociate = () => {
                 </div>
               </div>
             </div>
+
+            {/* Imagen simulada */}
             <div className="hidden lg:block">
               <div className="relative">
                 <div
@@ -322,57 +301,6 @@ const Asociate = () => {
         </div>
       </div>
 
-      {/* Testimonials */}
-      <div
-        className="py-20 px-4 sm:px-6 lg:px-8"
-        style={{ backgroundColor: "#f8f9fa" }}
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2
-              className="text-4xl font-bold mb-4"
-              style={{ color: "#254A5D" }}
-            >
-              Historias de Éxito
-            </h2>
-            <p className="text-xl text-gray-600">
-              Lo que dicen emprendedores como tú
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-2xl p-8 shadow-lg">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                    />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-6 text-lg italic">
-                  "{testimonial.text}"
-                </p>
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-12 h-12 rounded-full"
-                    style={{ backgroundColor: "#49C581" }}
-                  ></div>
-                  <div>
-                    <div className="font-bold" style={{ color: "#254A5D" }}>
-                      {testimonial.name}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {testimonial.business}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Final CTA */}
       <div
         className="py-20 px-4 sm:px-6 lg:px-8"
@@ -407,7 +335,7 @@ const Asociate = () => {
             className="px-12 py-5 rounded-full font-bold text-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             style={{ backgroundColor: "#F8485E", color: "white" }}
           >
-            Comenzar Mi Prueba Gratuita
+            Comenzar
           </button>
           <p className="mt-6 text-sm text-gray-200">
             Más de 500 emprendedores se unieron esta semana
