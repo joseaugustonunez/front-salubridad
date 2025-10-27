@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//const API_URL = "https://back-salubridad.sistemasudh.com/ubicaciones"; // Asegúrate de que esta URL sea correcta
-const API_URL = "http://localhost:3000/ubicaciones";
+const API_URL = "https://back-salubridad.sistemasudh.com/ubicaciones"; // Asegúrate de que esta URL sea correcta
+//const API_URL = "http://localhost:3000/ubicaciones";
 // Obtener todas las ubicaciones
 export const obtenerUbicaciones = async () => {
   try {

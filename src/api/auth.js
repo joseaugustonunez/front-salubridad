@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//const API_URL = 'https://back-salubridad.sistemasudh.com/auth'; 
-const API_URL = 'http://localhost:3000/auth';
+const API_URL = 'https://back-salubridad.sistemasudh.com/auth'; 
+//const API_URL = 'http://localhost:3000/auth';
 // LOGIN
 export const login = async (credenciales) => {
   try {

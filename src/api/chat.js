@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//const API_CHAT = "https://back-salubridad.sistemasudh.com/chat";
-const API_CHAT = "http://localhost:3000/chat";
+const API_CHAT = "https://back-salubridad.sistemasudh.com/chat";
+//const API_CHAT = "http://localhost:3000/chat";
 
 export const enviarMensajeChat = async (mensaje) => {
   try {

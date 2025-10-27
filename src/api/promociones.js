@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//const API_URL = "https://back-salubridad.sistemasudh.com/promociones";
-const API_URL = "http://localhost:3000/promociones";
+const API_URL = "https://back-salubridad.sistemasudh.com/promociones";
+//const API_URL = "http://localhost:3000/promociones";
 const getAuthHeaders = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
