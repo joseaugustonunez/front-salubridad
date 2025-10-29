@@ -19,6 +19,9 @@ import PromocionForm from "../components/PromocionForm";
 import EstablecimientoCard from "../components/EstablecimientoCard";
 import FotosEstablecimiento from "../components/FotosEstablecimiento";
 import ComentariosEstablecimiento from "../components/ComentariosEstablecimiento";
+import MisFavoritos from "../components/MisFavoritos";
+import Ofertas from "../components/Ofertas";
+import Reseñas from "../components/Reseñas";
 import { subirFotoPerfil } from "../api/usuario";
 import { obtenerUsuarioPorId } from "../api/usuario";
 import { subirFotoPortada } from "../api/usuario";
@@ -712,121 +715,21 @@ const PerfilPage = () => {
               </div>
 
               <div className="p-6">
-                {activeTab === "Promociones" && (
+                {activeTab === "Favoritos" && (
                   <div className="bg-white rounded-lg shadow p-6">
-                    {tieneEstablecimiento ? (
-                      <PromocionForm
-                        tieneEstablecimiento={tieneEstablecimiento}
-                        establecimientosData={establecimientosData}
-                      />
-                    ) : (
-                      <div className="text-center py-6">
-                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-                          <FaPercentage
-                            size={36}
-                            style={{ color: "#F8485E" }}
-                          />
-                        </div>
-                        <h3
-                          className="text-lg font-medium"
-                          style={{ color: "#254A5D" }}
-                        >
-                          Necesitas un establecimiento para crear promociones
-                        </h3>
-                        <p className="text-gray-500 mt-1">
-                          Crea primero tu establecimiento para poder añadir
-                          promociones
-                        </p>
-                        <button
-                          onClick={() => setActiveTab("Crear Establecimiento")}
-                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
-                          style={{ backgroundColor: "#49C581" }}
-                        >
-                          Crear Establecimiento
-                        </button>
-                      </div>
-                    )}
+                    <MisFavoritos />
                   </div>
                 )}
 
-                {activeTab === "Fotos" && (
+                {activeTab === "Reseñas" && (
                   <div className="space-y-6">
-                    {!tieneEstablecimiento ? (
-                      <div className="text-center py-6 bg-white rounded-lg shadow">
-                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-                          <FaImages size={36} style={{ color: "#37a6ca" }} />
-                        </div>
-                        <h3
-                          className="text-lg font-medium"
-                          style={{ color: "#254A5D" }}
-                        >
-                          Necesitas un establecimiento para gestionar fotos
-                        </h3>
-                        <p className="text-gray-500 mt-1">
-                          Crea primero tu establecimiento para poder añadir
-                          fotos
-                        </p>
-                        <button
-                          onClick={() => setActiveTab("Crear Establecimiento")}
-                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
-                          style={{ backgroundColor: "#49C581" }}
-                        >
-                          Crear Establecimiento
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="bg-white rounded-lg shadow">
-                        <FotosEstablecimiento
-                          establecimientoId={user?.establecimientosCreados?.[0]}
-                          tieneEstablecimiento={tieneEstablecimiento}
-                        />
-                      </div>
-                    )}
+                    <Reseñas />
                   </div>
                 )}
 
-                {activeTab === "Opiniones" && (
+                {activeTab === "Ofertas" && (
                   <div className="text-center py-10">
-                    {!tieneEstablecimiento ? (
-                      <div>
-                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-                          <FaCommentDots
-                            size={36}
-                            style={{ color: "#F8485E" }}
-                          />
-                        </div>
-                        <h3
-                          className="text-lg font-medium"
-                          style={{ color: "#254A5D" }}
-                        >
-                          Necesitas un establecimiento para recibir opiniones
-                        </h3>
-                        <p className="text-gray-500 mt-1">
-                          Crea primero tu establecimiento para poder recibir
-                          opiniones de tus clientes
-                        </p>
-                        <button
-                          onClick={() => setActiveTab("Crear Establecimiento")}
-                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
-                          style={{ backgroundColor: "#49C581" }}
-                        >
-                          Crear Establecimiento
-                        </button>
-                      </div>
-                    ) : (
-                      <div>
-                        {loading ? (
-                          <div className="text-center py-4">
-                            <p>Cargando opiniones...</p>
-                          </div>
-                        ) : (
-                          <ComentariosEstablecimiento
-                            tieneEstablecimiento={tieneEstablecimiento}
-                            establecimientosData={establecimientosData}
-                          />
-                        )}
-                      </div>
-                    )}
+                    <Ofertas />
                   </div>
                 )}
               </div>

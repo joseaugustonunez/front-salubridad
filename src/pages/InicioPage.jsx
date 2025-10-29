@@ -47,6 +47,9 @@ export default function HomePage() {
   const establecimientosPrevRef = useRef(null);
   const establecimientosNextRef = useRef(null);
 
+  // ref al swiper de establecimientos para controlar desde botones
+  const swiperEstRef = useRef(null);
+
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -346,14 +349,14 @@ export default function HomePage() {
               {/* Flechas funcionales solo para categorías */}
               <button
                 ref={categoriasPrevRef}
-                className="categorias-swiper-button-prev absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden sm:flex items-center justify-center"
+                className="categorias-swiper-button-prev absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden lg:flex items-center justify-center"
                 aria-label="Anterior categoría"
               >
                 <FaChevronLeft className="text-lg md:text-xl text-[#254A5D]" />
               </button>
               <button
                 ref={categoriasNextRef}
-                className="categorias-swiper-button-next absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden sm:flex items-center justify-center"
+                className="categorias-swiper-button-next absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden lg:flex items-center justify-center"
                 aria-label="Siguiente categoría"
               >
                 <FaChevronRight className="text-lg md:text-xl text-[#254A5D]" />
@@ -436,7 +439,7 @@ export default function HomePage() {
               </div>
             </div>
           ) : (
-            <div className="establecimientos-swiper">
+            <div className="establecimientos-swiper relative">
               <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={24}
@@ -447,14 +450,9 @@ export default function HomePage() {
                   disableOnInteraction: false,
                   pauseOnMouseEnter: true,
                 }}
-                // habilitamos navegación y asignamos refs en onBeforeInit
-                navigation={true}
-                onBeforeInit={(swiper) => {
-                  swiper.params.navigation.prevEl =
-                    establecimientosPrevRef.current;
-                  swiper.params.navigation.nextEl =
-                    establecimientosNextRef.current;
-                }}
+                // controlamos el swiper desde react ref
+                navigation={false}
+                onSwiper={(s) => (swiperEstRef.current = s)}
                 pagination={{
                   el: ".establecimientos-swiper-pagination",
                   clickable: true,
@@ -506,6 +504,25 @@ export default function HomePage() {
                   </SwiperSlide>
                 ))}
               </Swiper>
+
+              {/* Flechas para navegar los cards — solo visibles en laptop (lg) */}
+              <button
+                ref={establecimientosPrevRef}
+                onClick={() => swiperEstRef.current?.slidePrev()}
+                className="establecimientos-swiper-button-prev absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden lg:flex items-center justify-center"
+                aria-label="Anterior establecimiento"
+              >
+                <FaChevronLeft className="text-lg md:text-xl text-[#254A5D]" />
+              </button>
+
+              <button
+                ref={establecimientosNextRef}
+                onClick={() => swiperEstRef.current?.slideNext()}
+                className="establecimientos-swiper-button-next absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden lg:flex items-center justify-center"
+                aria-label="Siguiente establecimiento"
+              >
+                <FaChevronRight className="text-lg md:text-xl text-[#254A5D]" />
+              </button>
             </div>
           )}
         </div>

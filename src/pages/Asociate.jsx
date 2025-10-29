@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { solicitarVendedor } from "../api/usuario";
+
 import {
   Check,
   Users,
@@ -16,7 +18,24 @@ import {
 const Asociate = () => {
   const [activeTab, setActiveTab] = useState("benefits");
   const [hoveredFeature, setHoveredFeature] = useState(null);
+  const [enviando, setEnviando] = useState(false);
+  const [mensaje, setMensaje] = useState("");
 
+  const handleSolicitarVendedor = async () => {
+    try {
+      setEnviando(true);
+      setMensaje("");
+      const res = await solicitarVendedor();
+      setMensaje(res.message || "Solicitud enviada correctamente ✅");
+    } catch (error) {
+      setMensaje(
+        error.response?.data?.message ||
+          "Ocurrió un error al enviar la solicitud ❌"
+      );
+    } finally {
+      setEnviando(false);
+    }
+  };
   const features = [
     {
       icon: <ChefHat className="w-7 h-7" />,
@@ -96,18 +115,21 @@ const Asociate = () => {
               </p>
               <div className="flex flex-wrap gap-4">
                 <button
-                  className="px-8 py-4 rounded-full font-semibold text-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                  onClick={handleSolicitarVendedor}
+                  disabled={enviando}
+                  className={`px-8 py-4 rounded-full font-semibold text-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+                    enviando ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
                   style={{ backgroundColor: "#F8485E" }}
                 >
-                  Comenzar Ahora
-                </button>
-                <button
-                  className="px-8 py-4 rounded-full font-semibold text-lg bg-white transition-all duration-300 hover:scale-105"
-                  style={{ color: "#337179" }}
-                >
-                  Ver Demo
+                  {enviando ? "Enviando..." : "Comenzar Ahora"}
                 </button>
               </div>
+              {mensaje && (
+                <p className="mt-4 text-sm text-gray-200 bg-[#254A5D]/30 px-3 py-2 rounded-lg inline-block">
+                  {mensaje}
+                </p>
+              )}
               <div className="flex items-center gap-8 mt-12">
                 <div>
                   <div className="text-3xl font-bold">5,000+</div>

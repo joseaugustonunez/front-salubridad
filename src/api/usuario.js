@@ -152,3 +152,90 @@ export const eliminarUsuario = async (id) => {
     throw error;
   }
 };
+
+// Obtener establecimientos seguidos
+export const obtenerEstablecimientosSeguidos = async (userId) => {
+  try {
+    const token = obtenerToken();
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    // Si se pasa userId usamos /users/:id/seguidos, si no usamos /users/seguidos (backend toma user del token)
+    const url = userId ? `${API_URL}/${userId}/seguidos` : `${API_URL}/seguidos`;
+    const response = await axios.get(url, { headers });
+
+    // Intentar adaptarnos a distintas formas de respuesta
+    return response.data.establecimientosSeguidos || response.data || [];
+  } catch (error) {
+    console.error("Error al obtener establecimientos seguidos:", error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
+// Obtener comentarios (userId opcional, intenta localStorage si no se pasa)
+export const obtenerComentariosUsuario = async (userId) => {
+  try {
+    const id =
+      userId ||
+      (() => {
+        const stored = localStorage.getItem("user");
+        if (!stored) return null;
+        try {
+          const parsed = JSON.parse(stored);
+          return parsed?._id || parsed?.id || parsed?.userId || null;
+        } catch {
+          return null;
+        }
+      })();
+
+    if (!id) throw new Error("ID de usuario no disponible. Inicia sesión o pasa userId.");
+
+    const url = `${API_URL}/${id}/comentarios`;
+    const resp = await axios.get(url, configurarHeaders());
+    // Puede devolver { comentarios: [...] } o arreglo directo
+    return resp.data.comentarios || resp.data || [];
+  } catch (error) {
+    console.error("Error al obtener comentarios del usuario:", error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
+// Obtener promociones de los establecimientos que sigue el usuario
+export const obtenerPromocionesUsuario = async (userId) => {
+  try {
+    const id =
+      userId ||
+      (() => {
+        const stored = localStorage.getItem("user");
+        if (!stored) return null;
+        try {
+          const parsed = JSON.parse(stored);
+          return parsed?._id || parsed?.id || parsed?.userId || null;
+        } catch {
+          return null;
+        }
+      })();
+
+    if (!id) throw new Error("ID de usuario no disponible. Inicia sesión o pasa userId.");
+
+    const url = `${API_URL}/${id}/promociones`;
+    const resp = await axios.get(url, configurarHeaders());
+    return resp.data.promociones || resp.data || [];
+  } catch (error) {
+    console.error("Error al obtener promociones del usuario:", error.response?.data || error.message || error);
+    throw error;
+  }
+}
+// Enviar solicitud para ser vendedor
+export const solicitarVendedor = async () => {
+  try {
+    const headers = configurarHeaders(); // ya agrega el token automáticamente
+    const response = await axios.post(`${API_URL}/solicitar-vendedor`, {}, headers);
+    return response.data;
+  } catch (error) {
+    console.error("Error al solicitar ser vendedor:", error.response?.data || error.message || error);
+    throw error;
+  }
+};

@@ -12,7 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import{obtenerPromociones} from "../api/promociones";
+import { obtenerPromociones } from "../api/promociones";
 // Colores principales
 const colors = {
   primary: "#49C581",
@@ -149,7 +149,7 @@ const OfferCard = ({ offer }) => {
       <div className="relative">
         <div className="overflow-hidden">
           <img
-            src={offer.image}
+            src={`https://back-salubridad.sistemasudh.com/uploads/${offer.image}`}
             alt={offer.title}
             className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
           />
@@ -609,16 +609,16 @@ export default function OffersView() {
             className="text-lg text-white/90 max-w-xl mx-auto mb-8 text-center"
           >
             Descubre nuestras mejores ofertas y promociones exclusivas.
-              Actualizado diariamente para brindarte los mejores precios en
-              todos nuestros productos.
+            Actualizado diariamente para brindarte los mejores precios en todos
+            nuestros productos.
           </motion.p>
         </div>
         <div className="flex justify-center mt-6">
-            <div
-              className="w-20 h-1 rounded-full"
-              style={{ backgroundColor: colors.primary }}
-            ></div>
-          </div>
+          <div
+            className="w-20 h-1 rounded-full"
+            style={{ backgroundColor: colors.primary }}
+          ></div>
+        </div>
 
         {/* Elementos decorativos */}
         <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-10 bg-white/20 -mr-20 -mt-20"></div>

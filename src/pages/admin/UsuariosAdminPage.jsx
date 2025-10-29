@@ -54,6 +54,7 @@ export default function AdminUsuariosView() {
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedEstablecimiento, setSelectedEstablecimiento] = useState("");
   const [mensaje, setMensaje] = useState({ texto: "", tipo: "" });
+  const [procesandoSolicitud, setProcesandoSolicitud] = useState(false);
 
   // Cargar usuarios y establecimientos
   useEffect(() => {
@@ -70,12 +71,12 @@ export default function AdminUsuariosView() {
           nombreUsuario: usuario.nombreUsuario,
           rol: usuario.rol,
           establecimientosCreados: usuario.establecimientosCreados || [],
+          solicitudVendedor: usuario.solicitudVendedor || null, // <-- agregado
         }));
 
         // Asegurarse de que todos los establecimientos tengan id o _id
         const establecimientosNormalizados = datosEstablecimientos.map(
           (est) => {
-            // Si el establecimiento no tiene id, pero tiene _id, usamos _id como id
             if (!est.id && est._id) {
               return { ...est, id: est._id };
             }
@@ -95,6 +96,54 @@ export default function AdminUsuariosView() {
 
     cargarDatos();
   }, []);
+
+  // NUEVO: usuarios que solicitaron ser vendedor y están pendientes
+  const solicitudesPendientes = usuarios.filter(
+    (u) => u.solicitudVendedor === "pendiente"
+  );
+
+  // Aprobar solicitud: convierte a vendedor y marca solicitud como aprobada
+  const aprobarSolicitud = async (userId) => {
+    try {
+      setProcesandoSolicitud(true);
+      await actualizarUsuario(userId, {
+        rol: "vendedor",
+        solicitudVendedor: "aprobado",
+      });
+      setUsuarios((prev) =>
+        prev.map((u) =>
+          u.id === userId
+            ? { ...u, rol: "vendedor", solicitudVendedor: "aprobado" }
+            : u
+        )
+      );
+      mostrarMensaje("Solicitud aprobada", "success");
+    } catch (err) {
+      console.error("Error aprobar solicitud:", err);
+      mostrarMensaje("Error al aprobar la solicitud", "error");
+    } finally {
+      setProcesandoSolicitud(false);
+    }
+  };
+
+  // Rechazar solicitud: marca solicitud como rechazada
+  const rechazarSolicitud = async (userId) => {
+    try {
+      setProcesandoSolicitud(true);
+      await actualizarUsuario(userId, { solicitudVendedor: "rechazado" });
+      setUsuarios((prev) =>
+        prev.map((u) =>
+          u.id === userId ? { ...u, solicitudVendedor: "rechazado" } : u
+        )
+      );
+      mostrarMensaje("Solicitud rechazada", "success");
+    } catch (err) {
+      console.error("Error rechazar solicitud:", err);
+      mostrarMensaje("Error al rechazar la solicitud", "error");
+    } finally {
+      setProcesandoSolicitud(false);
+    }
+  };
 
   // Filtrar usuarios según término de búsqueda
   const usuariosFiltrados = usuarios.filter(
@@ -307,7 +356,7 @@ export default function AdminUsuariosView() {
                 <thead style={{ backgroundColor: colors.dark }}>
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                      Usuario
+                      Usuario (solicitud)
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                       Email
@@ -345,25 +394,48 @@ export default function AdminUsuariosView() {
                   ) : (
                     usuariosFiltrados.map((usuario) => (
                       <tr key={usuario.id} className="hover:bg-gray-50">
+                        {/* COLUMNA UNIFICADA: Usuario + Estado de solicitud */}
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                              <span className="text-lg font-medium text-gray-600">
-                                {usuario.nombreUsuario
-                                  ?.charAt(0)
-                                  .toUpperCase() || "?"}
-                              </span>
-                            </div>
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">
-                                {usuario.nombreUsuario || "Sin nombre"}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                <span className="text-lg font-medium text-gray-600">
+                                  {usuario.nombreUsuario
+                                    ?.charAt(0)
+                                    .toUpperCase() || "?"}
+                                </span>
                               </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {usuario.nombreUsuario || "Sin nombre"}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  ID: {usuario.id}
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                              <span
+                                className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                  usuario.solicitudVendedor === "pendiente"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : usuario.solicitudVendedor === "aprobado"
+                                    ? "bg-green-100 text-green-800"
+                                    : usuario.solicitudVendedor === "rechazado"
+                                    ? "bg-red-100 text-red-800"
+                                    : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {usuario.solicitudVendedor || "—"}
+                              </span>
                             </div>
                           </div>
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {usuario.email || "No disponible"}
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           {editingUser && editingUser.id === usuario.id ? (
                             <select
@@ -395,6 +467,7 @@ export default function AdminUsuariosView() {
                             </span>
                           )}
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {editingUser && editingUser.id === usuario.id ? (
                             <select
@@ -436,6 +509,7 @@ export default function AdminUsuariosView() {
                             </div>
                           )}
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           {editingUser && editingUser.id === usuario.id ? (
                             <div className="flex space-x-2">
