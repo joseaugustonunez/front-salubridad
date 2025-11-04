@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { obtenerComentariosUsuario } from "../api/usuario";
+import { FaStar, FaRegStar, FaStarHalf } from "react-icons/fa";
 
 const Resenas = ({ userId: propUserId }) => {
   const [comentarios, setComentarios] = useState([]);
@@ -53,9 +54,28 @@ const Resenas = ({ userId: propUserId }) => {
     return colores[index];
   };
 
+  const renderStars = (value = 0) => {
+    const stars = [];
+    const full = Math.floor(value);
+    const half = value - full >= 0.5;
+    for (let i = 0; i < full; i++) {
+      stars.push(<FaStar key={"s" + i} className="text-amber-400 w-4 h-4" />);
+    }
+    if (half) {
+      stars.push(<FaStarHalf key="half" className="text-amber-400 w-4 h-4" />);
+    }
+    const emptyCount = 5 - stars.length;
+    for (let i = 0; i < emptyCount; i++) {
+      stars.push(
+        <FaRegStar key={"e" + i} className="text-amber-300 w-4 h-4" />
+      );
+    }
+    return <div className="flex items-center gap-1">{stars}</div>;
+  };
+
   if (cargando)
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
+      <div className="flex justify-center items-center min-h-[320px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#254A5D]"></div>
       </div>
     );
@@ -72,12 +92,13 @@ const Resenas = ({ userId: propUserId }) => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-[#254A5D] flex items-center gap-3">
-          <span className="text-4xl"></span>
+      <div className="mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-[#254A5D]">
           Comentarios Recientes
         </h2>
-        <p className="text-gray-600 mt-2">Establecimientos que sigues</p>
+        <p className="text-sm text-gray-600 mt-1">
+          Publicaciones de establecimientos que sigues
+        </p>
       </div>
 
       {comentarios.length > 0 ? (
@@ -87,15 +108,15 @@ const Resenas = ({ userId: propUserId }) => {
               comentario.usuario?.nombreUsuario || "Usuario";
             const iniciales = obtenerIniciales(nombreUsuario);
             const colorAvatar = generarColorAvatar(nombreUsuario);
+            const calificacion = Number(comentario.calificacion) || 0;
 
             return (
-              <div
+              <article
                 key={comentario._id || comentario.id}
                 className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden"
               >
                 <div className="p-6">
-                  {/* Header con usuario */}
-                  <div className="flex items-start justify-between mb-4">
+                  <header className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       {comentario.usuario?.fotoPerfil ? (
                         <img
@@ -111,16 +132,16 @@ const Resenas = ({ userId: propUserId }) => {
                         </div>
                       )}
                       <div>
-                        <p className="font-semibold text-[#254A5D] text-lg">
+                        <p className="font-semibold text-[#254A5D] text-sm md:text-base">
                           {nombreUsuario}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs text-gray-500">
                           {comentario.fecha
                             ? new Date(comentario.fecha).toLocaleDateString(
                                 "es-ES",
                                 {
                                   year: "numeric",
-                                  month: "long",
+                                  month: "short",
                                   day: "numeric",
                                 }
                               )
@@ -129,39 +150,58 @@ const Resenas = ({ userId: propUserId }) => {
                       </div>
                     </div>
 
-                    {/* Calificación */}
-                    <div className="flex items-center gap-1 bg-amber-50 px-3 py-1 rounded-full">
-                      <span className="text-amber-500 text-xl">⭐</span>
-                      <span className="font-bold text-amber-600">
-                        {comentario.calificacion || 0}
-                      </span>
+                    <div className="flex flex-col items-end">
+                      <div className="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded-full">
+                        {renderStars(calificacion)}
+                        <span className="ml-2 text-amber-700 font-semibold text-sm">
+                          {calificacion.toFixed(1)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  </header>
 
-                  {/* Comentario */}
                   <p className="text-gray-700 leading-relaxed mb-4">
                     {comentario.comentario}
                   </p>
 
-                  {/* Establecimiento */}
                   {comentario.establecimiento && (
-                    <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
-                      <span className="text-gray-400">📍</span>
-                      <p className="text-sm text-gray-600">
-                        <span className="font-medium">
-                          {comentario.establecimiento.nombre}
-                        </span>
-                      </p>
+                    <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                      <div className="flex items-center gap-3">
+                        {comentario.establecimiento.portada ? (
+                          <img
+                            src={
+                              comentario.establecimiento.portada.includes(
+                                "http"
+                              )
+                                ? comentario.establecimiento.portada
+                                : `https://back-salubridad.sistemasudh.com/uploads/${comentario.establecimiento.portada}`
+                            }
+                            alt={comentario.establecimiento.nombre}
+                            className="w-14 h-10 rounded-md object-cover"
+                          />
+                        ) : (
+                          <div className="w-14 h-10 rounded-md bg-gray-100 flex items-center justify-center text-xs text-gray-400">
+                            No imagen
+                          </div>
+                        )}
+                        <div>
+                          <p className="text-sm text-[#254A5D] font-medium">
+                            {comentario.establecimiento.nombre}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {comentario.establecimiento.direccion || ""}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
       ) : (
         <div className="bg-gray-50 rounded-xl p-12 text-center">
-          <div className="text-6xl mb-4"></div>
           <p className="text-gray-600 text-lg">
             No hay comentarios de los establecimientos que sigues.
           </p>

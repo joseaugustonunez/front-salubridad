@@ -228,6 +228,35 @@ export const obtenerPromocionesUsuario = async (userId) => {
     throw error;
   }
 }
+
+// Obtener totales del usuario (comentarios hechos y establecimientos seguidos)
+export const obtenerTotalesUsuario = async (userId) => {
+  try {
+    const id =
+      userId ||
+      (() => {
+        const stored = localStorage.getItem("user");
+        if (!stored) return null;
+        try {
+          const parsed = JSON.parse(stored);
+          return parsed?._id || parsed?.id || parsed?.userId || null;
+        } catch {
+          return null;
+        }
+      })();
+
+    if (!id) throw new Error("ID de usuario no disponible. Inicia sesión o pasa userId.");
+
+    const url = `${API_URL}/${id}/totales`;
+    const resp = await axios.get(url, configurarHeaders());
+    // resp.data: { totalComentarios, totalEstablecimientosSeguidos }
+    return resp.data || {};
+  } catch (error) {
+    console.error("Error al obtener totales del usuario:", error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
 // Enviar solicitud para ser vendedor
 export const solicitarVendedor = async () => {
   try {
@@ -236,6 +265,62 @@ export const solicitarVendedor = async () => {
     return response.data;
   } catch (error) {
     console.error("Error al solicitar ser vendedor:", error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
+// Obtener seguidores de un vendedor (userId opcional)
+export const obtenerSeguidoresVendedor = async (userId) => {
+  try {
+    const id =
+      userId ||
+      (() => {
+        const stored = localStorage.getItem("user");
+        if (!stored) return null;
+        try {
+          const parsed = JSON.parse(stored);
+          return parsed?._id || parsed?.id || null;
+        } catch {
+          return null;
+        }
+      })();
+
+    if (!id) throw new Error("ID de usuario no disponible. Inicia sesión o pasa userId.");
+
+    const url = `${API_URL}/${id}/seguidores`;
+    const resp = await axios.get(url, configurarHeaders());
+    // resp.data: { total, seguidores }
+    return resp.data || { total: 0, seguidores: [] };
+  } catch (error) {
+    console.error("Error al obtener seguidores del vendedor:", error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
+// Obtener comentarios recibidos en los establecimientos del vendedor
+export const obtenerComentariosRecibidosUsuario = async (userId) => {
+  try {
+    const id =
+      userId ||
+      (() => {
+        const stored = localStorage.getItem("user");
+        if (!stored) return null;
+        try {
+          const parsed = JSON.parse(stored);
+          return parsed?._id || parsed?.id || null;
+        } catch {
+          return null;
+        }
+      })();
+
+    if (!id) throw new Error("ID de usuario no disponible. Inicia sesión o pasa userId.");
+
+    const url = `${API_URL}/${id}/comentarios-recibidos`;
+    const resp = await axios.get(url, configurarHeaders());
+    // resp.data: { total, comentarios }
+    return resp.data || { total: 0, comentarios: [] };
+  } catch (error) {
+    console.error("Error al obtener comentarios recibidos:", error.response?.data || error.message || error);
     throw error;
   }
 };

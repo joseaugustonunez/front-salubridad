@@ -20,7 +20,8 @@ import { useNavigate } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import Chatbot from "../components/Chatbot";
+//import Chatbot from "../components/Chatbot";
+import SearchChat from "../components/SearchChat";
 // Import estilos de Swiper
 import "swiper/css";
 import "swiper/css/navigation";
@@ -37,11 +38,16 @@ export default function HomePage() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // categoría seleccionada para filtrar establecimientos
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   const navigate = useNavigate();
 
   // refs para navegación de categorías
   const categoriasPrevRef = useRef(null);
   const categoriasNextRef = useRef(null);
+  // ref al swiper de categorías para controlar desde botones (igual que establecimientos)
+  const swiperCatRef = useRef(null);
 
   // refs para navegación de establecimientos (flechas en modo laptop)
   const establecimientosPrevRef = useRef(null);
@@ -145,12 +151,24 @@ export default function HomePage() {
   };
 
   // Establecimientos filtrados según el filtro activo
-  const establecimientosFiltrados = establecimientos.filter(
-    (est) =>
+  const establecimientosFiltrados = establecimientos.filter((est) => {
+    // filtro por tipo global (all | featured | offers)
+    const passesTypeFilter =
       activeFilter === "all" ||
       (activeFilter === "featured" && est.verificado) ||
-      (activeFilter === "offers" && tienePromociones(est._id))
-  );
+      (activeFilter === "offers" && tienePromociones(est._id));
+
+    // si hay categoría seleccionada, exigir que el establecimiento pertenezca a ella
+    if (selectedCategory) {
+      const perteneceCategoria =
+        est.categoria &&
+        Array.isArray(est.categoria) &&
+        est.categoria.some((c) => c._id === selectedCategory);
+      return passesTypeFilter && perteneceCategoria;
+    }
+
+    return passesTypeFilter;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -163,7 +181,7 @@ export default function HomePage() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         >
-          <source src="/video.mp4" type="video/mp4" />
+          <source src="" type="video/mp4" />
           Tu navegador no soporta videos en HTML5.
         </video>
 
@@ -173,34 +191,22 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 text-center max-w-6xl w-full px-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#00f0b5] to-[#00a6fb] drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] tracking-tight">
             Sabores que Inspiran
           </h1>
+
           <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 md:mb-8 font-light px-4">
             Descubre experiencias gastronómicas únicas cerca de ti
           </p>
 
-          <form
-            onSubmit={handleSearch}
-            className="bg-white/80 p-1.5 rounded-xl shadow-lg flex items-center max-w-md mx-auto backdrop-blur-sm"
-          >
-            <div className="bg-gray-100 p-2 rounded-lg">
-              <FaSearch className="text-[#337179] text-base" />
-            </div>
-            <input
-              type="text"
-              placeholder="Busca restaurantes, comidas, ofertas..."
-              className="flex-1 px-3 py-2 outline-none text-[#254A5D] bg-transparent text-sm"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+          {/* REEMPLAZADO: SearchChat (chat integrado en la barra) */}
+          <div className="mx-auto w-full px-4">
+            <SearchChat
+              onResults={(list) => {
+                if (list && list.length) setEstablecimientos(list);
+              }}
             />
-            <button
-              type="submit"
-              className="bg-gradient-to-r from-[#49C581] to-[#37a6ca] hover:from-[#37a6ca] hover:to-[#49C581] text-white px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300"
-            >
-              Buscar
-            </button>
-          </form>
+          </div>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
@@ -255,12 +261,20 @@ export default function HomePage() {
                   disableOnInteraction: false,
                   pauseOnMouseEnter: true,
                 }}
-                navigation={true}
-                // aseguramos que Swiper use los elementos de navegación referenciados
+                // usar navegación con prevEl / nextEl (asignado en onBeforeInit)
+                navigation={{
+                  prevEl: categoriasPrevRef.current,
+                  nextEl: categoriasNextRef.current,
+                }}
                 onBeforeInit={(swiper) => {
+                  // asignar los elementos de navegación (refs pueden ser null durante render)
+                  // esto garantiza que Swiper use los botones externos
+                  // eslint-disable-next-line no-param-reassign
                   swiper.params.navigation.prevEl = categoriasPrevRef.current;
+                  // eslint-disable-next-line no-param-reassign
                   swiper.params.navigation.nextEl = categoriasNextRef.current;
                 }}
+                onSwiper={(s) => (swiperCatRef.current = s)}
                 pagination={{
                   el: ".categorias-swiper-pagination",
                   clickable: true,
@@ -293,6 +307,7 @@ export default function HomePage() {
                 className="pb-12"
               >
                 {categorias.map((categoria, index) => {
+                  const isActiveCat = selectedCategory === categoria._id;
                   const colors = [
                     "#49C581",
                     "#F8485E",
@@ -312,13 +327,12 @@ export default function HomePage() {
                   return (
                     <SwiperSlide key={categoria._id}>
                       <div
-                        className="cursor-pointer transform hover:scale-105 transition-transform duration-300 h-full"
-                        onClick={() => {
-                          console.log(
-                            "Categoría seleccionada:",
-                            categoria.nombre
-                          );
-                        }}
+                        className={`cursor-pointer transform transition-transform duration-300 h-full ${
+                          isActiveCat
+                            ? "scale-105 ring-4 ring-[#49C581]/30"
+                            : "hover:scale-105"
+                        }`}
+                        onClick={() => setSelectedCategory(categoria._id)}
                       >
                         <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 h-full">
                           <div className="flex items-center p-4 md:p-6">
@@ -345,22 +359,35 @@ export default function HomePage() {
                   );
                 })}
               </Swiper>
-
-              {/* Flechas funcionales solo para categorías */}
+              {/* Flechas para navegar categorías — solo visibles en laptop (lg) */}
               <button
                 ref={categoriasPrevRef}
+                onClick={() => swiperCatRef.current?.slidePrev()}
                 className="categorias-swiper-button-prev absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden lg:flex items-center justify-center"
                 aria-label="Anterior categoría"
               >
                 <FaChevronLeft className="text-lg md:text-xl text-[#254A5D]" />
               </button>
+
               <button
                 ref={categoriasNextRef}
+                onClick={() => swiperCatRef.current?.slideNext()}
                 className="categorias-swiper-button-next absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden lg:flex items-center justify-center"
                 aria-label="Siguiente categoría"
               >
                 <FaChevronRight className="text-lg md:text-xl text-[#254A5D]" />
               </button>
+
+              {/* Botón para limpiar selección de categoría */}
+              <div className="absolute right-12 top-4 hidden lg:flex">
+                <button
+                  onClick={() => setSelectedCategory(null)}
+                  className="bg-white px-3 py-1 rounded-full text-sm shadow-sm hover:bg-gray-100"
+                  title="Limpiar categoría"
+                >
+                  Limpiar
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -529,7 +556,7 @@ export default function HomePage() {
       </section>
 
       {/* Componente global del asistente (usa createPortal en su interior) */}
-      <Chatbot />
+      {/*     <Chatbot /> */}
     </div>
   );
 }
@@ -620,7 +647,7 @@ function EstablecimientoCard({
           </div>
         )}
 
-        <button className="w-full bg-gradient-to-r from-[#49C581] to-[#37a6ca] text-white py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm md:text-base">
+        <button className="w-full bg-[#254a5d] text-white py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm md:text-base">
           Ver Detalles
         </button>
       </div>

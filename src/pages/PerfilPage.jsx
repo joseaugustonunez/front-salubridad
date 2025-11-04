@@ -22,11 +22,17 @@ import ComentariosEstablecimiento from "../components/ComentariosEstablecimiento
 import MisFavoritos from "../components/MisFavoritos";
 import Ofertas from "../components/Ofertas";
 import Reseñas from "../components/Reseñas";
-import { subirFotoPerfil } from "../api/usuario";
-import { obtenerUsuarioPorId } from "../api/usuario";
-import { subirFotoPortada } from "../api/usuario";
+import {
+  subirFotoPerfil,
+  subirFotoPortada,
+  obtenerUsuarioPorId,
+  obtenerTotalesUsuario,
+  obtenerSeguidoresVendedor,
+  obtenerComentariosRecibidosUsuario,
+} from "../api/usuario";
 const PerfilPage = () => {
-  const [activeTab, setActiveTab] = useState("Establecimiento");
+  // const [activeTab, setActiveTab] = useState("Establecimiento");
+  const [activeTab, setActiveTab] = useState(""); // se inicializa vacío y se establece tras cargar el usuario
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profilePicture, setProfilePicture] = useState("");
@@ -34,6 +40,13 @@ const PerfilPage = () => {
   const [tieneEstablecimiento, setTieneEstablecimiento] = useState(false);
   const [establecimientosData, setEstablecimientosData] = useState([]);
   const [selectedEstablishmentId, setSelectedEstablishmentId] = useState(null);
+  const [totalComentarios, setTotalComentarios] = useState(0);
+  const [totalEstablecimientosSeguidos, setTotalEstablecimientosSeguidos] =
+    useState(0);
+  const [seguidoresList, setSeguidoresList] = useState([]);
+  const [seguidoresCount, setSeguidoresCount] = useState(0);
+  const [comentariosRecibidos, setComentariosRecibidos] = useState([]);
+  const [comentariosRecibidosCount, setComentariosRecibidosCount] = useState(0);
 
   const recargarUsuario = async (userId) => {
     const usuarioActualizado = await obtenerUsuarioPorId(userId);
@@ -321,6 +334,71 @@ const PerfilPage = () => {
   const handleEstablecimientoCreado = (nuevoEstablecimiento) => {
     // Aquí puedes actualizar el estado o hacer algo con el nuevo establecimiento
   };
+  useEffect(() => {
+    if (!user) return;
+    // No sobreescribir si el usuario ya seleccionó una pestaña
+    if (activeTab) return;
+
+    // Por defecto: vendedores -> "Establecimiento", usuarios comunes -> "Favoritos"
+    if (user.rol === "vendedor") {
+      setActiveTab("Establecimiento");
+    } else {
+      setActiveTab("Favoritos");
+    }
+  }, [user]);
+  // helper para obtener id robustamente
+  const getUserIdFromUser = () => {
+    let userId = null;
+    if (user && (user.id || user._id)) userId = user.id || user._id;
+    else {
+      userId =
+        localStorage.getItem("userId") ||
+        localStorage.getItem("user_id") ||
+        localStorage.getItem("id");
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          const parsed = JSON.parse(storedUser);
+          userId = userId || parsed.id || parsed._id;
+        } catch (e) {
+          console.error("Error parseando user desde localStorage:", e);
+        }
+      }
+    }
+    return userId;
+  };
+
+  // Obtener totales (sigue, interacciones, etc.) cuando cargue el usuario
+  useEffect(() => {
+    if (!user) return;
+    const userId = getUserIdFromUser();
+    if (!userId) return;
+
+    (async () => {
+      try {
+        const totals = await obtenerTotalesUsuario(userId.toString());
+        // Manejamos varias posibles claves que la API pueda devolver
+        const sigue =
+          totals?.siguiendo ??
+          totals?.establecimientosSeguidos ??
+          totals?.sigue ??
+          totals?.totalSiguiendo ??
+          0;
+        const interacciones =
+          totals?.interacciones ??
+          totals?.totalInteracciones ??
+          totals?.totalComentarios ??
+          totals?.comentarios ??
+          0;
+
+        setTotalEstablecimientosSeguidos(Number(sigue));
+        setTotalComentarios(Number(interacciones));
+      } catch (error) {
+        console.error("Error al obtener totales de usuario:", error);
+      }
+    })();
+  }, [user]);
+
   if (loading || !user) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -454,17 +532,27 @@ const PerfilPage = () => {
               </p>
               <p className="text-sm text-gray-500">Aportes</p>
             </div>
+
             <div className="text-center py-4">
               <p className="font-bold text-xl" style={{ color: "#254A5D" }}>
-                {user.seguidores || 0}
+                {user.rol === "vendedor"
+                  ? user.seguidores || 0
+                  : totalEstablecimientosSeguidos || user.siguiendo || 0}
               </p>
-              <p className="text-sm text-gray-500">Seguidores</p>
+              <p className="text-sm text-gray-500">
+                {user.rol === "vendedor" ? "Seguidores" : "Siguiendo"}
+              </p>
             </div>
+
             <div className="text-center py-4">
               <p className="font-bold text-xl" style={{ color: "#254A5D" }}>
-                {user.siguiendo || 0}
+                {user.rol === "vendedor"
+                  ? user.siguiendo || 0
+                  : totalComentarios || 0}
               </p>
-              <p className="text-sm text-gray-500">Siguiendo</p>
+              <p className="text-sm text-gray-500">
+                {user.rol === "vendedor" ? "Siguiendo" : "Aportes"}
+              </p>
             </div>
           </div>
 

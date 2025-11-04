@@ -287,13 +287,13 @@ export default function NavbarPage() {
             </button>
 
             {/* Left: Menu (desktop) */}
-            <div className="hidden md:flex items-center space-x-6 font-helveticaBold">
+            <div className="hidden md:flex items-center space-x-3 text-sm font-helveticaBold">
               {/* Mostrar enlaces públicos sólo si NO es admin */}
               {!isAdmin && (
                 <>
                   <a
                     href="/"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-sm ${
                       activeLink === "inicio"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
@@ -304,7 +304,7 @@ export default function NavbarPage() {
                   </a>
                   <a
                     href="/establecimientos"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-sm ${
                       activeLink === "establecimientos"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
@@ -315,7 +315,7 @@ export default function NavbarPage() {
                   </a>
                   <a
                     href="/top"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-sm ${
                       activeLink === "top"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
@@ -326,7 +326,7 @@ export default function NavbarPage() {
                   </a>
                   <a
                     href="/promociones"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-sm ${
                       activeLink === "promociones"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
@@ -337,10 +337,10 @@ export default function NavbarPage() {
                   </a>
                   <a
                     href="/asociate"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 text-white rounded-3xl transition duration-200 text-sm ${
                       activeLink === "asociate"
-                        ? "bg-[#254A5D] text-white"
-                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                        ? "bg-gradient-to-r from-[#49C581] via-[#37c6a6] to-[#00f0b5] shadow-lg transform scale-105"
+                        : "bg-gradient-to-r from-[#37c6a6] via-[#00f0b5] to-[#49C581] hover:shadow-xl hover:scale-105"
                     }`}
                     onClick={() => handleLinkClick("asociate")}
                   >
@@ -354,7 +354,7 @@ export default function NavbarPage() {
                 <>
                   <a
                     href="/admin/tipos"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-sm ${
                       activeLink === "tipos"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
@@ -365,7 +365,7 @@ export default function NavbarPage() {
                   </a>
                   <a
                     href="/admin/categorias"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-sm ${
                       activeLink === "categorias"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
@@ -376,7 +376,7 @@ export default function NavbarPage() {
                   </a>
                   <a
                     href="/admin/usuarios"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-sm ${
                       activeLink === "usuarios"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
@@ -387,7 +387,7 @@ export default function NavbarPage() {
                   </a>
                   <a
                     href="/admin/establecimientos"
-                    className={`block px-3 py-1.5 rounded-3xl transition duration-200 ${
+                    className={`block md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-sm ${
                       activeLink === "establecimientos-admin"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
@@ -399,13 +399,13 @@ export default function NavbarPage() {
                 </>
               )}
 
-              {/* Business Owner specific navigation items */}
+              {/* Business Owner specific navigation items (compact visuals only) */}
               {isBusinessOwner && (
                 <div className="relative group">
-                  <button className="px-3 py-1.5 rounded-3xl transition duration-200 text-gray-700 hover:bg-[#254A5D] hover:text-white flex items-center">
+                  <button className="md:px-2 md:py-1 px-3 py-1 rounded-3xl transition duration-200 text-gray-700 hover:bg-[#254A5D] hover:text-white flex items-center text-sm">
                     Mi Negocio
                     <svg
-                      className="w-4 h-4 ml-1"
+                      className="w-3 h-3 ml-1"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -418,31 +418,31 @@ export default function NavbarPage() {
                       />
                     </svg>
                   </button>
-                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-10 hidden group-hover:block">
+                  <div className="absolute left-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2 z-10 hidden group-hover:block">
                     <a
                       href="/negocio/dashboard"
-                      className="block px-4 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      className="block px-3 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       onClick={() => handleLinkClick("negocio-dashboard")}
                     >
                       Dashboard
                     </a>
                     <a
                       href="/negocio/reservas"
-                      className="block px-4 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      className="block px-3 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       onClick={() => handleLinkClick("negocio-reservas")}
                     >
                       Gestionar Reservas
                     </a>
                     <a
                       href="/negocio/promociones"
-                      className="block px-4 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      className="block px-3 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       onClick={() => handleLinkClick("negocio-promociones")}
                     >
                       Mis Promociones
                     </a>
                     <a
                       href="/negocio/estadisticas"
-                      className="block px-4 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                      className="block px-3 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white"
                       onClick={() => handleLinkClick("negocio-estadisticas")}
                     >
                       Estadísticas
@@ -453,7 +453,7 @@ export default function NavbarPage() {
             </div>
 
             {/* Center: Logo */}
-            <div className="flex flex-col items-start md:flex-grow md:items-center ml-20">
+            <div className="flex flex-col items-center md:flex-grow md:items-center">
               <img
                 src="/img1.png"
                 alt="Logo Noka"
@@ -462,7 +462,7 @@ export default function NavbarPage() {
             </div>
 
             {/* Right: Search and actions */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               {/* Search button (mobile) */}
               <button
                 ref={searchButtonRef}

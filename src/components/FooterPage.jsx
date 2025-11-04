@@ -2,51 +2,86 @@ import { FaFacebookF, FaInstagram, FaTwitter, FaTiktok } from "react-icons/fa";
 
 function Footer() {
   return (
-    <footer className="bg-[#254A5D] text-white pt-10 pb-6">
-      <div className="container mx-auto px-6 grid md:grid-cols-3 gap-8">
-        
-        {/* Marca / Logo */}
-        <div>
-          <h2 className="text-2xl font-bold text-[#49C5B1] mb-4">TuMarca</h2>
-          <p className="text-sm text-gray-300">
-            Conectamos a los mejores establecimientos contigo. Descubre, califica y comparte.
-          </p>
-        </div>
+    <footer className="bg-gradient-to-r from-[#254A5D] via-[#337179] to-[#254A5D] text-white rounded-t-2xl overflow-hidden">
+      {/* franja superior fina para mantener continuidad con el navbar */}
 
-        {/* Navegación */}
-        <div>
-          <h3 className="text-xl font-semibold text-[#49C5B1] mb-4">Enlaces</h3>
-          <ul className="space-y-2">
-            <li><a href="#" className="hover:text-[#49C5B1] transition">Inicio</a></li>
-            <li><a href="#" className="hover:text-[#49C5B1] transition">Establecimientos</a></li>
-            <li><a href="#" className="hover:text-[#49C5B1] transition">Promociones</a></li>
-            <li><a href="#" className="hover:text-[#49C5B1] transition">Perfil</a></li>
-          </ul>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
+          {/* Logo y texto - alineado como en el navbar */}
+          <div className="flex items-center gap-4">
+            <img src="/escudo.png" alt="TuMarca" className="w-12 h-auto" />
+            <div>
+              <h3 className="text-lg font-bold text-[#49C581]">Amarilis</h3>
+              <p className="text-sm text-[#CFEAF0]">
+                Sabor auténtico, experiencias únicas
+              </p>
+            </div>
+          </div>
 
-        {/* Redes sociales */}
-        <div>
-          <h3 className="text-xl font-semibold text-[#49C5B1] mb-4">Síguenos</h3>
-          <div className="flex space-x-4">
-            <a href="#" className="bg-[#337179] hover:bg-[#49C5B1] p-3 rounded-full transition">
-              <FaFacebookF />
+          {/* Navegación compacta al centro */}
+          <nav className="flex flex-wrap justify-center gap-3 text-sm">
+            <a href="/" className="text-[#E6F7F9] hover:text-white px-2">
+              Inicio
             </a>
-            <a href="#" className="bg-[#337179] hover:bg-[#49C5B1] p-3 rounded-full transition">
-              <FaInstagram />
+            <a
+              href="/establecimientos"
+              className="text-[#E6F7F9] hover:text-white px-2"
+            >
+              Establecimientos
             </a>
-            <a href="#" className="bg-[#337179] hover:bg-[#49C5B1] p-3 rounded-full transition">
-              <FaTwitter />
+            <a
+              href="/promociones"
+              className="text-[#E6F7F9] hover:text-white px-2"
+            >
+              Promociones
             </a>
-            <a href="#" className="bg-[#337179] hover:bg-[#49C5B1] p-3 rounded-full transition">
-              <FaTiktok />
+            <a href="/top" className="text-[#E6F7F9] hover:text-white px-2">
+              Top
+            </a>
+            <a
+              href="/asociate"
+              className="px-3 py-1 rounded-full bg-gradient-to-r from-[#37c6a6] to-[#49C581] text-white hover:opacity-95 transition"
+            >
+              ¡Asóciate!
+            </a>
+          </nav>
+
+          {/* Redes sociales - efecto de un solo color al hover */}
+          <div className="flex items-center gap-3">
+            <a
+              href="#"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white text-[#337179] hover:bg-[#49C581] hover:text-white transition"
+              aria-label="Facebook"
+            >
+              <FaFacebookF className="text-xs" />
+            </a>
+            <a
+              href="#"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white text-[#337179] hover:bg-[#49C581] hover:text-white transition"
+              aria-label="Instagram"
+            >
+              <FaInstagram className="text-xs" />
+            </a>
+            <a
+              href="#"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white text-[#337179] hover:bg-[#49C581] hover:text-white transition"
+              aria-label="Twitter"
+            >
+              <FaTwitter className="text-xs" />
+            </a>
+            <a
+              href="#"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white text-[#337179] hover:bg-[#49C581] hover:text-white transition"
+              aria-label="Tiktok"
+            >
+              <FaTiktok className="text-xs" />
             </a>
           </div>
         </div>
-      </div>
 
-      {/* Línea inferior */}
-      <div className="mt-10 border-t border-[#337179] pt-4 text-sm text-center text-gray-400">
-        © 2025 TuMarca. Todos los derechos reservados.
+        <div className="mt-6 border-t border-[#2C6B73] pt-4 text-center text-xs text-[#CFEAF0]">
+          © 2025 TuMarca · Hecho con pasión
+        </div>
       </div>
     </footer>
   );

@@ -172,7 +172,8 @@ export default function EstablecimientoDetallePage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [promociones, setPromociones] = useState([]);
-  // Añadir estado y toggle para opciones de compartir (antes estaban fuera)
+  const [showVerifiedTooltip, setShowVerifiedTooltip] = useState(false);
+  // estado ya existente:
   const [showShareOptions, setShowShareOptions] = useState(false);
   const toggleShareOptions = () => setShowShareOptions((s) => !s);
 
@@ -577,6 +578,80 @@ export default function EstablecimientoDetallePage() {
     return stars;
   };
 
+  const getShareUrl = () => {
+    try {
+      return window.location.href;
+    } catch {
+      return "";
+    }
+  };
+
+  const copyToClipboard = async (text) => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const el = document.createElement("textarea");
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+      }
+      toast.success("Enlace copiado al portapapeles");
+      setShowShareOptions(false);
+    } catch (err) {
+      console.error("Error copiando enlace:", err);
+      toast.error("No se pudo copiar el enlace");
+    }
+  };
+
+  const handleNativeShare = async () => {
+    const url = getShareUrl();
+    const title = establecimiento?.nombre || "Establecimiento";
+    const text = `${title}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+        setShowShareOptions(false);
+      } catch (err) {
+        console.error("Error native share:", err);
+      }
+    } else {
+      await copyToClipboard(url);
+    }
+  };
+
+  const shareViaWhatsApp = () => {
+    const url = getShareUrl();
+    const text = `${establecimiento?.nombre || ""} - ${url}`;
+    const wa = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    window.open(wa, "_blank", "noopener");
+    setShowShareOptions(false);
+  };
+
+  const shareViaFacebook = () => {
+    const url = getShareUrl();
+    const text = `${establecimiento?.nombre || ""} - ${url}`;
+    const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      url
+    )}&quote=${encodeURIComponent(text)}`;
+    window.open(fb, "_blank", "noopener");
+    setShowShareOptions(false);
+  };
+
+  const openInstagramProfile = () => {
+    const ig = establecimiento?.redesSociales?.instagram;
+    if (ig) {
+      window.open(`https://www.instagram.com/${ig}`, "_blank", "noopener");
+    } else {
+      // si no hay perfil, copiar enlace del lugar
+      copyToClipboard(getShareUrl());
+    }
+    setShowShareOptions(false);
+  };
+  // --- fin funciones ---
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -730,23 +805,46 @@ export default function EstablecimientoDetallePage() {
               <h1 className="text-2xl md:text-3xl font-bold text-[#254A5D] flex items-center gap-2">
                 {establecimiento.nombre}
                 {establecimiento.verificado && (
-                  <div className="relative group flex items-center">
-                    <MdOutlineVerified className="text-green-500 cursor-pointer" />
-                    {/* Tooltip */}
-                    <span
-                      className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 
-                       opacity-0 group-hover:opacity-100 
-                       bg-white text-black text-sm font-medium 
-                       px-3 py-1 rounded-md shadow-lg 
-                       transition-opacity duration-200 whitespace-nowrap"
+                  <div className="relative">
+                    <div
+                      className="flex items-center cursor-pointer"
+                      onClick={() => setShowVerifiedTooltip((s) => !s)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setShowVerifiedTooltip((s) => !s);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
                     >
-                      Establecimiento verificado
-                      {/* Flecha */}
-                      <span
-                        className="absolute top-full left-1/2 -translate-x-1/2 
-                         w-2 h-2 bg-white rotate-45 shadow-md"
-                      ></span>
-                    </span>
+                      <div className="group">
+                        <MdOutlineVerified className="text-green-500" />
+                        {/* Tooltip desktop: aparece al hover en pantallas md+ */}
+                        <span
+                          className="hidden md:absolute md:bottom-full md:mb-3 md:left-1/2 md:-translate-x-1/2 
+                           md:opacity-0 md:group-hover:opacity-100 
+                           md:bg-white md:text-black md:text-sm md:font-medium 
+                           md:px-3 md:py-1 md:rounded-md md:shadow-lg 
+                           md:transition-opacity md:duration-200 md:whitespace-nowrap"
+                        >
+                          Establecimiento verificado
+                          <span
+                            className="md:absolute md:top-full md:left-1/2 md:-translate-x-1/2 
+                             md:w-2 md:h-2 md:bg-white md:rotate-45 md:shadow-md"
+                          ></span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Tooltip móvil: aparece al tocar (click) y se muestra debajo */}
+                    {showVerifiedTooltip && (
+                      <div className="md:hidden absolute top-full mt-2 left-0 right-0 flex justify-center z-50">
+                        <div className="bg-white text-black text-sm font-medium px-3 py-2 rounded-md shadow-lg">
+                          Establecimiento verificado
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </h1>
@@ -821,30 +919,156 @@ export default function EstablecimientoDetallePage() {
                   {followed ? "Dejar de seguir" : "Seguir"}
                 </Button>
               </div>
-              <div className="flex gap-2 mb-6">
-                <button
-                  onClick={toggleShareOptions}
-                  className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200"
-                >
-                  <FaShare className="text-2xl text-gray-700" />
-                </button>
-                <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200">
-                  <IoShareSocialOutline className="text-2xl text-gray-700" />
-                </button>
-                <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-blue-100 hover:bg-blue-200">
-                  <FaFacebook className="text-2xl text-blue-600" />
-                </button>
-                <button className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-pink-100 hover:bg-pink-200">
-                  <FaInstagram className="text-2xl text-pink-600" />
-                </button>
-                <a
-                  href={`https://wa.me/${establecimiento.telefono}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-green-100 hover:bg-green-200"
-                >
-                  <FaWhatsapp className="text-2xl text-green-600" />
-                </a>
+              <div className="flex gap-2 mb-6 items-center">
+                {/* Botón principal de compartir con popover */}
+                <div className="relative">
+                  <button
+                    onClick={toggleShareOptions}
+                    className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200"
+                    aria-expanded={showShareOptions}
+                    aria-label="Compartir"
+                  >
+                    <FaShare className="text-2xl text-gray-700" />
+                  </button>
+
+                  {/* Desktop popover */}
+                  {showShareOptions && (
+                    <>
+                      <div
+                        className="hidden md:block absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg p-2 z-50"
+                        role="menu"
+                      >
+                        <button
+                          onClick={handleNativeShare}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-md"
+                          role="menuitem"
+                        >
+                          Compartir (dispositivo)
+                        </button>
+
+                        <button
+                          onClick={() => copyToClipboard(getShareUrl())}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-md"
+                          role="menuitem"
+                        >
+                          Copiar enlace
+                        </button>
+
+                        <button
+                          onClick={shareViaWhatsApp}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-md"
+                          role="menuitem"
+                        >
+                          Compartir por WhatsApp
+                        </button>
+                      </div>
+
+                      {/* Mobile bottom sheet */}
+                      <div className="md:hidden fixed inset-x-0 bottom-0 z-50">
+                        <div className="bg-white rounded-t-xl shadow-xl p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">Compartir</h4>
+                            <button
+                              onClick={() => setShowShareOptions(false)}
+                              className="text-gray-500 p-1"
+                              aria-label="Cerrar"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3">
+                            <button
+                              onClick={handleNativeShare}
+                              className="flex flex-col items-center justify-center gap-1 p-3 bg-gray-50 rounded-lg"
+                            >
+                              <FaShare className="text-xl text-gray-700" />
+                              <span className="text-xs">Dispositivo</span>
+                            </button>
+
+                            <button
+                              onClick={() => copyToClipboard(getShareUrl())}
+                              className="flex flex-col items-center justify-center gap-1 p-3 bg-gray-50 rounded-lg"
+                            >
+                              <svg
+                                className="w-5 h-5 text-gray-700"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8 7H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <rect
+                                  x="8"
+                                  y="3"
+                                  width="13"
+                                  height="13"
+                                  rx="2"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                              <span className="text-xs">Copiar</span>
+                            </button>
+
+                            <button
+                              onClick={shareViaWhatsApp}
+                              className="flex flex-col items-center justify-center gap-1 p-3 bg-gray-50 rounded-lg"
+                            >
+                              <FaWhatsapp className="text-xl text-green-600" />
+                              <span className="text-xs">WhatsApp</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Botones directos: Facebook, Instagram y WhatsApp (si existen) */}
+                <div className="flex items-center gap-2">
+                  {establecimiento?.redesSociales?.facebook && (
+                    <a
+                      href={`https://www.facebook.com/${establecimiento.redesSociales.facebook}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-blue-50 hover:opacity-90"
+                      title="Facebook"
+                    >
+                      <FaFacebook className="text-xl text-blue-600" />
+                    </a>
+                  )}
+
+                  {establecimiento?.redesSociales?.instagram && (
+                    <a
+                      href={`https://www.instagram.com/${establecimiento.redesSociales.instagram}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-pink-50 hover:opacity-90"
+                      title="Instagram"
+                    >
+                      <FaInstagram className="text-xl text-pink-600" />
+                    </a>
+                  )}
+
+                  {establecimiento?.telefono && (
+                    <a
+                      href={`https://wa.me/${establecimiento.telefono}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 w-12 h-12 flex items-center justify-center rounded-lg bg-green-50 hover:opacity-90"
+                      title="WhatsApp"
+                    >
+                      <FaWhatsapp className="text-xl text-green-600" />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           </div>
