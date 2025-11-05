@@ -455,9 +455,9 @@ export default function NavbarPage() {
             {/* Center: Logo */}
             <div className="flex flex-col items-center md:flex-grow md:items-center">
               <img
-                src="/img1.png"
+                src="/log.png"
                 alt="Logo Noka"
-                className="max-w-[43px] h-auto mb-1 transform scale-125"
+                className="max-w-[150px] h-auto mb-1 transform scale-125"
               />
             </div>
 

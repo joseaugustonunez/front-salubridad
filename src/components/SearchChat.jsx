@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { enviarMensajeChat } from "../api/chat";
+import { BsTelephoneFill, BsGeoAltFill } from "react-icons/bs";
 
 export default function SearchChat({ onResults }) {
   const navigate = useNavigate();
@@ -172,7 +173,7 @@ export default function SearchChat({ onResults }) {
               className="bg-white/98 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-100 p-4 flex flex-col"
             >
               <div className="mb-3 px-1 flex-shrink-0">
-                <p className="text-sm md:text-base text-gray-800 font-semibold">
+                <p className="text-sm md:text-base text-white font-semibold">
                   Recomendados para ti
                 </p>
               </div>
@@ -299,12 +300,14 @@ export default function SearchChat({ onResults }) {
                                   <div className="flex flex-wrap items-center gap-1.5 text-xs">
                                     {est.telefono && (
                                       <span className="text-gray-500 bg-gray-50 px-2 py-0.5 rounded">
-                                        📞 {est.telefono}
+                                        <BsTelephoneFill className="inline-block mr-1" />{" "}
+                                        {est.telefono}
                                       </span>
                                     )}
                                     {est.direccion && (
                                       <span className="text-gray-500 bg-gray-50 px-2 py-0.5 rounded line-clamp-1 flex-1 min-w-0">
-                                        📍 {est.direccion}
+                                        <BsGeoAltFill className="inline-block mr-1" />
+                                        {est.direccion}
                                       </span>
                                     )}
                                   </div>
@@ -357,16 +360,17 @@ export default function SearchChat({ onResults }) {
     >
       <form
         onSubmit={handleSubmit}
-        className="bg-white/95 p-2 md:p-2.5 rounded-xl md:rounded-2xl shadow-lg flex items-center gap-2 backdrop-blur-sm border border-gray-100"
+        className="bg-green-900/50 p-2 rounded-xl shadow-lg flex items-center gap-2 backdrop-blur-md border border-green-700/40"
       >
-        <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
-          <FaSearch className="text-[#337179] text-sm" />
+        <div className="p-2 rounded-lg flex-shrink-0">
+          <FaSearch className="text-white/90 text-base" />
         </div>
+
         <input
           ref={inputRef}
           type="text"
           placeholder="Busca restaurantes..."
-          className="flex-1 px-2 py-2 outline-none text-[#254A5D] bg-transparent text-sm min-w-0"
+          className="flex-1 min-w-0 px-3 py-2 text-white bg-transparent placeholder-white/60 text-sm outline-none focus:ring-2 focus:ring-green-400/50 rounded-lg"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => {
@@ -390,9 +394,10 @@ export default function SearchChat({ onResults }) {
             }
           }}
         />
+
         <button
           type="submit"
-          className="bg-gradient-to-r from-[#254a5d] to-[#337179] hover:from-[#356f8a] hover:to-[#45888f] text-white px-3 md:px-5 py-2 rounded-lg font-medium text-xs md:text-sm transition-all duration-300 shadow-sm hover:shadow-md flex-shrink-0"
+          className="flex-shrink-0 bg-[#b40a26] hover:bg-[#d01434] text-white px-3 sm:px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-300 shadow-md active:scale-95"
         >
           {loading ? "..." : "Buscar"}
         </button>

@@ -11,7 +11,7 @@ function Footer() {
           <div className="flex items-center gap-4">
             <img src="/escudo.png" alt="TuMarca" className="w-12 h-auto" />
             <div>
-              <h3 className="text-lg font-bold text-[#49C581]">Amarilis</h3>
+              <h3 className="text-lg font-bold text-white">Amarilis</h3>
               <p className="text-sm text-[#CFEAF0]">
                 Sabor auténtico, experiencias únicas
               </p>

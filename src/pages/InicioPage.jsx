@@ -7,6 +7,14 @@ import {
   FaClock,
   FaChevronLeft,
   FaChevronRight,
+  FaUtensils,
+  FaCoffee,
+  FaPizzaSlice,
+  FaIceCream,
+  FaHamburger,
+  FaCocktail,
+  FaLeaf,
+  FaFish,
 } from "react-icons/fa";
 import { MdRestaurant, MdLocalOffer } from "react-icons/md";
 import {
@@ -37,6 +45,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]); // <-- nuevo estado para resultados de búsqueda (no reemplaza establecimientos)
 
   // categoría seleccionada para filtrar establecimientos
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -55,6 +64,41 @@ export default function HomePage() {
 
   // ref al swiper de establecimientos para controlar desde botones
   const swiperEstRef = useRef(null);
+
+  // -- INICIO: rotador de textos para el título (responsive, con fade) --
+  const titlePhrases = [
+    "Sabores que Inspiran",
+    "Comida local y artesanal",
+    "Ofertas cerca de ti",
+    "Experiencias únicas",
+  ];
+  const [titleIndex, setTitleIndex] = useState(0);
+  const [titleVisible, setTitleVisible] = useState(true);
+
+  useEffect(() => {
+    const fadeDuration = 600; // ms - duración de la transición de salida/entrada
+    const delayBetween = 5000; // ms - tiempo entre cambios (más tiempo)
+
+    let timeoutId = null;
+    const tick = () => {
+      // iniciar fade out
+      setTitleVisible(false);
+      // después del fade, cambiar texto y hacer fade in
+      timeoutId = setTimeout(() => {
+        setTitleIndex((i) => (i + 1) % titlePhrases.length);
+        setTitleVisible(true);
+      }, fadeDuration);
+    };
+
+    // primera ejecución programada después del delayBetween (mantiene el primer texto visible)
+    const intervalId = setInterval(tick, delayBetween);
+
+    return () => {
+      clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [titlePhrases.length]);
+  // -- FIN rotador de textos --
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -92,20 +136,16 @@ export default function HomePage() {
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchTerm.trim()) {
-      try {
-        const establecimientos = await obtenerEstablecimientosAprobados();
-        setEstablecimientos(establecimientos);
-      } catch (err) {
-        console.error("Error al cargar los establecimientos:", err);
-        setError("Hubo un problema al cargar los establecimientos.");
-      }
+      // limpiar resultados de búsqueda sin tocar la lista principal
+      setSearchResults([]);
       return;
     }
 
     try {
       setLoading(true);
       const resultados = await buscarEstablecimientosPorNombre(searchTerm);
-      setEstablecimientos(resultados);
+      // guardar resultados en searchResults en vez de sobrescribir establecimientos
+      setSearchResults(resultados || []);
       setLoading(false);
     } catch (err) {
       console.error("Error en la búsqueda:", err);
@@ -170,20 +210,66 @@ export default function HomePage() {
     return passesTypeFilter;
   });
 
+  // helper: devolver icono según nombre de categoría (puedes ampliar condiciones)
+  const getCategoryIcon = (categoria, color = "#337179") => {
+    const name = (categoria?.nombre || "").toLowerCase();
+
+    if (
+      name.includes("café") ||
+      name.includes("cafe") ||
+      name.includes("bebidas")
+    )
+      return <FaCoffee className="text-2xl md:text-3xl" style={{ color }} />;
+    if (name.includes("pizza"))
+      return (
+        <FaPizzaSlice className="text-2xl md:text-3xl" style={{ color }} />
+      );
+    if (name.includes("postre") || name.includes("helado"))
+      return <FaIceCream className="text-2xl md:text-3xl" style={{ color }} />;
+    if (name.includes("hamburgues") || name.includes("burger"))
+      return <FaHamburger className="text-2xl md:text-3xl" style={{ color }} />;
+    if (
+      name.includes("coctel") ||
+      name.includes("bar") ||
+      name.includes("trago")
+    )
+      return <FaCocktail className="text-2xl md:text-3xl" style={{ color }} />;
+    if (
+      name.includes("veg") ||
+      name.includes("vegetar") ||
+      name.includes("ensalada")
+    )
+      return <FaLeaf className="text-2xl md:text-3xl" style={{ color }} />;
+    if (
+      name.includes("pesc") ||
+      name.includes("mar") ||
+      name.includes("mariscos")
+    )
+      return <FaFish className="text-2xl md:text-3xl" style={{ color }} />;
+
+    // fallback por tipo o icono definido en la entidad
+    if (categoria.icono === "restaurant")
+      return (
+        <MdRestaurant className="text-2xl md:text-3xl" style={{ color }} />
+      );
+    if (categoria.icono === "offer")
+      return (
+        <MdLocalOffer className="text-2xl md:text-3xl" style={{ color }} />
+      );
+
+    // default general
+    return <FaUtensils className="text-2xl md:text-3xl" style={{ color }} />;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section Responsive */}
       <section className="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#254A5D] via-[#337179] to-[#49C581] px-4 pb-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
+        <img
+          src="/banner.png"
+          alt="Fondo"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
-        >
-          <source src="" type="video/mp4" />
-          Tu navegador no soporta videos en HTML5.
-        </video>
+        />
 
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 left-1/4 w-48 h-48 md:w-72 md:h-72 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
@@ -191,8 +277,18 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 text-center max-w-6xl w-full px-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] tracking-tight">
-            Sabores que Inspiran
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] tracking-tight text-white text-center">
+            <span
+              className={`inline-block transition-all duration-700 ease-[cubic-bezier(.2,.8,.2,1)] ${
+                titleVisible
+                  ? "opacity-100 translate-y-0 scale-100"
+                  : "opacity-0 -translate-y-3 scale-95"
+              }`}
+              style={{ display: "inline-block" }}
+              aria-live="polite"
+            >
+              {titlePhrases[titleIndex]}
+            </span>
           </h1>
 
           <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 md:mb-8 font-light px-4">
@@ -203,7 +299,9 @@ export default function HomePage() {
           <div className="mx-auto w-full px-4">
             <SearchChat
               onResults={(list) => {
-                if (list && list.length) setEstablecimientos(list);
+                // ahora los resultados de la búsqueda se almacenan en searchResults
+                // para no filtrar la lista principal de establecimientos automáticamente
+                setSearchResults(list || []);
               }}
             />
           </div>
@@ -341,7 +439,7 @@ export default function HomePage() {
                               style={{ backgroundColor: `${color}15` }}
                             >
                               <div style={{ color: color }}>
-                                <MdRestaurant className="text-2xl md:text-3xl" />
+                                {getCategoryIcon(categoria, color)}
                               </div>
                             </div>
                             <div className="ml-4 md:ml-6 flex-1">
@@ -647,7 +745,7 @@ function EstablecimientoCard({
           </div>
         )}
 
-        <button className="w-full bg-[#254a5d] text-white py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm md:text-base">
+        <button className="w-full bg-[#49C581] text-white py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm md:text-base">
           Ver Detalles
         </button>
       </div>

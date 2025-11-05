@@ -1,0 +1,39 @@
+:root {
+  --primary-color: #fff5e1; /* Fondo cálido crema */
+  --accent-color: #c32f27; /* Rojo vino vibrante */
+  --secondary-color: #f4a259; /* Dorado/caramelo cálido */
+  --text-color: #2e2e2e; /* Gris carbón elegante */
+  --highlight-color: #1b998b; /* Verde menta para contraste fresco */
+  --button-color: #fae1b3; /* Tono pastel para botones */
+}
+:root {
+  --primary-color: #fffbea; /* Fondo crema claro */
+  --accent-color: #e63946; /* Rojo coral brillante */
+  --secondary-color: #f1c40f; /* Amarillo dorado vibrante */
+  --text-color: #2c3e50; /* Azul grisáceo profundo */
+  --highlight-color: #4aa96c; /* Verde oliva brillante */
+  --button-color: #fde8c9; /* Fondo claro para botones */
+}
+:root {
+  --primary-color: #fff3e0; /* Fondo cálido crema */
+  --accent-color: #e63946; /* Rojo picante tipo ají o salsa */
+  --secondary-color: #f4a261; /* Naranja tostado (pollo, papa frita) */
+  --highlight-color: #2a9d8f; /* Verde cilantro fresco */
+  --text-color: #2f2f2f; /* Gris oscuro neutro */
+  --button-color: #ffe0b2; /* Fondo suave para botones */
+}
+:root {
+  --primary-color: #fffbea; /* Fondo crema claro */
+  --accent-color: #ff6b35; /* Naranja vivo */
+  --secondary-color: #ffd166; /* Amarillo brillante tipo papas fritas */
+  --highlight-color: #06d6a0; /* Verde menta refrescante */
+  --text-color: #073b4c; /* Azul oscuro fuerte */
+  --button-color: #ffe6a7; /* Botones suaves y cálidos */
+}
+/* 
+  #fff3e0; 
+ #e63946; 
+#f4a261; 
+ #2a9d8f; 
+#2f2f2f; 
+ #ffe0b2;  */
