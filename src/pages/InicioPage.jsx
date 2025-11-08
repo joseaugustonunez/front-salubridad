@@ -266,7 +266,7 @@ export default function HomePage() {
       {/* Hero Section Responsive */}
       <section className="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#254A5D] via-[#337179] to-[#49C581] px-4 pb-0">
         <img
-          src="/banner.png"
+          src="/banner.webp"
           alt="Fondo"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
