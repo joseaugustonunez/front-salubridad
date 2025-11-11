@@ -317,7 +317,7 @@ export default function SearchChat({ onResults }) {
                                     e.stopPropagation();
                                     handleCardClick(id);
                                   }}
-                                  className="text-xs bg-gradient-to-r from-[#254A5D] to-[#337179] text-white px-3 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full"
+                                  className="text-xs bg-[#49C581] text-white px-3 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full"
                                 >
                                   Ver más
                                 </button>
@@ -360,17 +360,18 @@ export default function SearchChat({ onResults }) {
     >
       <form
         onSubmit={handleSubmit}
-        className="bg-green-900/50 p-2 rounded-xl shadow-lg flex items-center gap-2 backdrop-blur-md border border-green-700/40"
+        className="bg-green-900/60 p-2 rounded-xl shadow-[0_6px_25px_rgba(0,0,0,0.35)] flex items-center gap-2 backdrop-blur-xl border border-green-600/50 transition-all duration-300 hover:shadow-[0_8px_35px_rgba(0,0,0,0.45)]"
       >
-        <div className="p-2 rounded-lg flex-shrink-0">
-          <FaSearch className="text-white/90 text-base" />
+        <div className="p-2 rounded-lg flex-shrink-0 bg-white/10">
+          <FaSearch className="text-white text-base" />
         </div>
 
         <input
           ref={inputRef}
           type="text"
           placeholder="Busca restaurantes..."
-          className="flex-1 min-w-0 px-3 py-2 text-white bg-transparent placeholder-white/60 text-sm outline-none focus:ring-2 focus:ring-green-400/50 rounded-lg"
+          className="flex-1 min-w-0 px-3 py-2 text-white bg-transparent placeholder-white/70 text-sm outline-none 
+                 focus:ring-2 focus:ring-green-300/70 focus:bg-white/5 rounded-lg transition-all"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => {
@@ -397,7 +398,8 @@ export default function SearchChat({ onResults }) {
 
         <button
           type="submit"
-          className="flex-shrink-0 bg-[#b40a26] hover:bg-[#d01434] text-white px-3 sm:px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-300 shadow-md active:scale-95"
+          className="flex-shrink-0 bg-[#d21636] hover:bg-[#e41b3d] text-white px-3 sm:px-4 py-2 rounded-lg font-semibold 
+                 text-xs sm:text-sm transition-all duration-300 shadow-[0_4px_12px_rgba(210,22,54,0.45)] hover:shadow-[0_6px_18px_rgba(210,22,54,0.55)] active:scale-95"
         >
           {loading ? "..." : "Buscar"}
         </button>

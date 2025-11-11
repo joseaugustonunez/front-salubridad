@@ -335,7 +335,7 @@ export default function HomePage() {
       <section className="py-12 md:py-6 bg-white px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-left mb-8 md:mb-16 px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#254A5D] mb-3 md:mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#254A5D] mb-2">
               Explorar por Categorías
             </h2>
           </div>
@@ -359,17 +359,12 @@ export default function HomePage() {
                   disableOnInteraction: false,
                   pauseOnMouseEnter: true,
                 }}
-                // usar navegación con prevEl / nextEl (asignado en onBeforeInit)
                 navigation={{
                   prevEl: categoriasPrevRef.current,
                   nextEl: categoriasNextRef.current,
                 }}
                 onBeforeInit={(swiper) => {
-                  // asignar los elementos de navegación (refs pueden ser null durante render)
-                  // esto garantiza que Swiper use los botones externos
-                  // eslint-disable-next-line no-param-reassign
                   swiper.params.navigation.prevEl = categoriasPrevRef.current;
-                  // eslint-disable-next-line no-param-reassign
                   swiper.params.navigation.nextEl = categoriasNextRef.current;
                 }}
                 onSwiper={(s) => (swiperCatRef.current = s)}
@@ -380,33 +375,18 @@ export default function HomePage() {
                   bulletActiveClass: "swiper-pagination-bullet-active-custom",
                 }}
                 breakpoints={{
-                  320: {
-                    // en móvil mostrar 1 tarjeta y parte de la siguiente
-                    slidesPerView: 1.15,
-                    spaceBetween: 16,
-                  },
-                  640: {
-                    slidesPerView: 1.5,
-                    spaceBetween: 16,
-                  },
-                  768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                  },
-                  1024: {
-                    slidesPerView: 2.5,
-                    spaceBetween: 24,
-                  },
-                  1280: {
-                    slidesPerView: 3,
-                    spaceBetween: 24,
-                  },
+                  320: { slidesPerView: 1.15, spaceBetween: 16 },
+                  640: { slidesPerView: 1.5, spaceBetween: 16 },
+                  768: { slidesPerView: 2, spaceBetween: 20 },
+                  1024: { slidesPerView: 2.5, spaceBetween: 24 },
+                  1280: { slidesPerView: 3, spaceBetween: 24 },
                 }}
-                className="pb-12"
+                className="pb-12 !flex justify-center"
               >
                 {categorias.map((categoria, index) => {
                   const isActiveCat = selectedCategory === categoria._id;
-                  const colors = [
+                  // colores iniciales con buen contraste (para la tarjeta al iniciar)
+                  const contrastColors = [
                     "#49C581",
                     "#F8485E",
                     "#37a6ca",
@@ -414,7 +394,10 @@ export default function HomePage() {
                     "#254A5D",
                     "#337179",
                   ];
-                  const color = colors[index % colors.length];
+                  const accent = contrastColors[index % contrastColors.length];
+                  // color limpio y sutil para el estado seleccionado
+                  const selectedBg = "#EAF8F7"; // fondo muy suave (limpio)
+                  const selectedText = "#06394a"; // texto fresco sobre fondo limpio
 
                   const count = establecimientos.filter(
                     (est) =>
@@ -425,31 +408,85 @@ export default function HomePage() {
                   return (
                     <SwiperSlide key={categoria._id}>
                       <div
-                        className={`cursor-pointer transform transition-transform duration-300 h-full ${
-                          isActiveCat
-                            ? "scale-105 ring-4 ring-[#49C581]/30"
-                            : "hover:scale-105"
-                        }`}
-                        onClick={() => setSelectedCategory(categoria._id)}
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={isActiveCat}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            setSelectedCategory(categoria._id);
+                          }
+                        }}
+                        onClick={() =>
+                          setSelectedCategory(
+                            isActiveCat ? null : categoria._id
+                          )
+                        }
+                        className="h-full outline-none focus:outline-none"
                       >
-                        <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 h-full">
-                          <div className="flex items-center p-4 md:p-6">
-                            <div
-                              className="flex-shrink-0 rounded-2xl p-3 md:p-4"
-                              style={{ backgroundColor: `${color}15` }}
+                        <div
+                          className={`flex items-center gap-4 p-4 md:p-5 rounded-xl transition duration-200 border ${
+                            isActiveCat
+                              ? "shadow-sm border-transparent"
+                              : "border-gray-200 bg-white hover:shadow-sm"
+                          }`}
+                          style={{
+                            // fondo limpio cuando está seleccionada, otherwise blanco con acento lateral
+                            background: isActiveCat ? selectedBg : "white",
+                            // MANTENER contorno izquierdo (left accent) incluso al seleccionar
+                            borderLeft: `4px solid ${accent}`,
+                          }}
+                        >
+                          <div
+                            className="flex-shrink-0 rounded-full p-3 flex items-center justify-center transform transition-colors duration-200"
+                            style={{
+                              // icono: en inicio contraste fuerte; al seleccionar fondo blanco y color de acento en el icono
+                              background: isActiveCat ? "#fff" : accent,
+                              color: isActiveCat ? accent : "#fff",
+                              width: 52,
+                              height: 52,
+                              boxShadow: isActiveCat
+                                ? "inset 0 0 0 1px rgba(0,0,0,0.04)"
+                                : "none",
+                            }}
+                          >
+                            {getCategoryIcon(
+                              categoria,
+                              isActiveCat ? accent : "#fff"
+                            )}
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <h3
+                              className={`text-sm md:text-base font-semibold truncate ${
+                                isActiveCat ? selectedText : "text-[#0f2930]"
+                              }`}
                             >
-                              <div style={{ color: color }}>
-                                {getCategoryIcon(categoria, color)}
-                              </div>
-                            </div>
-                            <div className="ml-4 md:ml-6 flex-1">
-                              <h3 className="font-black text-lg md:text-xl text-[#254A5D] mb-1">
-                                {categoria.nombre}
-                              </h3>
-                              <p className="text-gray-500 text-sm md:text-base">
-                                {count} {count === 1 ? "lugar" : "lugares"}
-                              </p>
-                            </div>
+                              {categoria.nombre}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {count} {count === 1 ? "lugar" : "lugares"}
+                            </p>
+                          </div>
+
+                          <div>
+                            <span
+                              className="text-xs font-semibold px-3 py-1 rounded-full transition-colors duration-200"
+                              style={
+                                isActiveCat
+                                  ? {
+                                      background: "#fff",
+                                      color: accent,
+                                      border: `1px solid ${accent}`,
+                                    }
+                                  : {
+                                      background: "#F3F4F6",
+                                      color: "#374151",
+                                      border: "1px solid transparent",
+                                    }
+                              }
+                            >
+                              {isActiveCat ? "Seleccionada" : "Ver"}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -457,30 +494,31 @@ export default function HomePage() {
                   );
                 })}
               </Swiper>
-              {/* Flechas para navegar categorías — solo visibles en laptop (lg) */}
+
+              {/* Flechas */}
               <button
                 ref={categoriasPrevRef}
                 onClick={() => swiperCatRef.current?.slidePrev()}
-                className="categorias-swiper-button-prev absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden lg:flex items-center justify-center"
+                className="categorias-swiper-button-prev absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 md:p-3 shadow-xl hover:bg-white transition-all duration-300 hidden lg:flex items-center justify-center"
                 aria-label="Anterior categoría"
               >
-                <FaChevronLeft className="text-lg md:text-xl text-[#254A5D]" />
+                <FaChevronLeft className="text-lg md:text-xl text-[#19333F]" />
               </button>
 
               <button
                 ref={categoriasNextRef}
                 onClick={() => swiperCatRef.current?.slideNext()}
-                className="categorias-swiper-button-next absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 md:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hidden lg:flex items-center justify-center"
+                className="categorias-swiper-button-next absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 md:p-3 shadow-xl hover:bg-white transition-all duration-300 hidden lg:flex items-center justify-center"
                 aria-label="Siguiente categoría"
               >
-                <FaChevronRight className="text-lg md:text-xl text-[#254A5D]" />
+                <FaChevronRight className="text-lg md:text-xl text-[#19333F]" />
               </button>
 
-              {/* Botón para limpiar selección de categoría */}
+              {/* Botón limpiar */}
               <div className="absolute right-12 top-4 hidden lg:flex">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className="bg-white px-3 py-1 rounded-full text-sm shadow-sm hover:bg-gray-100"
+                  className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm shadow-sm hover:bg-white transition"
                   title="Limpiar categoría"
                 >
                   Limpiar
