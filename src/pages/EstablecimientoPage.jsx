@@ -47,6 +47,8 @@ export default function EstablecimientoPage() {
     dark: "#254A5D", // Azul oscuro
     accent: "#F8485E", // Rosa/rojo acento
     blue: "#37a6ca", // Azul
+    nue: "#267241",
+    re: "#d21636",
   };
 
   // Verificar autenticación del usuario
@@ -386,7 +388,7 @@ export default function EstablecimientoPage() {
             <button
               onClick={handleBuscar}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-full text-white transition-all duration-200 hover:scale-105 hover:shadow-md"
-              style={{ backgroundColor: colors.blue }}
+              style={{ backgroundColor: colors.re }}
             >
               <FaSearch size={16} />
             </button>
@@ -415,7 +417,7 @@ export default function EstablecimientoPage() {
                 : "bg-white text-gray-700 hover:shadow-sm"
             }`}
             style={{
-              backgroundColor: filtro === "todos" ? colors.primary : "white",
+              backgroundColor: filtro === "todos" ? colors.nue : "white",
             }}
           >
             Todos
@@ -435,8 +437,7 @@ export default function EstablecimientoPage() {
                   : "bg-white text-gray-700 hover:shadow-sm"
               }`}
               style={{
-                backgroundColor:
-                  filtro === cat.nombre ? colors.primary : "white",
+                backgroundColor: filtro === cat.nombre ? colors.nue : "white",
               }}
             >
               {cat.nombre}

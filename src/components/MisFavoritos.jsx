@@ -79,12 +79,11 @@ const MisFavoritos = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full  py-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
-          <FaHeart className="text-3xl sm:text-4xl text-red-500" />
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#254A5D]">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#254A5D]">
             Mis Favoritos
           </h1>
         </div>

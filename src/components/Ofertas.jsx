@@ -57,13 +57,10 @@ const Ofertas = ({ userId: propUserId }) => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 sm:mb-12">
-          <div className="flex items-center gap-3 mb-3">
-            <FaGift className="text-3xl sm:text-4xl text-[#49C581]" />
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#254A5D]">
-              Promociones Exclusivas
-            </h1>
-          </div>
-          <p className="text-gray-600 text-sm sm:text-base ml-0 sm:ml-12">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#254A5D]">
+            Promociones Exclusivas
+          </h1>
+          <p className="text-sm text-gray-600 mt-1">
             Descubre las mejores ofertas de los establecimientos que sigues
           </p>
         </div>

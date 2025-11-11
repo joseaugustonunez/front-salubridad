@@ -30,9 +30,31 @@ import {
   obtenerSeguidoresVendedor,
   obtenerComentariosRecibidosUsuario,
 } from "../api/usuario";
+
+// Definir colores como constantes para reutilización
+const COLORS = {
+  primary: "#49C581",
+  primaryDark: "#337179",
+  secondary: "#254A5D",
+  accent: "#F8485E",
+  info: "#37a6ca",
+  background: "#f8f9fa",
+  white: "#ffffff",
+  gray: {
+    100: "#f7fafc",
+    200: "#edf2f7",
+    300: "#e2e8f0",
+    400: "#cbd5e0",
+    500: "#a0aec0",
+    600: "#718096",
+    700: "#4a5568",
+    800: "#2d3748",
+    900: "#1a202c",
+  },
+};
+
 const PerfilPage = () => {
-  // const [activeTab, setActiveTab] = useState("Establecimiento");
-  const [activeTab, setActiveTab] = useState(""); // se inicializa vacío y se establece tras cargar el usuario
+  const [activeTab, setActiveTab] = useState("");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profilePicture, setProfilePicture] = useState("");
@@ -53,9 +75,9 @@ const PerfilPage = () => {
     setUser(usuarioActualizado);
     localStorage.setItem("user", JSON.stringify(usuarioActualizado));
   };
-  // Imagen de portada por defecto
-  const defaultCoverPhoto =
-    "https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80";
+
+  // Fondo de portada con gradiente usando los colores de la paleta
+  const coverGradient = `linear-gradient(135deg, ${COLORS.secondary} 0%, ${COLORS.primaryDark} 50%, ${COLORS.primary} 100%)`;
 
   useEffect(() => {
     if (
@@ -64,8 +86,6 @@ const PerfilPage = () => {
       user.establecimientosCreados.length > 0
     ) {
       setTieneEstablecimiento(true);
-
-      // Obtener datos básicos de los establecimientos para la lista
       const establecimientosBasicos = user.establecimientosCreados.map(
         (id) => ({
           id: id,
@@ -74,11 +94,7 @@ const PerfilPage = () => {
           categorias: [],
         })
       );
-
       setEstablecimientosData(establecimientosBasicos);
-
-      // En una aplicación real, aquí cargarías los datos básicos de cada establecimiento
-      // Simulamos los datos para este ejemplo
       setTimeout(() => {
         const datosSimulados = user.establecimientosCreados.map(
           (id, index) => ({
@@ -88,7 +104,6 @@ const PerfilPage = () => {
             categorias: ["Restaurante", "Bar"],
           })
         );
-
         setEstablecimientosData(datosSimulados);
         setLoading(false);
       }, 1000);
@@ -97,17 +112,14 @@ const PerfilPage = () => {
       setLoading(false);
     }
   }, [user]);
-  // Cargar datos de la sesión
+
   useEffect(() => {
-    // Obtener datos del usuario del localStorage
     const obtenerUsuario = () => {
       try {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
           setUser(parsedUser);
-
-          // Comprobar si el usuario tiene algún establecimiento creado
           setTieneEstablecimiento(
             parsedUser.establecimientosCreados &&
               parsedUser.establecimientosCreados.length > 0
@@ -119,11 +131,9 @@ const PerfilPage = () => {
         setLoading(false);
       }
     };
-
     obtenerUsuario();
   }, []);
 
-  // Función para generar las pestañas adecuadas según si tiene establecimiento o no
   const generateTabs = () => {
     const baseTabs = [
       { name: "Establecimiento", icon: <FaStore size={18} /> },
@@ -131,57 +141,41 @@ const PerfilPage = () => {
       { name: "Fotos", icon: <FaImages size={18} /> },
       { name: "Opiniones", icon: <FaCommentDots size={18} /> },
     ];
-
-    // Si no tiene establecimiento, agregar la opción de "Crear Establecimiento" al inicio
     if (!tieneEstablecimiento) {
       return [
         { name: "Crear Establecimiento", icon: <FaPlusCircle size={18} /> },
         ...baseTabs,
       ];
     }
-
     return baseTabs;
   };
+
   const generateTabsUser = () => {
-    const baseTabs = [
-      { name: "Favoritos", icon: <FaStore size={18} /> },
+    return [
+      { name: "Favoritos", icon: <FaHeart size={18} /> },
       { name: "Reseñas", icon: <FaRegCommentDots size={18} /> },
       { name: "Ofertas", icon: <FaPercent size={18} /> },
     ];
-
-    return baseTabs;
   };
+
   const tabsUser = generateTabsUser();
   const tabs = generateTabs();
-
   const [refreshKey, setRefreshKey] = useState(Date.now());
 
   const handleProfilePictureChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
     try {
-      // Mostrar temporalmente la imagen seleccionada
       const tempURL = URL.createObjectURL(file);
       setProfilePicture(tempURL);
-
-      // Obtener el ID del usuario de múltiples fuentes posibles
       let userId = null;
-
-      // Intentar obtener del objeto user (verificar la estructura exacta)
-      if (user && user.id) {
-        userId = user.id;
-      } else if (user && user._id) {
-        // Algunas APIs usan _id en lugar de id
-        userId = user._id;
-      } else {
-        // Intentar diferentes keys en localStorage según tu implementación
+      if (user && user.id) userId = user.id;
+      else if (user && user._id) userId = user._id;
+      else {
         userId =
           localStorage.getItem("userId") ||
           localStorage.getItem("user_id") ||
           localStorage.getItem("id");
-
-        // Si hay un objeto user en localStorage, intentar extraer el ID
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
           try {
@@ -192,85 +186,50 @@ const PerfilPage = () => {
           }
         }
       }
-
-      // Verificar que tenemos un ID válido antes de continuar
       if (!userId) {
         console.error("No se pudo obtener el ID del usuario");
         throw new Error(
           "ID de usuario no disponible. Inicia sesión nuevamente."
         );
       }
-
-      // Llamar a la API para subir la imagen pasando el ID y el archivo
-      const imageUrl = await subirFotoPerfil(userId.toString(), file); // Asegurar que es string
-
-      // Actualizar la URL de la imagen con la devuelta por el servidor
+      const imageUrl = await subirFotoPerfil(userId.toString(), file);
       if (imageUrl) {
-        // Actualizar el estado del objeto usuario
-        const updatedUser = {
-          ...user,
-          fotoPerfil: imageUrl,
-        };
-
-        // Actualizar el estado local
+        const updatedUser = { ...user, fotoPerfil: imageUrl };
         setUser(updatedUser);
-
-        // Actualizar en localStorage si lo usas para persistencia
         try {
           localStorage.setItem("user", JSON.stringify(updatedUser));
         } catch (e) {
           console.error("Error al actualizar el usuario en localStorage:", e);
         }
-
-        // Generar un nuevo timestamp para forzar la recarga de la imagen
         setRefreshKey(Date.now());
-
-        // Mensaje de éxito para el usuario
         alert("¡Foto de perfil actualizada con éxito!");
       }
-
-      // Limpiar la URL temporal
       URL.revokeObjectURL(tempURL);
     } catch (error) {
       console.error("Error completo:", error);
-
-      // Mensaje de error más específico según el tipo de error
       if (error.message.includes("ID de usuario")) {
         alert(error.message);
       } else {
         alert("No se pudo subir la foto de perfil. Inténtalo de nuevo.");
       }
-
-      // Revertir la imagen al estado anterior si hay error
-      if (user && user.fotoPerfil) {
-        setProfilePicture(user.fotoPerfil);
-      }
+      if (user && user.fotoPerfil) setProfilePicture(user.fotoPerfil);
     }
   };
 
-  // Manejador para cambio de foto de portada
   const handleCoverPhotoChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
     try {
-      // Mostrar temporalmente la imagen seleccionada
       const tempURL = URL.createObjectURL(file);
       setCoverPhoto(tempURL);
-
-      // Obtener el ID del usuario de múltiples fuentes posibles
       let userId = null;
-
-      if (user && user.id) {
-        userId = user.id;
-      } else if (user && user._id) {
-        userId = user._id;
-      } else {
+      if (user && user.id) userId = user.id;
+      else if (user && user._id) userId = user._id;
+      else {
         userId =
           localStorage.getItem("userId") ||
           localStorage.getItem("user_id") ||
           localStorage.getItem("id");
-
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
           try {
@@ -281,72 +240,45 @@ const PerfilPage = () => {
           }
         }
       }
-
       if (!userId) {
         console.error("No se pudo obtener el ID del usuario para la portada");
         throw new Error(
           "ID de usuario no disponible. Inicia sesión nuevamente."
         );
       }
-
       const imageUrl = await subirFotoPortada(userId.toString(), file);
-
       if (imageUrl) {
-        // Actualizar el estado del objeto usuario
-        const updatedUser = {
-          ...user,
-          fotoPortada: imageUrl,
-        };
-
-        // Actualizar el estado local
+        const updatedUser = { ...user, fotoPortada: imageUrl };
         setUser(updatedUser);
-
-        // Actualizar en localStorage si lo usas para persistencia
         try {
           localStorage.setItem("user", JSON.stringify(updatedUser));
         } catch (e) {
           console.error("Error al actualizar el usuario en localStorage:", e);
         }
-
-        // Generar un nuevo timestamp para forzar la recarga de la imagen
         setRefreshKey(Date.now());
-
-        // Mensaje de éxito para el usuario
         alert("¡Foto de portada actualizada con éxito!");
       }
-
       URL.revokeObjectURL(tempURL);
     } catch (error) {
       console.error("Error completo al subir la foto de portada:", error);
-
       if (error.message.includes("ID de usuario")) {
         alert(error.message);
       } else {
         alert("No se pudo subir la foto de portada. Inténtalo de nuevo.");
       }
-
-      if (user && user.fotoPortada) {
-        setCoverPhoto(user.fotoPortada);
-      }
+      if (user && user.fotoPortada) setCoverPhoto(user.fotoPortada);
     }
   };
 
-  const handleEstablecimientoCreado = (nuevoEstablecimiento) => {
-    // Aquí puedes actualizar el estado o hacer algo con el nuevo establecimiento
-  };
+  const handleEstablecimientoCreado = (nuevoEstablecimiento) => {};
+
   useEffect(() => {
     if (!user) return;
-    // No sobreescribir si el usuario ya seleccionó una pestaña
     if (activeTab) return;
-
-    // Por defecto: vendedores -> "Establecimiento", usuarios comunes -> "Favoritos"
-    if (user.rol === "vendedor") {
-      setActiveTab("Establecimiento");
-    } else {
-      setActiveTab("Favoritos");
-    }
+    if (user.rol === "vendedor") setActiveTab("Establecimiento");
+    else setActiveTab("Favoritos");
   }, [user]);
-  // helper para obtener id robustamente
+
   const getUserIdFromUser = () => {
     let userId = null;
     if (user && (user.id || user._id)) userId = user.id || user._id;
@@ -368,16 +300,13 @@ const PerfilPage = () => {
     return userId;
   };
 
-  // Obtener totales (sigue, interacciones, etc.) cuando cargue el usuario
   useEffect(() => {
     if (!user) return;
     const userId = getUserIdFromUser();
     if (!userId) return;
-
     (async () => {
       try {
         const totals = await obtenerTotalesUsuario(userId.toString());
-        // Manejamos varias posibles claves que la API pueda devolver
         const sigue =
           totals?.siguiendo ??
           totals?.establecimientosSeguidos ??
@@ -390,7 +319,6 @@ const PerfilPage = () => {
           totals?.totalComentarios ??
           totals?.comentarios ??
           0;
-
         setTotalEstablecimientosSeguidos(Number(sigue));
         setTotalComentarios(Number(interacciones));
       } catch (error) {
@@ -401,8 +329,17 @@ const PerfilPage = () => {
 
   if (loading || !user) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        Cargando...
+      <div
+        className="flex justify-center items-center h-screen"
+        style={{ backgroundColor: COLORS.background }}
+      >
+        <div className="text-center">
+          <div
+            className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4"
+            style={{ borderColor: COLORS.primary }}
+          ></div>
+          <p style={{ color: COLORS.secondary }}>Cargando perfil...</p>
+        </div>
       </div>
     );
   }
@@ -410,33 +347,40 @@ const PerfilPage = () => {
   return (
     <div
       className="w-full min-h-screen pb-20"
-      style={{ backgroundColor: "#f8f9fa" }}
+      style={{ backgroundColor: COLORS.background }}
     >
-      {/* Cover Photo Section */}
+      {/* Cover Photo Section - Con gradiente de colores */}
       <div
-        className="relative w-full h-64 flex items-center justify-center overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, #337179 0%, #37a6ca 100%)`,
-        }}
+        className="relative w-full h-64 md:h-80 flex items-center justify-center overflow-hidden"
+        style={{ background: coverGradient }}
       >
-        <div className="absolute inset-0 bg-black opacity-30"></div>
-        {/* Mostrar foto de portada o la imagen por defecto */}
-        <div className="absolute inset-0">
-          <img
-            src={`https://back-salubridad.sistemasudh.com${user.fotoPortada}${
-              user.fotoPortada?.includes("?") ? "&" : "?"
-            }t=${Date.now()}`}
-            alt="Portada"
-            className="w-full h-full object-cover opacity-90"
-          />
-        </div>
+        {/* Overlay para mejorar contraste */}
+        <div className="absolute inset-0 bg-black opacity-10"></div>
+
+        {/* Mostrar imagen de portada si existe, superpuesta sobre el gradiente */}
+        {user?.fotoPortada && (
+          <div className="absolute inset-0">
+            <img
+              src={`https://back-salubridad.sistemasudh.com${user.fotoPortada}${
+                user.fotoPortada.includes("?") ? "&" : "?"
+              }t=${Date.now()}`}
+              alt="Portada"
+              className="w-full h-full object-cover opacity-70"
+            />
+          </div>
+        )}
+
+        {/* Botón para cambiar foto de portada - Mejorado */}
         <label
           htmlFor="coverPhotoInput"
-          className="absolute top-24 right-4 bg-white bg-opacity-90 px-4 py-2 text-sm font-medium rounded-full flex items-center space-x-2 transition hover:bg-opacity-100 shadow z-10 cursor-pointer"
-          style={{ color: "#254A5D" }}
+          className="absolute top-6 right-6 bg-white bg-opacity-95 px-5 py-3 rounded-full flex items-center space-x-2 transition-all hover:bg-white hover:shadow-2xl z-10 cursor-pointer hover:scale-105 group"
+          style={{ color: COLORS.secondary }}
         >
-          <FaCamera size={16} />
-          <span className="ml-2">Cambiar portada</span>
+          <FaCamera
+            size={18}
+            className="group-hover:scale-110 transition-transform"
+          />
+          <span className="ml-2 font-semibold">Cambiar portada</span>
         </label>
         <input
           id="coverPhotoInput"
@@ -445,66 +389,91 @@ const PerfilPage = () => {
           className="hidden"
           onChange={handleCoverPhotoChange}
         />
+
+        {/* Efecto decorativo adicional */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black opacity-10"></div>
       </div>
 
       {/* Profile Content */}
-      <div className="max-w-5xl mx-auto px-4 relative">
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          {/* Profile Photo - Positioned to overlap the cover photo */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 -top-16 md:left-16 md:transform-none z-30">
-            <div
-              className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center"
-              style={{ backgroundColor: "#49C581" }}
-            >
-              {user.fotoPerfil ? (
-                <img
-                  src={`https://back-salubridad.sistemasudh.com${
-                    user.fotoPerfil
-                  }${
-                    user.fotoPerfil?.includes("?") ? "&" : "?"
-                  }t=${Date.now()}`}
-                  alt="Foto de perfil"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-white text-4xl font-bold">
-                  {user.nombreUsuario?.charAt(0).toUpperCase()}
-                </span>
-              )}
+      <div className="max-w-6xl mx-auto px-4 relative -mt-8">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+          {/* Profile Photo - Con botón de cámara mejorado */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 -top-20 md:left-8 md:transform-none z-30">
+            <div className="relative group">
+              <div
+                className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white shadow-2xl flex items-center justify-center relative"
+                style={{ backgroundColor: COLORS.primary }}
+              >
+                {user?.fotoPerfil ? (
+                  <img
+                    src={`https://back-salubridad.sistemasudh.com${
+                      user.fotoPerfil
+                    }${
+                      user.fotoPerfil.includes("?") ? "&" : "?"
+                    }t=${Date.now()}`}
+                    alt="Foto de perfil"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white text-4xl font-bold">
+                    {user.nombreUsuario?.charAt(0).toUpperCase()}
+                  </span>
+                )}
+
+                {/* Overlay en hover */}
+                <div className="absolute inset-0 bg-black bg-opacity-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <FaCamera size={24} className="text-white" />
+                </div>
+              </div>
+
+              {/* Botón de cámara flotante - Siempre visible */}
+              <label
+                htmlFor="profilePictureInput"
+                className="absolute bottom-2 right-2 p-3 rounded-full shadow-2xl transition-all cursor-pointer hover:scale-110 active:scale-95 z-20"
+                style={{
+                  backgroundColor: COLORS.primary,
+                  color: COLORS.white,
+                  border: `3px solid ${COLORS.white}`,
+                }}
+                title="Cambiar foto de perfil"
+              >
+                <FaCamera size={16} />
+              </label>
+              <input
+                id="profilePictureInput"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleProfilePictureChange}
+              />
             </div>
-            <label
-              htmlFor="profilePictureInput"
-              className="absolute bottom-0 right-0 p-2 rounded-full shadow-md transition cursor-pointer"
-              style={{ backgroundColor: "#49C581", color: "white" }}
-            >
-              <FaCamera size={16} />
-            </label>
-            <input
-              id="profilePictureInput"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleProfilePictureChange}
-            />
           </div>
 
           {/* User Info Section */}
-          <div className="pt-20 md:pt-6 md:pl-52 px-6 pb-6 md:flex md:items-center md:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold" style={{ color: "#254A5D" }}>
+          <div className="pt-24 md:pt-8 md:pl-44 px-6 pb-6 md:flex md:items-center md:justify-between">
+            <div className="flex-1">
+              <h2
+                className="text-3xl font-bold mb-2"
+                style={{ color: COLORS.secondary }}
+              >
                 {user.nombreUsuario}
               </h2>
-              <p className="text-gray-500 flex items-center flex-wrap mt-1">
-                <span>{user.email}</span>
-                <span className="mx-2 text-gray-300">•</span>
-                <span
-                  className="text-sm px-2 py-1 rounded-full capitalize"
-                  style={{ backgroundColor: "#f0f8f6", color: "#49C581" }}
-                >
-                  {user.rol}
+              <p className="text-gray-600 flex items-center flex-wrap mb-3">
+                <span className="flex items-center">
+                  <span className="mr-2">{user.email}</span>
+                  <span className="mx-2 text-gray-300">•</span>
+                  <span
+                    className="text-sm px-3 py-1 rounded-full capitalize font-medium"
+                    style={{
+                      backgroundColor: `${COLORS.primary}15`,
+                      color: COLORS.primary,
+                    }}
+                  >
+                    {user.rol}
+                  </span>
                 </span>
               </p>
-              <p className="text-gray-600 mt-2 text-sm">
+              <p className="text-gray-500 text-sm">
                 Se unió en{" "}
                 {new Date(user.fechaCreacion).toLocaleDateString("es-ES", {
                   month: "long",
@@ -515,8 +484,8 @@ const PerfilPage = () => {
 
             <div className="mt-4 md:mt-0">
               <button
-                className="px-5 py-2 rounded-full text-sm font-medium shadow-sm transition flex items-center"
-                style={{ backgroundColor: "#49C581", color: "white" }}
+                className="px-6 py-3 rounded-full font-medium shadow-lg transition-all hover:shadow-xl hover:scale-105 flex items-center"
+                style={{ backgroundColor: COLORS.primary, color: COLORS.white }}
               >
                 <FaEdit size={16} className="mr-2" />
                 Editar perfil
@@ -525,69 +494,123 @@ const PerfilPage = () => {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-3 divide-x divide-gray-100 bg-gray-50 border-t border-gray-100">
-            <div className="text-center py-4">
-              <p className="font-bold text-xl" style={{ color: "#254A5D" }}>
-                {user.aportes || 0}
-              </p>
-              <p className="text-sm text-gray-500">Aportes</p>
-            </div>
+          <div className="px-6 -mt-2 mb-6">
+            <div className="max-w-4xl mx-auto">
+              {user?.rol === "vendedor" ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div
+                    className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
+                    aria-label="Seguidores"
+                  >
+                    <p
+                      className="text-3xl font-bold mb-1"
+                      style={{ color: COLORS.secondary }}
+                    >
+                      {user.seguidores || 0}
+                    </p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Seguidores
+                    </p>
+                  </div>
 
-            <div className="text-center py-4">
-              <p className="font-bold text-xl" style={{ color: "#254A5D" }}>
-                {user.rol === "vendedor"
-                  ? user.seguidores || 0
-                  : totalEstablecimientosSeguidos || user.siguiendo || 0}
-              </p>
-              <p className="text-sm text-gray-500">
-                {user.rol === "vendedor" ? "Seguidores" : "Siguiendo"}
-              </p>
-            </div>
+                  <div
+                    className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
+                    aria-label="Siguiendo"
+                  >
+                    <p
+                      className="text-3xl font-bold mb-1"
+                      style={{ color: COLORS.secondary }}
+                    >
+                      {user.siguiendo || totalEstablecimientosSeguidos || 0}
+                    </p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Siguiendo
+                    </p>
+                  </div>
 
-            <div className="text-center py-4">
-              <p className="font-bold text-xl" style={{ color: "#254A5D" }}>
-                {user.rol === "vendedor"
-                  ? user.siguiendo || 0
-                  : totalComentarios || 0}
-              </p>
-              <p className="text-sm text-gray-500">
-                {user.rol === "vendedor" ? "Siguiendo" : "Aportes"}
-              </p>
+                  <div
+                    className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
+                    aria-label="Aportes"
+                  >
+                    <p
+                      className="text-3xl font-bold mb-1"
+                      style={{ color: COLORS.secondary }}
+                    >
+                      {totalComentarios || user.aportes || 0}
+                    </p>
+                    <p className="text-sm font-medium text-gray-600">Aportes</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                  <div
+                    className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
+                    aria-label="Siguiendo"
+                  >
+                    <p
+                      className="text-3xl font-bold mb-1"
+                      style={{ color: COLORS.secondary }}
+                    >
+                      {totalEstablecimientosSeguidos || user.siguiendo || 0}
+                    </p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Siguiendo
+                    </p>
+                  </div>
+
+                  <div
+                    className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
+                    aria-label="Aportes"
+                  >
+                    <p
+                      className="text-3xl font-bold mb-1"
+                      style={{ color: COLORS.secondary }}
+                    >
+                      {user.aportes || totalComentarios || 0}
+                    </p>
+                    <p className="text-sm font-medium text-gray-600">Aportes</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {user?.rol === "vendedor" ? (
             <>
-              <div className="overflow-x-auto scrollbar-hide border-b border-gray-100">
+              {/* Tabs Navigation */}
+              <div className="overflow-x-auto scrollbar-hide border-b border-gray-200 bg-gray-50">
                 <div className="flex w-full">
                   {tabs.map((tab) => (
                     <button
                       key={tab.name}
-                      className={`flex-1 flex flex-col items-center justify-center px-4 py-4 text-sm font-medium transition border-b-2 ${
+                      className={`flex-1 flex flex-col items-center justify-center px-4 py-4 text-sm font-medium transition-all duration-300 border-b-2 min-w-0 ${
                         activeTab === tab.name
-                          ? "border-b-2 text-white"
-                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          ? "border-b-2 font-semibold"
+                          : "border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300"
                       }`}
                       style={
                         activeTab === tab.name
                           ? {
-                              borderColor: "#49C581",
-                              color: "#337179",
+                              borderColor: COLORS.primary,
+                              color: COLORS.primary,
+                              backgroundColor: `${COLORS.primary}08`,
                             }
                           : {}
                       }
                       onClick={() => setActiveTab(tab.name)}
                     >
-                      <span className="text-xl">{tab.icon}</span>
-                      <span className="hidden md:block mt-1">{tab.name}</span>
+                      <span className="text-xl mb-1">{tab.icon}</span>
+                      <span className="hidden md:block whitespace-nowrap">
+                        {tab.name}
+                      </span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="p-6">
+              <div className="p-6 bg-gray-50">
                 {activeTab === "Crear Establecimiento" && (
-                  <div className="text-center py-10">
+                  <div className="text-center py-8">
                     <EstablecimientoForm
                       onEstablecimientoCreado={handleEstablecimientoCreado}
                     />
@@ -595,26 +618,35 @@ const PerfilPage = () => {
                 )}
 
                 {activeTab === "Establecimiento" && (
-                  <div className="text-center ">
+                  <div className="text-center">
                     {tieneEstablecimiento ? (
                       <div>
                         <h3
-                          className="text-lg font-medium"
-                          style={{ color: "#254A5D" }}
+                          className="text-xl font-semibold mb-6"
+                          style={{ color: COLORS.secondary }}
                         >
                           {user.establecimientosCreados &&
                           user.establecimientosCreados.length > 0
                             ? `Tienes ${user.establecimientosCreados.length} establecimiento(s)`
                             : "No tienes establecimientos registrados"}
                         </h3>
-                        <div className="mt-6">
+                        <div className="mt-6 space-y-6">
                           {loading ? (
-                            <div className="text-center py-4">
-                              <p>Cargando establecimientos...</p>
+                            <div className="text-center py-8">
+                              <div
+                                className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4"
+                                style={{ borderColor: COLORS.primary }}
+                              ></div>
+                              <p className="text-gray-600">
+                                Cargando establecimientos...
+                              </p>
                             </div>
                           ) : (
                             establecimientosData.map((est, index) => (
-                              <div key={index} className="s">
+                              <div
+                                key={index}
+                                className="transition-all hover:scale-[1.02]"
+                              >
                                 <EstablecimientoCard
                                   establecimientoId={est.id}
                                   tieneEstablecimiento={tieneEstablecimiento}
@@ -628,24 +660,27 @@ const PerfilPage = () => {
                         </div>
                       </div>
                     ) : (
-                      <div>
-                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-                          <FaStore size={36} style={{ color: "#49C581" }} />
+                      <div className="bg-white rounded-2xl shadow-md p-8 max-w-md mx-auto">
+                        <div className="bg-gray-100 inline-flex p-6 rounded-full mb-4">
+                          <FaStore
+                            size={42}
+                            style={{ color: COLORS.primary }}
+                          />
                         </div>
                         <h3
-                          className="text-lg font-medium"
-                          style={{ color: "#254A5D" }}
+                          className="text-xl font-semibold mb-2"
+                          style={{ color: COLORS.secondary }}
                         >
                           No tienes establecimientos registrados
                         </h3>
-                        <p className="text-gray-500 mt-1">
+                        <p className="text-gray-600 mb-6">
                           Crea tu primer establecimiento para empezar a recibir
                           reseñas
                         </p>
                         <button
                           onClick={() => setActiveTab("Crear Establecimiento")}
-                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
-                          style={{ backgroundColor: "#49C581" }}
+                          className="px-6 py-3 rounded-full text-white font-medium shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                          style={{ backgroundColor: COLORS.primary }}
                         >
                           Crear Establecimiento
                         </button>
@@ -655,34 +690,34 @@ const PerfilPage = () => {
                 )}
 
                 {activeTab === "Promociones" && (
-                  <div className="bg-white rounded-lg shadow p-6">
+                  <div className="bg-white rounded-2xl shadow-md p-6">
                     {tieneEstablecimiento ? (
                       <PromocionForm
                         tieneEstablecimiento={tieneEstablecimiento}
                         establecimientosData={establecimientosData}
                       />
                     ) : (
-                      <div className="text-center py-6">
-                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                      <div className="text-center py-8 bg-white rounded-2xl shadow-md p-8 max-w-md mx-auto">
+                        <div className="bg-gray-100 inline-flex p-6 rounded-full mb-4">
                           <FaPercentage
-                            size={36}
-                            style={{ color: "#F8485E" }}
+                            size={42}
+                            style={{ color: COLORS.accent }}
                           />
                         </div>
                         <h3
-                          className="text-lg font-medium"
-                          style={{ color: "#254A5D" }}
+                          className="text-xl font-semibold mb-2"
+                          style={{ color: COLORS.secondary }}
                         >
                           Necesitas un establecimiento para crear promociones
                         </h3>
-                        <p className="text-gray-500 mt-1">
+                        <p className="text-gray-600 mb-6">
                           Crea primero tu establecimiento para poder añadir
                           promociones
                         </p>
                         <button
                           onClick={() => setActiveTab("Crear Establecimiento")}
-                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
-                          style={{ backgroundColor: "#49C581" }}
+                          className="px-6 py-3 rounded-full text-white font-medium shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                          style={{ backgroundColor: COLORS.primary }}
                         >
                           Crear Establecimiento
                         </button>
@@ -694,30 +729,30 @@ const PerfilPage = () => {
                 {activeTab === "Fotos" && (
                   <div className="space-y-6">
                     {!tieneEstablecimiento ? (
-                      <div className="text-center py-6 bg-white rounded-lg shadow">
-                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-                          <FaImages size={36} style={{ color: "#37a6ca" }} />
+                      <div className="text-center py-8 bg-white rounded-2xl shadow-md p-8 max-w-md mx-auto">
+                        <div className="bg-gray-100 inline-flex p-6 rounded-full mb-4">
+                          <FaImages size={42} style={{ color: COLORS.info }} />
                         </div>
                         <h3
-                          className="text-lg font-medium"
-                          style={{ color: "#254A5D" }}
+                          className="text-xl font-semibold mb-2"
+                          style={{ color: COLORS.secondary }}
                         >
                           Necesitas un establecimiento para gestionar fotos
                         </h3>
-                        <p className="text-gray-500 mt-1">
+                        <p className="text-gray-600 mb-6">
                           Crea primero tu establecimiento para poder añadir
                           fotos
                         </p>
                         <button
                           onClick={() => setActiveTab("Crear Establecimiento")}
-                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
-                          style={{ backgroundColor: "#49C581" }}
+                          className="px-6 py-3 rounded-full text-white font-medium shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                          style={{ backgroundColor: COLORS.primary }}
                         >
                           Crear Establecimiento
                         </button>
                       </div>
                     ) : (
-                      <div className="bg-white rounded-lg shadow">
+                      <div className="bg-white rounded-2xl shadow-md overflow-hidden">
                         <FotosEstablecimiento
                           establecimientoId={user?.establecimientosCreados?.[0]}
                           tieneEstablecimiento={tieneEstablecimiento}
@@ -728,29 +763,29 @@ const PerfilPage = () => {
                 )}
 
                 {activeTab === "Opiniones" && (
-                  <div className="text-center py-10">
+                  <div className="text-center py-8">
                     {!tieneEstablecimiento ? (
-                      <div>
-                        <div className="bg-gray-50 inline-flex p-6 rounded-full mb-4">
+                      <div className="bg-white rounded-2xl shadow-md p-8 max-w-md mx-auto">
+                        <div className="bg-gray-100 inline-flex p-6 rounded-full mb-4">
                           <FaCommentDots
-                            size={36}
-                            style={{ color: "#F8485E" }}
+                            size={42}
+                            style={{ color: COLORS.accent }}
                           />
                         </div>
                         <h3
-                          className="text-lg font-medium"
-                          style={{ color: "#254A5D" }}
+                          className="text-xl font-semibold mb-2"
+                          style={{ color: COLORS.secondary }}
                         >
                           Necesitas un establecimiento para recibir opiniones
                         </h3>
-                        <p className="text-gray-500 mt-1">
+                        <p className="text-gray-600 mb-6">
                           Crea primero tu establecimiento para poder recibir
                           opiniones de tus clientes
                         </p>
                         <button
                           onClick={() => setActiveTab("Crear Establecimiento")}
-                          className="mt-4 px-4 py-2 rounded-md text-white font-medium"
-                          style={{ backgroundColor: "#49C581" }}
+                          className="px-6 py-3 rounded-full text-white font-medium shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                          style={{ backgroundColor: COLORS.primary }}
                         >
                           Crear Establecimiento
                         </button>
@@ -758,8 +793,14 @@ const PerfilPage = () => {
                     ) : (
                       <div>
                         {loading ? (
-                          <div className="text-center py-4">
-                            <p>Cargando opiniones...</p>
+                          <div className="text-center py-8">
+                            <div
+                              className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4"
+                              style={{ borderColor: COLORS.primary }}
+                            ></div>
+                            <p className="text-gray-600">
+                              Cargando opiniones...
+                            </p>
                           </div>
                         ) : (
                           <ComentariosEstablecimiento
@@ -774,29 +815,33 @@ const PerfilPage = () => {
               </div>
             </>
           ) : (
-            <div className="p-6">
-              <div className="overflow-x-auto scrollbar-hide border-b border-gray-100">
+            <div className="p-6 bg-gray-50">
+              {/* User Tabs Navigation */}
+              <div className="overflow-x-auto scrollbar-hide border-b border-gray-200 bg-gray-50">
                 <div className="flex w-full">
                   {tabsUser.map((tab) => (
                     <button
                       key={tab.name}
-                      className={`flex-1 flex flex-col items-center justify-center px-4 py-4 text-sm font-medium transition border-b-2 ${
+                      className={`flex-1 flex flex-col items-center justify-center px-4 py-4 text-sm font-medium transition-all duration-300 border-b-2 min-w-0 ${
                         activeTab === tab.name
-                          ? "border-b-2 text-white"
-                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          ? "border-b-2 font-semibold"
+                          : "border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300"
                       }`}
                       style={
                         activeTab === tab.name
                           ? {
-                              borderColor: "#49C581",
-                              color: "#337179",
+                              borderColor: COLORS.primary,
+                              color: COLORS.primary,
+                              backgroundColor: `${COLORS.primary}08`,
                             }
                           : {}
                       }
                       onClick={() => setActiveTab(tab.name)}
                     >
-                      <span className="text-xl">{tab.icon}</span>
-                      <span className="hidden md:block mt-1">{tab.name}</span>
+                      <span className="text-xl mb-1">{tab.icon}</span>
+                      <span className="hidden md:block whitespace-nowrap">
+                        {tab.name}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -804,7 +849,7 @@ const PerfilPage = () => {
 
               <div className="p-6">
                 {activeTab === "Favoritos" && (
-                  <div className="bg-white rounded-lg shadow p-6">
+                  <div className="bg-white rounded-2xl shadow-md p-6">
                     <MisFavoritos />
                   </div>
                 )}
@@ -816,7 +861,7 @@ const PerfilPage = () => {
                 )}
 
                 {activeTab === "Ofertas" && (
-                  <div className="text-center py-10">
+                  <div className="text-center py-8">
                     <Ofertas />
                   </div>
                 )}

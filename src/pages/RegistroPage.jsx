@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { registrar } from "../api/auth";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 function RegisterPage() {
   const [formData, setFormData] = useState({
     nombreUsuario: "",
@@ -30,26 +30,26 @@ function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Las contraseñas no coinciden");
       return;
     }
-  
+
     if (!termsAccepted) {
       toast.error("Debes aceptar los términos y condiciones");
       return;
     }
-  
+
     try {
       const response = await registrar({
         nombreUsuario: formData.nombreUsuario,
         email: formData.email,
         password: formData.password,
       });
-  
+
       toast.success("¡Registro exitoso!");
-  
+
       setFormData({
         nombreUsuario: "",
         email: "",
@@ -57,19 +57,15 @@ function RegisterPage() {
         confirmPassword: "",
       });
       setTermsAccepted(false);
-  
     } catch (error) {
-  
       const mensajeError =
         error.response?.data?.message || // si el backend responde con { message: "..." }
-        error.response?.data?.error ||   // o con { error: "..." }
-        "Hubo un error al registrarse";  // mensaje por defecto
-  
+        error.response?.data?.error || // o con { error: "..." }
+        "Hubo un error al registrarse"; // mensaje por defecto
+
       toast.error(mensajeError);
     }
   };
-  
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 pt-10">
@@ -84,7 +80,10 @@ function RegisterPage() {
           <div className="rounded-md shadow-sm space-y-4">
             {/* Nombres y Apellidos (en una fila) */}
             <div>
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
                 Usuario
               </label>
               <input
@@ -95,14 +94,17 @@ function RegisterPage() {
                 required
                 value={formData.nombreUsuario}
                 onChange={handleChange}
-                className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
                 placeholder="Juan Pérez"
               />
             </div>
 
             {/* Campo Email */}
             <div>
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
                 Correo electrónico
               </label>
               <input
@@ -113,14 +115,17 @@ function RegisterPage() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
                 placeholder="correo@ejemplo.com"
               />
             </div>
 
             {/* Campo Password */}
             <div>
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
                 Contraseña
               </label>
               <div className="relative">
@@ -131,7 +136,7 @@ function RegisterPage() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
                   placeholder="********"
                 />
                 <button
@@ -140,13 +145,38 @@ function RegisterPage() {
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   ) : (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -158,7 +188,10 @@ function RegisterPage() {
 
             {/* Campo Confirmar Password */}
             <div>
-              <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="text-sm font-medium text-gray-700"
+              >
                 Confirmar Contraseña
               </label>
               <div className="relative">
@@ -169,7 +202,7 @@ function RegisterPage() {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
                   placeholder="********"
                 />
                 <button
@@ -178,13 +211,38 @@ function RegisterPage() {
                   onClick={toggleConfirmPasswordVisibility}
                 >
                   {showConfirmPassword ? (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   ) : (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -206,7 +264,20 @@ function RegisterPage() {
               </div>
               <div className="ml-3 text-sm">
                 <label htmlFor="terms" className="text-gray-700">
-                  Acepto los <a href="#terms" className="text-teal-600 hover:text-teal-500">términos y condiciones</a> y la <a href="#privacy" className="text-teal-600 hover:text-teal-500">política de privacidad</a>
+                  Acepto los{" "}
+                  <a
+                    href="#terms"
+                    className="text-[#267241] hover:text-[#3DA16A]"
+                  >
+                    términos y condiciones
+                  </a>{" "}
+                  y la{" "}
+                  <a
+                    href="#privacy"
+                    className="text-[#267241] hover:text-[#3DA16A]"
+                  >
+                    política de privacidad
+                  </a>
                 </label>
               </div>
             </div>
@@ -216,14 +287,14 @@ function RegisterPage() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-3xl text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-200"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-3xl text-white bg-[#267241] hover:bg-[#3DA16A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#267241] transition duration-200"
             >
               Crear Cuenta
             </button>
           </div>
 
           {/* Divisor */}
-         {/*  <div className="relative my-4">
+          {/*  <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>
@@ -233,7 +304,7 @@ function RegisterPage() {
           </div> */}
 
           {/* Botones de social media */}
-        {/*   <div className="grid grid-cols-2 gap-3">
+          {/*   <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               className="py-2.5 px-4 border border-gray-300 rounded-3xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-200"
@@ -277,7 +348,10 @@ function RegisterPage() {
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
               ¿Ya tienes una cuenta?{" "}
-              <a href="/login" className="font-medium text-teal-600 hover:text-teal-500">
+              <a
+                href="/login"
+                className="font-medium text-[#267241] hover:text-[#1e5e30]"
+              >
                 Inicia sesión aquí
               </a>
             </p>

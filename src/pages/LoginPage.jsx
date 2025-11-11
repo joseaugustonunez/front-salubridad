@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom"; // para redirigir tras login
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,10 +21,10 @@ function LoginPage() {
 
     try {
       const user = await login({ email, password });
-      toast.success('Inicio de sesión exitoso');
+      toast.success("Inicio de sesión exitoso");
       navigate("/");
     } catch (err) {
-      toast.error('Correo o contraseña incorrectos');
+      toast.error("Correo o contraseña incorrectos");
       setError("Correo o contraseña incorrectos");
     }
   };
@@ -41,7 +41,10 @@ function LoginPage() {
           <div className="rounded-md shadow-sm space-y-4">
             {/* Campo Email */}
             <div>
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
                 Correo electrónico
               </label>
               <input
@@ -52,7 +55,7 @@ function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
                 placeholder="correo@ejemplo.com"
               />
             </div>
@@ -60,10 +63,16 @@ function LoginPage() {
             {/* Campo Password */}
             <div>
               <div className="flex justify-between">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Contraseña
                 </label>
-                <a href="/recuperar" className="text-sm font-medium text-teal-600 hover:text-teal-500">
+                <a
+                  href="/recuperar"
+                  className="text-sm font-medium text-[#267241] hover:text-[#1e5e30]"
+                >
                   ¿Olvidaste tu contraseña?
                 </a>
               </div>
@@ -76,7 +85,7 @@ function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
                   placeholder="********"
                 />
                 <button
@@ -85,13 +94,38 @@ function LoginPage() {
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   ) : (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -105,14 +139,14 @@ function LoginPage() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-3xl text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-200"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-3xl text-white bg-[#267241] hover:bg-[#3DA16A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-200"
             >
               Iniciar Sesión
             </button>
           </div>
 
           {/* Divisor */}
-        {/*   <div className="relative my-4">
+          {/*   <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>
@@ -122,7 +156,7 @@ function LoginPage() {
           </div> */}
 
           {/* Botones de social media */}
-        {/*   <div className="grid grid-cols-2 gap-3">
+          {/*   <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               className="py-2.5 px-4 border border-gray-300 rounded-3xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-200"
@@ -166,7 +200,10 @@ function LoginPage() {
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
               ¿No tienes una cuenta?{" "}
-              <a href="/registro" className="font-medium text-teal-600 hover:text-teal-500">
+              <a
+                href="/registro"
+                className="font-medium text-[#267241] hover:text-[#1e5e30]"
+              >
                 Regístrate aquí
               </a>
             </p>

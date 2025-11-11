@@ -339,8 +339,8 @@ export default function NavbarPage() {
                     href="/asociate"
                     className={`block md:px-2 md:py-1 px-3 py-1 text-white rounded-3xl transition duration-200 text-sm ${
                       activeLink === "asociate"
-                        ? "bg-gradient-to-r from-[#49C581] via-[#37c6a6] to-[#00f0b5] shadow-lg transform scale-105"
-                        : "bg-gradient-to-r from-[#37c6a6] via-[#00f0b5] to-[#49C581] hover:shadow-xl hover:scale-105"
+                        ? "bg-gradient-to-r from-[#267241]  to-[#00f0b5] shadow-lg transform scale-105"
+                        : "bg-gradient-to-r from-[#267241] to-[#49C581] hover:shadow-xl hover:scale-105"
                     }`}
                     onClick={() => handleLinkClick("asociate")}
                   >
@@ -757,7 +757,7 @@ export default function NavbarPage() {
                             logout(); // Llama a la función de logout del contexto
                             setIsUserMenuOpen(false);
                           }}
-                          className="block py-1.5 px-3 text-white bg-[#F8485E] hover:bg-[#d93a4e] rounded-3xl transition duration-200 mx-2 my-1"
+                          className="block py-1.5 px-3 text-white bg-[#d21636] hover:bg-[#e41b3d] rounded-3xl transition duration-200 mx-2 my-1"
                         >
                           Cerrar Sesión
                         </a>
@@ -867,120 +867,123 @@ export default function NavbarPage() {
           {/* Mobile menu (expanded) */}
           {isMenuOpen && (
             <div ref={menuRef} className="mt-4 pb-4 md:hidden">
-              <a
-                href="/"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                  activeLink === "inicio"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
-                onClick={() => handleLinkClick("inicio")}
-              >
-                Inicio
-              </a>
-              <a
-                href="/establecimientos"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                  activeLink === "establecimientos"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
-                onClick={() => handleLinkClick("establecimientos")}
-              >
-                Establecimientos
-              </a>
-              <a
-                href="/top"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                  activeLink === "top"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
-                onClick={() => handleLinkClick("top")}
-              >
-                Top
-              </a>
-              <a
-                href="/promociones"
-                className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                  activeLink === "promociones"
-                    ? "bg-[#254A5D] text-white"
-                    : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                }`}
-                onClick={() => handleLinkClick("promociones")}
-              >
-                Promociones
-              </a>
-              <a
-                href="/asociate"
-                className={`block py-3 px-6 rounded-full font-semibold text-white text-lg transition-all duration-300 mx-2 my-1
-    ${
-      activeLink === "asociate"
-        ? "bg-gradient-to-r from-[#49C581] via-[#37c6a6] to-[#00f0b5] shadow-lg transform scale-105"
-        : "bg-gradient-to-r from-[#37c6a6] via-[#00f0b5] to-[#49C581] hover:shadow-xl hover:scale-105"
-    }`}
-                onClick={() => handleLinkClick("asociate")}
-              >
-                ¡Asóciate ya!
-              </a>
-
-              {/* Business Owner specific options in mobile menu */}
-              {isBusinessOwner && (
+              {/* Mostrar distinta navegación según rol */}
+              {!isAdmin ? (
                 <>
-                  <div className="my-2 border-t border-gray-200 pt-2">
-                    <div className="mx-2 text-sm text-gray-500 mb-1">
-                      Mi Negocio
-                    </div>
-                  </div>
                   <a
-                    href="/negocio/dashboard"
+                    href="/"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "negocio-dashboard"
-                        ? "bg-[#2A9D8F] text-white"
-                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                      activeLink === "inicio"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                     }`}
-                    onClick={() => setActiveLink("negocio-dashboard")}
+                    onClick={() => handleLinkClick("inicio")}
                   >
-                    Dashboard
+                    Inicio
                   </a>
                   <a
-                    href="/negocio/reservas"
+                    href="/establecimientos"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "negocio-reservas"
-                        ? "bg-[#2A9D8F] text-white"
-                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                      activeLink === "establecimientos"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                     }`}
-                    onClick={() => setActiveLink("negocio-reservas")}
+                    onClick={() => handleLinkClick("establecimientos")}
                   >
-                    Gestionar Reservas
+                    Establecimientos
                   </a>
                   <a
-                    href="/negocio/promociones"
+                    href="/top"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "negocio-promociones"
-                        ? "bg-[#2A9D8F] text-white"
-                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                      activeLink === "top"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                     }`}
-                    onClick={() => setActiveLink("negocio-promociones")}
+                    onClick={() => handleLinkClick("top")}
                   >
-                    Mis Promociones
+                    Top
                   </a>
                   <a
-                    href="/negocio/estadisticas"
+                    href="/promociones"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "negocio-estadisticas"
-                        ? "bg-[#2A9D8F] text-white"
-                        : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                      activeLink === "promociones"
+                        ? "bg-[#254A5D] text-white"
+                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                     }`}
-                    onClick={() => setActiveLink("negocio-estadisticas")}
+                    onClick={() => handleLinkClick("promociones")}
                   >
-                    Estadísticas
+                    Promociones
                   </a>
-                </>
-              )}
+                  <a
+                    href="/asociate"
+                    className={`block py-3 px-6 rounded-full font-semibold text-white text-lg transition-all duration-300 mx-2 my-1
+      ${
+        activeLink === "asociate"
+          ? "bg-gradient-to-r from-[#267241]  to-[#00f0b5] shadow-lg transform scale-105"
+          : "bg-gradient-to-r from-[#267241]  to-[#49C581] hover:shadow-xl hover:scale-105"
+      }`}
+                    onClick={() => handleLinkClick("asociate")}
+                  >
+                    ¡Asóciate ya!
+                  </a>
 
-              {/* Admin options in mobile menu */}
-              {isAdmin && (
+                  {/* Business Owner */}
+                  {isBusinessOwner && (
+                    <>
+                      <div className="my-2 border-t border-gray-200 pt-2">
+                        <div className="mx-2 text-sm text-gray-500 mb-1">
+                          Mi Negocio
+                        </div>
+                      </div>
+                      <a
+                        href="/negocio/dashboard"
+                        className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                          activeLink === "negocio-dashboard"
+                            ? "bg-[#2A9D8F] text-white"
+                            : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                        }`}
+                        onClick={() => setActiveLink("negocio-dashboard")}
+                      >
+                        Dashboard
+                      </a>
+                      <a
+                        href="/negocio/reservas"
+                        className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                          activeLink === "negocio-reservas"
+                            ? "bg-[#2A9D8F] text-white"
+                            : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                        }`}
+                        onClick={() => setActiveLink("negocio-reservas")}
+                      >
+                        Gestionar Reservas
+                      </a>
+                      <a
+                        href="/negocio/promociones"
+                        className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                          activeLink === "negocio-promociones"
+                            ? "bg-[#2A9D8F] text-white"
+                            : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                        }`}
+                        onClick={() => setActiveLink("negocio-promociones")}
+                      >
+                        Mis Promociones
+                      </a>
+                      <a
+                        href="/negocio/estadisticas"
+                        className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                          activeLink === "negocio-estadisticas"
+                            ? "bg-[#2A9D8F] text-white"
+                            : "text-gray-700 hover:bg-[#2A9D8F] hover:text-white"
+                        }`}
+                        onClick={() => setActiveLink("negocio-estadisticas")}
+                      >
+                        Estadísticas
+                      </a>
+                    </>
+                  )}
+                </>
+              ) : (
+                // Admin mobile menu
                 <>
                   <div className="my-2 border-t border-gray-200 pt-2">
                     <div className="mx-2 text-sm text-gray-500 mb-1">
@@ -1034,21 +1037,21 @@ export default function NavbarPage() {
                   <a
                     href="/admin/promociones"
                     className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "promociones"
+                      activeLink === "promociones-admin"
                         ? "bg-[#254A5D] text-white"
                         : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
                     }`}
-                    onClick={() => setActiveLink("promociones")}
+                    onClick={() => setActiveLink("promociones-admin")}
                   >
                     Promociones
                   </a>
                 </>
               )}
 
+              {/* Account / Auth area */}
               <div className="my-2 border-t border-gray-200 pt-2">
-                {user && (
+                {user ? (
                   <>
-                    {/* Mostrar "Mi Perfil" sólo si NO es admin */}
                     {!isAdmin && (
                       <a
                         href="/perfil"
@@ -1069,13 +1072,12 @@ export default function NavbarPage() {
                         e.preventDefault();
                         logout();
                       }}
-                      className="block py-1.5 px-3 text-white bg-[#F8485E] hover:bg-[#d93a4e] rounded-3xl transition duration-200 mx-2 my-1"
+                      className="block py-1.5 px-3 text-white bg-[#d21636] hover:bg-[#e41b3d] rounded-3xl transition duration-200 mx-2 my-1"
                     >
                       Cerrar Sesión
                     </a>
                   </>
-                )}
-                {!user && (
+                ) : (
                   <>
                     <a
                       href="/login"

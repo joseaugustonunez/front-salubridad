@@ -547,7 +547,7 @@ export default function HomePage() {
                 onClick={() => setActiveFilter("all")}
                 className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
                   activeFilter === "all"
-                    ? "bg-[#49C581] text-white shadow-lg"
+                    ? "bg-[#267241] text-white shadow-lg"
                     : "bg-white text-gray-600 border border-gray-200 hover:border-[#49C581]"
                 }`}
               >
@@ -557,7 +557,7 @@ export default function HomePage() {
                 onClick={() => setActiveFilter("featured")}
                 className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
                   activeFilter === "featured"
-                    ? "bg-[#49C581] text-white shadow-lg"
+                    ? "bg-[#267241] text-white shadow-lg"
                     : "bg-white text-gray-600 border border-gray-200 hover:border-[#49C581]"
                 }`}
               >
@@ -567,7 +567,7 @@ export default function HomePage() {
                 onClick={() => setActiveFilter("offers")}
                 className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
                   activeFilter === "offers"
-                    ? "bg-[#49C581] text-white shadow-lg"
+                    ? "bg-[#267241] text-white shadow-lg"
                     : "bg-white text-gray-600 border border-gray-200 hover:border-[#49C581]"
                 }`}
               >
@@ -754,14 +754,14 @@ function EstablecimientoCard({
         <div className="flex flex-col sm:flex-row sm:justify-between text-gray-600 mb-4 gap-2">
           {establecimiento.ubicacion?.[0] && (
             <div className="flex items-center text-sm">
-              <FaLocationArrow className="mr-2 text-[#49C581]" />
+              <FaLocationArrow className="mr-2 text-[#254A5D]" />
               <span className="font-medium">
                 {calcularDistancia(establecimiento.ubicacion[0].coordenadas)}
               </span>
             </div>
           )}
           <div className="flex items-center text-sm">
-            <FaClock className="mr-2 text-[#49C581]" />
+            <FaClock className="mr-2 text-[#254A5D]" />
             <span className="font-medium">
               {formatearHorario(establecimiento.horario)}
             </span>
@@ -783,7 +783,7 @@ function EstablecimientoCard({
           </div>
         )}
 
-        <button className="w-full bg-[#49C581] text-white py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm md:text-base">
+        <button className="w-full bg-[#267241] text-white py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm md:text-base">
           Ver Detalles
         </button>
       </div>

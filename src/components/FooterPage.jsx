@@ -40,7 +40,7 @@ function Footer() {
             </a>
             <a
               href="/asociate"
-              className="px-3 py-1 rounded-full bg-gradient-to-r from-[#37c6a6] to-[#49C581] text-white hover:opacity-95 transition"
+              className="px-3 py-1 rounded-full bg-gradient-to-r from-[#267241]  to-[#00f0b5] text-white hover:opacity-95 transition"
             >
               ¡Asóciate!
             </a>
