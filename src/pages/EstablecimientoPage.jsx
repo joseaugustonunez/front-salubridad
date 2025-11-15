@@ -36,6 +36,7 @@ export default function EstablecimientoPage() {
   const [seguidos, setSeguidos] = useState([]);
   const [seguidores, setSeguidores] = useState({});
   const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [busqueda, setBusqueda] = useState("");
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -61,6 +62,9 @@ export default function EstablecimientoPage() {
       try {
         const userData = JSON.parse(user);
         setUserId(userData._id || userData.id);
+
+        // Guardar rol (soporta 'rol' o 'role' o 'tipo')
+        setUserRole(userData.rol || userData.role || userData.tipo || null);
 
         // Cargar likes y seguimientos del usuario
         cargarEstadosUsuario(userData._id || userData.id);
@@ -162,6 +166,12 @@ export default function EstablecimientoPage() {
   const toggleFavorito = async (id, e) => {
     e.stopPropagation();
 
+    // Bloquear acción si el rol es vendedor
+    if (userRole === "vendedor") {
+      toast.error("Los vendedores no pueden seguir establecimientos");
+      return;
+    }
+
     // Verificar si el usuario está autenticado
     if (!isAuthenticated) {
       toast.error("Debes iniciar sesión para seguir establecimientos");
@@ -212,6 +222,12 @@ export default function EstablecimientoPage() {
   // Alternar like
   const toggleLike = async (id, e) => {
     e.stopPropagation();
+
+    // Bloquear acción si el rol es vendedor
+    if (userRole === "vendedor") {
+      toast.error("Los vendedores no pueden dar like a establecimientos");
+      return;
+    }
 
     // Verificar si el usuario está autenticado
     if (!isAuthenticated) {
@@ -503,7 +519,17 @@ export default function EstablecimientoPage() {
                       onClick={(e) =>
                         toggleLike(establecimiento._id || establecimiento.id, e)
                       }
-                      className="p-2 rounded-full shadow-md z-10 transition-all duration-300"
+                      disabled={userRole === "vendedor"}
+                      title={
+                        userRole === "vendedor"
+                          ? "No permitido para vendedores"
+                          : "Me gusta"
+                      }
+                      className={`p-2 rounded-full shadow-md z-10 transition-all duration-300 ${
+                        userRole === "vendedor"
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
                       style={{
                         backgroundColor: likesDados.includes(
                           establecimiento._id || establecimiento.id
@@ -533,7 +559,17 @@ export default function EstablecimientoPage() {
                           e
                         )
                       }
-                      className="p-2 rounded-full shadow-md z-10 transition-all duration-300"
+                      disabled={userRole === "vendedor"}
+                      title={
+                        userRole === "vendedor"
+                          ? "No permitido para vendedores"
+                          : undefined
+                      }
+                      className={`p-2 rounded-full shadow-md z-10 transition-all duration-300 ${
+                        userRole === "vendedor"
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
                       style={{
                         backgroundColor: seguidos.includes(
                           establecimiento._id || establecimiento.id

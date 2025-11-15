@@ -62,7 +62,15 @@ const estilos = {
   tiktok: "bg-black text-white",
 };
 // Componentes UI
-const Button = ({ children, primary, secondary, onClick, className = "" }) => {
+const Button = ({
+  children,
+  primary,
+  secondary,
+  onClick,
+  className = "",
+  disabled = false,
+  title,
+}) => {
   const baseClasses =
     "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all";
   const colorClasses = primary
@@ -73,8 +81,12 @@ const Button = ({ children, primary, secondary, onClick, className = "" }) => {
 
   return (
     <button
+      disabled={disabled}
+      title={title}
       onClick={onClick}
-      className={`${baseClasses} ${colorClasses} ${className}`}
+      className={`${baseClasses} ${colorClasses} ${className} ${
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+      }`}
     >
       {children}
     </button>
@@ -171,6 +183,7 @@ export default function EstablecimientoDetallePage() {
   const [comentarios, setComentarios] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const [promociones, setPromociones] = useState([]);
   const [showVerifiedTooltip, setShowVerifiedTooltip] = useState(false);
   // estado ya existente:
@@ -222,6 +235,9 @@ export default function EstablecimientoDetallePage() {
       try {
         const userData = JSON.parse(user);
         setUserId(userData._id || userData.id);
+
+        // Guardar rol si existe (soporta 'rol' o 'role')
+        setUserRole(userData.rol || userData.role || null);
 
         // Cargar likes y seguimientos del usuario
         cargarEstadosUsuario(userData._id || userData.id);
@@ -278,6 +294,10 @@ export default function EstablecimientoDetallePage() {
   }, [id, userId]);
 
   const handleLike = async () => {
+    if (userRole === "vendedor") {
+      toast.error("Los vendedores no pueden dar like");
+      return;
+    }
     if (!isAuthenticated) {
       toast.error("Debes iniciar sesión para dar like");
       return;
@@ -323,6 +343,10 @@ export default function EstablecimientoDetallePage() {
     }
   };
   const handleFollow = async () => {
+    if (userRole === "vendedor") {
+      toast.error("Los vendedores no pueden seguir establecimientos");
+      return;
+    }
     if (!isAuthenticated) {
       toast.error("Debes iniciar sesión para seguir este establecimiento");
       return;
@@ -377,6 +401,10 @@ export default function EstablecimientoDetallePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (userRole === "vendedor") {
+      toast.error("Los vendedores no pueden comentar");
+      return;
+    }
     if (newRating === 0) {
       toast.error("Por favor, selecciona una calificación");
       return;
@@ -822,15 +850,15 @@ export default function EstablecimientoDetallePage() {
                         <MdOutlineVerified className="text-green-500" />
                         {/* Tooltip desktop: aparece al hover en pantallas md+ */}
                         <span
-                          className="hidden md:absolute md:bottom-full md:mb-3 md:left-1/2 md:-translate-x-1/2 
-                           md:opacity-0 md:group-hover:opacity-100 
-                           md:bg-white md:text-black md:text-sm md:font-medium 
-                           md:px-3 md:py-1 md:rounded-md md:shadow-lg 
+                          className="hidden md:block md:absolute md:bottom-full md:mb-3 md:left-1/2 md:-translate-x-1/2
+                           md:opacity-0 md:group-hover:opacity-100 md:pointer-events-none md:group-hover:pointer-events-auto
+                           md:bg-white md:text-black md:text-sm md:font-medium
+                           md:px-3 md:py-1 md:rounded-md md:shadow-lg
                            md:transition-opacity md:duration-200 md:whitespace-nowrap"
                         >
                           Establecimiento verificado
                           <span
-                            className="md:absolute md:top-full md:left-1/2 md:-translate-x-1/2 
+                            className="md:absolute md:top-full md:left-1/2 md:-translate-x-1/2
                              md:w-2 md:h-2 md:bg-white md:rotate-45 md:shadow-md"
                           ></span>
                         </span>
@@ -900,6 +928,12 @@ export default function EstablecimientoDetallePage() {
               <div className="flex gap-2">
                 <Button
                   onClick={handleLike}
+                  disabled={userRole === "vendedor"}
+                  title={
+                    userRole === "vendedor"
+                      ? "No permitido para vendedores"
+                      : undefined
+                  }
                   className={`group ${
                     liked ? "bg-red-50 hover:bg-red-100" : ""
                   }`}
@@ -915,6 +949,12 @@ export default function EstablecimientoDetallePage() {
                   primary={!followed}
                   secondary={followed}
                   onClick={handleFollow}
+                  disabled={userRole === "vendedor"}
+                  title={
+                    userRole === "vendedor"
+                      ? "No permitido para vendedores"
+                      : undefined
+                  }
                 >
                   {followed ? "Dejar de seguir" : "Seguir"}
                 </Button>
@@ -1303,6 +1343,12 @@ export default function EstablecimientoDetallePage() {
                             onClick={() => setNewRating(star)}
                             className="focus:outline-none transition-transform hover:scale-110"
                             aria-label={`Calificación ${star}`}
+                            disabled={userRole === "vendedor" || isSubmitting}
+                            title={
+                              userRole === "vendedor"
+                                ? "No permitido para vendedores"
+                                : undefined
+                            }
                           >
                             {star <= newRating ? (
                               <FaStar className="text-yellow-300 text-xl" />
@@ -1320,7 +1366,7 @@ export default function EstablecimientoDetallePage() {
                         className="w-full md:flex-1 bg-white/10 text-white placeholder-white/70 px-4 py-2 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none transition-all"
                         value={mensaje}
                         onChange={(e) => setMensaje(e.target.value)}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || userRole === "vendedor"}
                       />
 
                       {/* Botón de enviar */}
@@ -1329,8 +1375,12 @@ export default function EstablecimientoDetallePage() {
                         className={`bg-white/90 text-[#2E5F58] font-medium px-4 py-2 rounded-full hover:bg-white transition-all md:self-auto self-end ${
                           isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                         }`}
-                        title="Enviar reseña"
-                        disabled={isSubmitting}
+                        title={
+                          userRole === "vendedor"
+                            ? "Los vendedores no pueden comentar"
+                            : "Enviar reseña"
+                        }
+                        disabled={isSubmitting || userRole === "vendedor"}
                       >
                         <div className="flex items-center gap-2">
                           <IoMdSend className="text-lg" />

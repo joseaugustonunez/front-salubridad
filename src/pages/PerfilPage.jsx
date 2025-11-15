@@ -29,7 +29,9 @@ import {
   obtenerTotalesUsuario,
   obtenerSeguidoresVendedor,
   obtenerComentariosRecibidosUsuario,
+  // obtenerComentariosUsuario, // ...existing code...
 } from "../api/usuario";
+import { obtenerComentariosPorUsuario } from "../api/comentario"; // <-- agregado
 
 // Definir colores como constantes para reutilización
 const COLORS = {
@@ -65,10 +67,21 @@ const PerfilPage = () => {
   const [totalComentarios, setTotalComentarios] = useState(0);
   const [totalEstablecimientosSeguidos, setTotalEstablecimientosSeguidos] =
     useState(0);
+  const [totalLikes, setTotalLikes] = useState(0);
+  const [totalSeguidores, setTotalSeguidores] = useState(0);
   const [seguidoresList, setSeguidoresList] = useState([]);
   const [seguidoresCount, setSeguidoresCount] = useState(0);
   const [comentariosRecibidos, setComentariosRecibidos] = useState([]);
   const [comentariosRecibidosCount, setComentariosRecibidosCount] = useState(0);
+  const [aportesCount, setAportesCount] = useState(0); // <-- agregado
+  // Modal cambio de contraseña
+  const [showModal, setShowModal] = useState(false);
+  const [currentPass, setCurrentPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const recargarUsuario = async (userId) => {
     const usuarioActualizado = await obtenerUsuarioPorId(userId);
@@ -307,22 +320,45 @@ const PerfilPage = () => {
     (async () => {
       try {
         const totals = await obtenerTotalesUsuario(userId.toString());
-        const sigue =
-          totals?.siguiendo ??
-          totals?.establecimientosSeguidos ??
-          totals?.sigue ??
-          totals?.totalSiguiendo ??
-          0;
-        const interacciones =
-          totals?.interacciones ??
-          totals?.totalInteracciones ??
-          totals?.totalComentarios ??
-          totals?.comentarios ??
-          0;
-        setTotalEstablecimientosSeguidos(Number(sigue));
-        setTotalComentarios(Number(interacciones));
+        // Mapear respuesta del backend
+        setTotalEstablecimientosSeguidos(
+          Number(
+            totals?.totalEstablecimientosSeguidos || totals?.siguiendo || 0
+          )
+        );
+        setTotalComentarios(
+          Number(
+            totals?.totalComentariosRecibidos ||
+              totals?.totalComentarios ||
+              totals?.interacciones ||
+              0
+          )
+        );
+        setTotalLikes(Number(totals?.totalLikes || 0));
+        setTotalSeguidores(
+          Number(totals?.seguidoresCount || totals?.seguidores || 0)
+        );
       } catch (error) {
         console.error("Error al obtener totales de usuario:", error);
+      }
+
+      // Obtener cantidad de comentarios (aportes) hechos por el usuario
+      try {
+        const resp = await obtenerComentariosPorUsuario(userId.toString()); // <-- cambiado
+        // Puede devolver { total, comentarios } o un arreglo
+        if (resp == null) setAportesCount(0);
+        else if (typeof resp.total === "number")
+          setAportesCount(Number(resp.total));
+        else if (Array.isArray(resp)) setAportesCount(resp.length);
+        else if (Array.isArray(resp.comentarios))
+          setAportesCount(resp.comentarios.length);
+        else setAportesCount(0);
+      } catch (err) {
+        console.error(
+          "Error al obtener aportes (comentarios del usuario):",
+          err
+        );
+        setAportesCount(0);
       }
     })();
   }, [user]);
@@ -373,7 +409,7 @@ const PerfilPage = () => {
         {/* Botón para cambiar foto de portada - Mejorado */}
         <label
           htmlFor="coverPhotoInput"
-          className="absolute top-6 right-6 bg-white bg-opacity-95 px-5 py-3 rounded-full flex items-center space-x-2 transition-all hover:bg-white hover:shadow-2xl z-10 cursor-pointer hover:scale-105 group"
+          className="absolute top-24 right-6 bg-white bg-opacity-95 px-5 py-3 rounded-full flex items-center space-x-2 transition-all hover:bg-white hover:shadow-2xl z-10 cursor-pointer hover:scale-105 group"
           style={{ color: COLORS.secondary }}
         >
           <FaCamera
@@ -484,6 +520,7 @@ const PerfilPage = () => {
 
             <div className="mt-4 md:mt-0">
               <button
+                onClick={() => setShowModal(true)}
                 className="px-6 py-3 rounded-full font-medium shadow-lg transition-all hover:shadow-xl hover:scale-105 flex items-center"
                 style={{ backgroundColor: COLORS.primary, color: COLORS.white }}
               >
@@ -497,48 +534,50 @@ const PerfilPage = () => {
           <div className="px-6 -mt-2 mb-6">
             <div className="max-w-4xl mx-auto">
               {user?.rol === "vendedor" ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4">
                   <div
-                    className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
+                    className="bg-white rounded-xl shadow-md p-3 sm:p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
+                    aria-label="Reseñas"
+                  >
+                    <p
+                      className="text-2xl sm:text-3xl font-bold mb-1"
+                      style={{ color: COLORS.secondary }}
+                    >
+                      {totalComentarios || 0}
+                    </p>
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">
+                      Reseñas
+                    </p>
+                  </div>
+
+                  <div
+                    className="bg-white rounded-xl shadow-md p-3 sm:p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
                     aria-label="Seguidores"
                   >
                     <p
-                      className="text-3xl font-bold mb-1"
+                      className="text-2xl sm:text-3xl font-bold mb-1"
                       style={{ color: COLORS.secondary }}
                     >
-                      {user.seguidores || 0}
+                      {totalSeguidores || 0}
                     </p>
-                    <p className="text-sm font-medium text-gray-600">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">
                       Seguidores
                     </p>
                   </div>
 
                   <div
-                    className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
-                    aria-label="Siguiendo"
+                    className="bg-white rounded-xl shadow-md p-3 sm:p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
+                    aria-label="Me gusta"
                   >
                     <p
-                      className="text-3xl font-bold mb-1"
+                      className="text-2xl sm:text-3xl font-bold mb-1"
                       style={{ color: COLORS.secondary }}
                     >
-                      {user.siguiendo || totalEstablecimientosSeguidos || 0}
+                      {totalLikes || 0}
                     </p>
-                    <p className="text-sm font-medium text-gray-600">
-                      Siguiendo
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">
+                      Me gusta
                     </p>
-                  </div>
-
-                  <div
-                    className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-100 hover:shadow-lg transition-all"
-                    aria-label="Aportes"
-                  >
-                    <p
-                      className="text-3xl font-bold mb-1"
-                      style={{ color: COLORS.secondary }}
-                    >
-                      {totalComentarios || user.aportes || 0}
-                    </p>
-                    <p className="text-sm font-medium text-gray-600">Aportes</p>
                   </div>
                 </div>
               ) : (
@@ -566,7 +605,7 @@ const PerfilPage = () => {
                       className="text-3xl font-bold mb-1"
                       style={{ color: COLORS.secondary }}
                     >
-                      {user.aportes || totalComentarios || 0}
+                      {aportesCount || user.aportes || 0}
                     </p>
                     <p className="text-sm font-medium text-gray-600">Aportes</p>
                   </div>
@@ -608,9 +647,9 @@ const PerfilPage = () => {
                 </div>
               </div>
 
-              <div className="p-6 bg-gray-50">
+              <div className=" bg-gray-50">
                 {activeTab === "Crear Establecimiento" && (
-                  <div className="text-center py-8">
+                  <div className="text-center ">
                     <EstablecimientoForm
                       onEstablecimientoCreado={handleEstablecimientoCreado}
                     />
@@ -870,6 +909,142 @@ const PerfilPage = () => {
           )}
         </div>
       </div>
+
+      {/* Modal cambio de contraseña */}
+      {showModal && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/40 z-40"
+            onClick={() => setShowModal(false)}
+          />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div
+              className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="px-4 py-3 border-b flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Cambiar contraseña
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-500 hover:text-gray-700 text-xl"
+                  aria-label="Cerrar"
+                >
+                  ×
+                </button>
+              </div>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!currentPass || !newPass || !confirmPass) {
+                    alert("Complete todos los campos");
+                    return;
+                  }
+                  if (newPass !== confirmPass) {
+                    alert("La nueva contraseña y confirmación no coinciden");
+                    return;
+                  }
+                  // TODO: llamar API para cambiar contraseña
+                  alert("Contraseña actualizada");
+                  setCurrentPass("");
+                  setNewPass("");
+                  setConfirmPass("");
+                  setShowModal(false);
+                }}
+                className="px-4 py-4 space-y-3"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Contraseña actual
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showCurrent ? "text" : "password"}
+                      value={currentPass}
+                      onChange={(e) => setCurrentPass(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="Contraseña actual"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrent((s) => !s)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-gray-500"
+                    >
+                      {showCurrent ? "Ocultar" : "Mostrar"}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nueva contraseña
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showNew ? "text" : "password"}
+                      value={newPass}
+                      onChange={(e) => setNewPass(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="Nueva contraseña"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNew((s) => !s)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-gray-500"
+                    >
+                      {showNew ? "Ocultar" : "Mostrar"}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Confirmar nueva contraseña
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirm ? "text" : "password"}
+                      value={confirmPass}
+                      onChange={(e) => setConfirmPass(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="Confirmar contraseña"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirm((s) => !s)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-gray-500"
+                    >
+                      {showConfirm ? "Ocultar" : "Mostrar"}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="submit"
+                    className="w-full px-3 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 transition text-sm"
+                  >
+                    Guardar contraseña
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition text-sm"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

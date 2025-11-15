@@ -36,7 +36,19 @@ export const obtenerComentariosPorEstablecimiento = async (establecimientoId) =>
   }
 };
 
+// Obtener comentarios por usuario
+export const obtenerComentariosPorUsuario = async (userId) => {
+  try {
+    const url = userId ? `${API_URL}/usuario/${userId}` : `${API_URL}/usuario`;
+    const response = await axios.get(url, configurarHeaders());
+    return response.data; // { total, comentarios } o similar
+  } catch (error) {
+    console.error("Error al obtener comentarios por usuario:", error.response?.data || error);
+    throw error;
+  }
+};
 
+// Obtener todos los comentarios
 export const obtenerComentarios = async (establecimientoId) => {
   try {
     const response = await axios.get(`${API_URL}/establecimiento/${establecimientoId}`);

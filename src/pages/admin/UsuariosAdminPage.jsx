@@ -69,6 +69,8 @@ export default function AdminUsuariosView() {
           id: usuario._id,
           email: usuario.email,
           nombreUsuario: usuario.nombreUsuario,
+          nombres: usuario.nombres || "",
+          apellidos: usuario.apellidos || "",
           rol: usuario.rol,
           establecimientosCreados: usuario.establecimientosCreados || [],
           solicitudVendedor: usuario.solicitudVendedor || null, // <-- agregado
@@ -150,7 +152,9 @@ export default function AdminUsuariosView() {
     (usuario) =>
       usuario.nombreUsuario?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       usuario.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      usuario.rol?.toLowerCase().includes(searchTerm.toLowerCase())
+      usuario.rol?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usuario.nombres?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usuario.apellidos?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const mostrarMensaje = (texto, tipo) => {
@@ -227,6 +231,8 @@ export default function AdminUsuariosView() {
         id: usuario._id,
         email: usuario.email,
         nombreUsuario: usuario.nombreUsuario,
+        nombres: usuario.nombres || "",
+        apellidos: usuario.apellidos || "",
         rol: usuario.rol,
         establecimientosCreados: usuario.establecimientosCreados || [],
       }));
@@ -400,17 +406,31 @@ export default function AdminUsuariosView() {
                             <div className="flex items-center">
                               <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
                                 <span className="text-lg font-medium text-gray-600">
-                                  {usuario.nombreUsuario
-                                    ?.charAt(0)
-                                    .toUpperCase() || "?"}
+                                  {(
+                                    (usuario.apellidos &&
+                                      usuario.apellidos.trim()) ||
+                                    (usuario.nombres &&
+                                      usuario.nombres.trim()) ||
+                                    usuario.nombreUsuario ||
+                                    "?"
+                                  )
+                                    .charAt(0)
+                                    .toUpperCase()}
                                 </span>
                               </div>
                               <div className="ml-4">
                                 <div className="text-sm font-medium text-gray-900">
-                                  {usuario.nombreUsuario || "Sin nombre"}
+                                  {/* Mostrar: Apellidos, Nombres (coma entre ambos). Si falta uno mostrar el que exista; sino nombreUsuario */}
+                                  {usuario.apellidos && usuario.nombres
+                                    ? `${(usuario.apellidos || "").trim()}, ${(usuario.nombres || "").trim()}`
+                                    : usuario.apellidos
+                                    ? (usuario.apellidos || "").trim()
+                                    : usuario.nombres
+                                    ? (usuario.nombres || "").trim()
+                                    : usuario.nombreUsuario || "Sin nombre"}
                                 </div>
                                 <div className="text-xs text-gray-500">
-                                  ID: {usuario.id}
+                                  @{usuario.nombreUsuario || "—"}
                                 </div>
                               </div>
                             </div>

@@ -335,17 +335,19 @@ export default function NavbarPage() {
                   >
                     Promociones
                   </a>
-                  <a
-                    href="/asociate"
-                    className={`block md:px-2 md:py-1 px-3 py-1 text-white rounded-3xl transition duration-200 text-sm ${
-                      activeLink === "asociate"
-                        ? "bg-gradient-to-r from-[#267241]  to-[#00f0b5] shadow-lg transform scale-105"
-                        : "bg-gradient-to-r from-[#267241] to-[#49C581] hover:shadow-xl hover:scale-105"
-                    }`}
-                    onClick={() => handleLinkClick("asociate")}
-                  >
-                    ¡Asóciate ya!
-                  </a>
+                  {!user && (
+                    <a
+                      href="/asociate"
+                      className={`block md:px-2 md:py-1 px-3 py-1 text-white rounded-3xl transition duration-200 text-sm ${
+                        activeLink === "asociate"
+                          ? "bg-gradient-to-r from-[#267241]  to-[#00f0b5] shadow-lg transform scale-105"
+                          : "bg-gradient-to-r from-[#267241] to-[#49C581] hover:shadow-xl hover:scale-105"
+                      }`}
+                      onClick={() => handleLinkClick("asociate")}
+                    >
+                      ¡Asóciate ya!
+                    </a>
+                  )}
                 </>
               )}
 
@@ -914,18 +916,20 @@ export default function NavbarPage() {
                   >
                     Promociones
                   </a>
-                  <a
-                    href="/asociate"
-                    className={`block py-3 px-6 rounded-full font-semibold text-white text-lg transition-all duration-300 mx-2 my-1
+                  {!user && (
+                    <a
+                      href="/asociate"
+                      className={`block py-3 px-6 rounded-full font-semibold text-white text-lg transition-all duration-300 mx-2 my-1
       ${
         activeLink === "asociate"
           ? "bg-gradient-to-r from-[#267241]  to-[#00f0b5] shadow-lg transform scale-105"
           : "bg-gradient-to-r from-[#267241]  to-[#49C581] hover:shadow-xl hover:scale-105"
       }`}
-                    onClick={() => handleLinkClick("asociate")}
-                  >
-                    ¡Asóciate ya!
-                  </a>
+                      onClick={() => handleLinkClick("asociate")}
+                    >
+                      ¡Asóciate ya!
+                    </a>
+                  )}
 
                   {/* Business Owner */}
                   {isBusinessOwner && (

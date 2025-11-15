@@ -3,6 +3,8 @@ import { registrar } from "../api/auth";
 import { toast } from "react-hot-toast";
 function RegisterPage() {
   const [formData, setFormData] = useState({
+    nombres: "",
+    apellidos: "",
     nombreUsuario: "",
     email: "",
     password: "",
@@ -41,8 +43,16 @@ function RegisterPage() {
       return;
     }
 
+    // Validación mínima de nombres/apellidos
+    if (!formData.nombres.trim() || !formData.apellidos.trim()) {
+      toast.error("Por favor ingresa nombres y apellidos");
+      return;
+    }
+
     try {
       const response = await registrar({
+        nombres: formData.nombres,
+        apellidos: formData.apellidos,
         nombreUsuario: formData.nombreUsuario,
         email: formData.email,
         password: formData.password,
@@ -51,6 +61,8 @@ function RegisterPage() {
       toast.success("¡Registro exitoso!");
 
       setFormData({
+        nombres: "",
+        apellidos: "",
         nombreUsuario: "",
         email: "",
         password: "",
@@ -79,9 +91,52 @@ function RegisterPage() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
             {/* Nombres y Apellidos (en una fila) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label
+                  htmlFor="nombres"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Nombres
+                </label>
+                <input
+                  id="nombres"
+                  name="nombres"
+                  type="text"
+                  autoComplete="given-name"
+                  required
+                  value={formData.nombres}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
+                  placeholder="Juan"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="apellidos"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Apellidos
+                </label>
+                <input
+                  id="apellidos"
+                  name="apellidos"
+                  type="text"
+                  autoComplete="family-name"
+                  required
+                  value={formData.apellidos}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
+                  placeholder="Pérez"
+                />
+              </div>
+            </div>
+
+            {/* Nombre de usuario */}
             <div>
               <label
-                htmlFor="email"
+                htmlFor="nombreUsuario"
                 className="text-sm font-medium text-gray-700"
               >
                 Usuario
@@ -89,13 +144,13 @@ function RegisterPage() {
               <input
                 id="nombreUsuario"
                 name="nombreUsuario"
-                type="nombreUsuario"
-                autoComplete="nombreUsuario"
+                type="text"
+                autoComplete="username"
                 required
                 value={formData.nombreUsuario}
                 onChange={handleChange}
                 className="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#267241] focus:border-[#267241]"
-                placeholder="Juan Pérez"
+                placeholder="juan.perez"
               />
             </div>
 
