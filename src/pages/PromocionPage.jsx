@@ -273,7 +273,7 @@ const PromocionesBanner = () => {
     <div className="relative mb-10 rounded-xl overflow-hidden shadow-2xl group mt-6">
       {/* Imagen principal */}
       <img
-        src="../public/pro.jpg"
+        src="/pro.jpg"
         alt="Promociones especiales"
         className="w-full h-72 object-cover transition-transform duration-1000 group-hover:scale-105"
       />
