@@ -712,17 +712,24 @@ function EstablecimientoCard({
       className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 group cursor-pointer h-full"
       onClick={() => onClick(establecimiento._id)}
     >
-      <div className="relative overflow-hidden rounded-t-2xl">
+      {/* Contenedor de imagen más compacto */}
+      <div className="relative overflow-hidden rounded-t-2xl h-64 md:h-72 lg:h-80">
         <img
           src={obtenerImagen(establecimiento.imagen)}
           alt={establecimiento.nombre}
-          className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
         />
+
+        {/* Degradado SOLO en la parte inferior para no tapar la parte superior */}
+        <div className="absolute bottom-0 left-0 right-0 h-28 md:h-36 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
+
         {establecimiento.verificado && (
           <div className="absolute top-4 left-4 bg-gradient-to-r from-[#F8485E] to-[#FF6B6B] text-white px-3 py-1 rounded-xl font-bold text-sm">
             Destacado
           </div>
         )}
+
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-xl">
           <div className="flex items-center text-yellow-500">
             <FaStar className="mr-1" />
@@ -768,7 +775,6 @@ function EstablecimientoCard({
           </div>
         </div>
 
-        {/* Mini oferta si existe */}
         {tienePromociones(establecimiento._id) && (
           <div className="bg-[#49C581]/10 p-3 rounded-xl mb-4 flex justify-between items-center">
             <span className="text-sm text-[#254A5D] font-semibold flex items-center">
