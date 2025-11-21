@@ -76,6 +76,29 @@ function Footer() {
             >
               <FaTiktok className="text-xs" />
             </a>
+            {/* Botón para abrir el modal de instalación de la app */}
+            <button
+              onClick={() => {
+                try {
+                  console.log("Footer: dispatching openInstallPrompt (force)");
+                  // enviamos force:true para garantizar apertura durante pruebas
+                  window.dispatchEvent(
+                    new CustomEvent("openInstallPrompt", {
+                      detail: { force: true },
+                    })
+                  );
+                } catch (err) {
+                  console.error("Error dispatching openInstallPrompt:", err);
+                  alert(
+                    "No fue posible abrir el diálogo de instalación. Sigue las instrucciones manuales en tu navegador."
+                  );
+                }
+              }}
+              className="ml-2 px-3 py-2 rounded-full bg-white text-[#254A5D] font-semibold hover:bg-[#F3F7F6] transition"
+              aria-label="Instalar aplicación"
+            >
+              Descargar
+            </button>
           </div>
         </div>
 

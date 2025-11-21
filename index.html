@@ -2,15 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="escudo.png" />
+    <link rel="icon" type="image/svg+xml" href="/escudo.png" />
+    <!-- Usar `escudo.png` temporalmente para evitar 404 en ambientes locales -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/escudo.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/escudo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Boulevard Amarilis
-    </title>
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Boulevard Amarilis</title>
     <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/180.png" />
+     <meta name="theme-color" content="#49C581" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#49C581" />
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   </head>
   <body>
     <div id="root"></div>
