@@ -15,11 +15,6 @@ function LoginPage() {
   const { login, setUser, user: currentUser } = useAuth();
   const googleButtonRef = useRef(null);
 
-  // Debug: Ver el estado del usuario en tiempo real
-  useEffect(() => {
-    console.log("👤 Usuario actual en LoginPage:", currentUser);
-  }, [currentUser]);
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -27,16 +22,11 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("🔐 Intentando login normal...");
       const usuario = await login({ nombreUsuario, password });
-      console.log("✅ Login exitoso, usuario:", usuario);
-      console.log("📍 Navegando según rol:", usuario?.rol);
-
       if (usuario?.rol === "administrador") navigate("/admin/tipos");
       else navigate("/");
       toast.success("Inicio de sesión exitoso");
     } catch (err) {
-      console.error("❌ Error en login:", err);
       toast.error("Usuario o contraseña incorrectos");
       setError("Usuario o contraseña incorrectos");
     }
@@ -95,49 +85,32 @@ function LoginPage() {
               return;
             }
             try {
-              console.log(
-                "1. Iniciando Google Sign In con token:",
-                idToken?.substring(0, 20) + "..."
-              );
-
               // Llamar a googleSignIn que guarda el token en el backend
               const response = await googleSignIn(idToken);
-              console.log("2. Respuesta de googleSignIn:", response);
 
               // El backend debería devolver el token
               const token = response?.token || response?.accessToken;
-              console.log(
-                "3. Token obtenido:",
-                token?.substring(0, 20) + "..."
-              );
 
               if (token) {
                 localStorage.setItem("token", token);
                 axios.defaults.headers.common[
                   "Authorization"
                 ] = `Bearer ${token}`;
-                console.log(
-                  "4. Token guardado en localStorage y headers configurados"
-                );
               }
 
               // Obtener el usuario autenticado
               const usuario = await obtenerUsuarioAutenticado();
-              console.log("5. Usuario obtenido:", usuario);
 
               // Actualizar el contexto con el usuario
               if (usuario) {
                 localStorage.setItem("user", JSON.stringify(usuario));
                 setUser(usuario);
-                console.log("6. Usuario guardado en contexto y localStorage");
               }
 
               // Navegar según el rol
               if (usuario?.rol === "administrador") {
-                console.log("7. Navegando a /admin/tipos");
                 navigate("/admin/tipos");
               } else {
-                console.log("7. Navegando a /");
                 navigate("/");
               }
               toast.success("Inicio con Google exitoso");
@@ -151,8 +124,14 @@ function LoginPage() {
           },
         });
 
-        if (googleButtonRef.current)
-          googleButtonRef.current.style.width = "100%";
+        // Ajustes de estilo para centrar el botón de Google
+        if (googleButtonRef.current) {
+          const btn = googleButtonRef.current;
+          // tamaño fijo y centrado para evitar desalineación en producción
+          btn.style.width = "240px";
+          btn.style.margin = "0 auto";
+          btn.style.display = "block";
+        }
 
         window.google.accounts.id.renderButton(googleButtonRef.current, {
           theme: "outline",
