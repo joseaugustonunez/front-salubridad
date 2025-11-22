@@ -36,6 +36,11 @@ function LoginPage() {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!clientId) return;
 
+    // Si ya hay usuario en contexto o token en localStorage, no inicializamos el prompt (evita recargas/loops)
+    if (currentUser || localStorage.getItem("token")) {
+      return;
+    }
+
     let mounted = true;
     let interval = null;
     let timeout = null;
@@ -101,6 +106,15 @@ function LoginPage() {
               // Obtener el usuario autenticado
               const usuario = await obtenerUsuarioAutenticado();
 
+              // Cancelar prompt/one-tap para evitar que Google vuelva a iniciar sesión automáticamente
+              if (window.google?.accounts?.id?.cancel) {
+                try {
+                  window.google.accounts.id.cancel();
+                } catch (e) {
+                  /* ignore */
+                }
+              }
+
               // Actualizar el contexto con el usuario
               if (usuario) {
                 localStorage.setItem("user", JSON.stringify(usuario));
@@ -138,11 +152,7 @@ function LoginPage() {
           size: "large",
         });
 
-        try {
-          window.google.accounts.id.prompt();
-        } catch (e) {
-          /* ignore */
-        }
+        // NO llamar a prompt() automáticamente: puede provocar auto-login/reloads.
       } catch {
         return false;
       }
@@ -175,7 +185,7 @@ function LoginPage() {
       if (window.google?.accounts?.id?.cancel)
         window.google.accounts.id.cancel();
     };
-  }, [navigate, setUser]);
+  }, [navigate, setUser, currentUser]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 pt-10">
