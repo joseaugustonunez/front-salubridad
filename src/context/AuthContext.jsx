@@ -1,90 +1,77 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { login as loginRequest } from "../api/auth";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
+import * as apiAuth from "../api/auth";
 
 const AuthContext = createContext();
 
-function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-}
-
-function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(() => {
+    const raw = localStorage.getItem("user");
+    return raw ? JSON.parse(raw) : null;
+  });
 
   useEffect(() => {
-    const loadUserFromStorage = () => {
-      try {
-        const storedUser = localStorage.getItem("user");
-        const storedToken = localStorage.getItem("token");
-
-        if (storedUser && storedToken) {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error("Error loading user from localStorage:", error);
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUserFromStorage();
+    // Si hay token en localStorage, configuro axios header al iniciar la app
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
   }, []);
 
-  const login = async (credentials) => {
-    try {
-      const { token, user } = await loginRequest(credentials);
-  
-      if (!token) throw new Error("Token no recibido del servidor");
-  
+  const login = async (credenciales) => {
+    // esperar respuesta que incluya token y user
+    const res = await apiAuth.login(credenciales);
+    // ejemplo: res = { user, token }
+    const usuario = res.user || res.usuario || null;
+    const token = res.token || res.accessToken || null;
+
+    if (token) {
       localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
-  
-      return user;
-    } catch (error) {
-      console.error("Error durante login:", error?.response?.data || error.message);
-      throw new Error("Credenciales inválidas o token no válido");
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
+
+    setUser(usuario);
+    if (usuario) localStorage.setItem("user", JSON.stringify(usuario));
+    return usuario;
   };
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    delete axios.defaults.headers.common["Authorization"];
+    setUser(null);
   };
 
-  const updateUser = (updatedData) => {
+  // opcional: función para refrescar usuario desde backend
+  const refreshUser = async () => {
     try {
-      const updatedUser = { ...user, ...updatedData };
-      setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      return true;
-    } catch (error) {
-      console.error("Error updating user data:", error);
-      return false;
+      const usuario = await apiAuth.obtenerUsuarioAutenticado();
+      setUser(usuario || null);
+      if (usuario) localStorage.setItem("user", JSON.stringify(usuario));
+    } catch {
+      setUser(null);
     }
   };
 
+  useEffect(() => {
+    // al montar: si hay token pero no hay user, intento refrescarlo automáticamente
+    const token = localStorage.getItem("token");
+    if (token && !user) {
+      (async () => {
+        try {
+          await refreshUser();
+        } catch (err) {
+          // opcional: manejar/loguear error
+        }
+      })();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        updateUser,
-        isAuthenticated: !!user,
-        loading,
-      }}
-    >
+    <AuthContext.Provider value={{ user, setUser, login, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export { AuthProvider, useAuth };
+export const useAuth = () => useContext(AuthContext);

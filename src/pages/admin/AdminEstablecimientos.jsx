@@ -23,7 +23,7 @@ import {
   Filter,
   TrendingUp,
   Building2,
-  Award
+  Award,
 } from "lucide-react";
 
 // Importar las funciones reales de la API
@@ -45,7 +45,7 @@ const colors = {
   warning: "#F59E0B",
   error: "#EF4444",
   purple: "#8B5CF6",
-  indigo: "#6366F1"
+  indigo: "#6366F1",
 };
 
 export default function AdminEstablecimientos() {
@@ -54,7 +54,8 @@ export default function AdminEstablecimientos() {
   const [isLoading, setIsLoading] = useState(true);
   const [filtro, setFiltro] = useState("todos");
   const [mensaje, setMensaje] = useState({ texto: "", tipo: "" });
-  const [establecimientoExpandido, setEstablecimientoExpandido] = useState(null);
+  const [establecimientoExpandido, setEstablecimientoExpandido] =
+    useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -70,7 +71,10 @@ export default function AdminEstablecimientos() {
         setCategorias(catData);
       } catch (error) {
         console.error("Error al cargar datos:", error);
-        mostrarMensaje("Error al cargar los datos. Intente nuevamente.", "error");
+        mostrarMensaje(
+          "Error al cargar los datos. Intente nuevamente.",
+          "error"
+        );
       } finally {
         setIsLoading(false);
       }
@@ -125,9 +129,10 @@ export default function AdminEstablecimientos() {
     }
 
     if (searchTerm) {
-      filtered = filtered.filter((est) =>
-        est.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        est.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (est) =>
+          est.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          est.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -136,17 +141,37 @@ export default function AdminEstablecimientos() {
 
   const getStatusConfig = (estado) => {
     const configs = {
-      pendiente: { color: colors.warning, icon: Clock, bg: "bg-amber-100", text: "text-amber-800" },
-      aprobado: { color: colors.success, icon: CheckCircle, bg: "bg-green-100", text: "text-green-800" },
-      rechazado: { color: colors.error, icon: XCircle, bg: "bg-red-100", text: "text-red-800" },
+      pendiente: {
+        color: colors.warning,
+        icon: Clock,
+        bg: "bg-amber-100",
+        text: "text-amber-800",
+      },
+      aprobado: {
+        color: colors.success,
+        icon: CheckCircle,
+        bg: "bg-green-100",
+        text: "text-green-800",
+      },
+      rechazado: {
+        color: colors.error,
+        icon: XCircle,
+        bg: "bg-red-100",
+        text: "text-red-800",
+      },
     };
-    return configs[estado] || { color: colors.info, icon: Store, bg: "bg-blue-100", text: "text-blue-800" };
+    return (
+      configs[estado] || {
+        color: colors.info,
+        icon: Store,
+        bg: "bg-blue-100",
+        text: "text-blue-800",
+      }
+    );
   };
 
   const toggleExpandirEstablecimiento = (id) => {
-    setEstablecimientoExpandido(
-      establecimientoExpandido === id ? null : id
-    );
+    setEstablecimientoExpandido(establecimientoExpandido === id ? null : id);
   };
 
   const irADetalleEstablecimiento = (id, event) => {
@@ -178,9 +203,9 @@ export default function AdminEstablecimientos() {
 
   const estadisticas = {
     total: establecimientos.length,
-    aprobados: establecimientos.filter(e => e.estado === "aprobado").length,
-    pendientes: establecimientos.filter(e => e.estado === "pendiente").length,
-    verificados: establecimientos.filter(e => e.verificado).length,
+    aprobados: establecimientos.filter((e) => e.estado === "aprobado").length,
+    pendientes: establecimientos.filter((e) => e.estado === "pendiente").length,
+    verificados: establecimientos.filter((e) => e.verificado).length,
   };
 
   return (
@@ -204,31 +229,48 @@ export default function AdminEstablecimientos() {
               transition={{ duration: 0.8 }}
               className="text-center"
             >
-              <h1 className="text-6xl md:text-7xl font-black text-white mb-6 tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tight">
                 Gestión de{" "}
-                <span className="text-[#49C581]">
-                  Establecimientos
-                </span>
+                <span className="text-[#49C581]">Establecimientos</span>
               </h1>
 
               {/* Stats Preview */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 max-w-xl sm:max-w-2xl mx-auto">
                 {[
                   { label: "Total", value: estadisticas.total, icon: Store },
-                  { label: "Aprobados", value: estadisticas.aprobados, icon: CheckCircle },
-                  { label: "Pendientes", value: estadisticas.pendientes, icon: Clock },
-                  { label: "Verificados", value: estadisticas.verificados, icon: Award }
+                  {
+                    label: "Aprobados",
+                    value: estadisticas.aprobados,
+                    icon: CheckCircle,
+                  },
+                  {
+                    label: "Pendientes",
+                    value: estadisticas.pendientes,
+                    icon: Clock,
+                  },
+                  {
+                    label: "Verificados",
+                    value: estadisticas.verificados,
+                    icon: Award,
+                  },
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                    className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 border border-white/20"
+                    className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 sm:p-4 border border-white/20"
                   >
-                    <stat.icon className="text-[#49C581] mx-auto mb-2" size={24} />
-                    <div className="text-2xl font-bold text-white">{stat.value}</div>
-                    <div className="text-sm text-slate-300">{stat.label}</div>
+                    <stat.icon
+                      className="text-[#49C581] mx-auto mb-2"
+                      size={20}
+                    />
+                    <div className="text-xl md:text-2xl font-bold text-white">
+                      {stat.value}
+                    </div>
+                    <div className="text-xs md:text-sm text-slate-300">
+                      {stat.label}
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -236,7 +278,6 @@ export default function AdminEstablecimientos() {
           </div>
         </div>
       </div>
-
 
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Mensaje de estado */}
@@ -246,10 +287,11 @@ export default function AdminEstablecimientos() {
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              className={`mb-8 p-6 rounded-2xl shadow-xl border-l-4 backdrop-blur-lg ${mensaje.tipo === "error"
+              className={`mb-8 p-6 rounded-2xl shadow-xl border-l-4 backdrop-blur-lg ${
+                mensaje.tipo === "error"
                   ? "bg-red-50/90 text-red-800 border-red-400"
                   : "bg-green-50/90 text-green-800 border-green-400"
-                }`}
+              }`}
             >
               <div className="flex items-center gap-3">
                 {mensaje.tipo === "error" ? (
@@ -274,7 +316,10 @@ export default function AdminEstablecimientos() {
             {/* Búsqueda Avanzada */}
             <div className="flex-1">
               <div className="relative group">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" size={20} />
+                <Search
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
+                  size={20}
+                />
                 <input
                   type="text"
                   placeholder="Buscar por nombre o descripción..."
@@ -295,7 +340,7 @@ export default function AdminEstablecimientos() {
                 { key: "todos", label: "Todos", icon: Store },
                 { key: "pendiente", label: "Pendientes", icon: Clock },
                 { key: "aprobado", label: "Aprobados", icon: CheckCircle },
-                { key: "rechazado", label: "Rechazados", icon: XCircle }
+                { key: "rechazado", label: "Rechazados", icon: XCircle },
               ].map((filtroItem) => {
                 const IconComponent = filtroItem.icon;
                 const isActive = filtro === filtroItem.key;
@@ -306,10 +351,11 @@ export default function AdminEstablecimientos() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setFiltro(filtroItem.key)}
-                    className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 flex items-center gap-2 ${isActive
+                    className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 flex items-center gap-2 ${
+                      isActive
                         ? "bg-gradient-to-r from-[#49C581] to-[#337179] text-white shadow-lg"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                      }`}
+                    }`}
                   >
                     <IconComponent size={16} />
                     {filtroItem.label}
@@ -322,10 +368,34 @@ export default function AdminEstablecimientos() {
           {/* Estadísticas Detalladas */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8 pt-8 border-t border-slate-200">
             {[
-              { label: "Total Establecimientos", value: estadisticas.total, color: colors.info, icon: Building2, trend: "+12%" },
-              { label: "Aprobados", value: estadisticas.aprobados, color: colors.success, icon: CheckCircle, trend: "+8%" },
-              { label: "Pendientes", value: estadisticas.pendientes, color: colors.warning, icon: Clock, trend: "-3%" },
-              { label: "Verificados", value: estadisticas.verificados, color: colors.primary, icon: ShieldCheck, trend: "+15%" }
+              {
+                label: "Total Establecimientos",
+                value: estadisticas.total,
+                color: colors.info,
+                icon: Building2,
+                trend: "+12%",
+              },
+              {
+                label: "Aprobados",
+                value: estadisticas.aprobados,
+                color: colors.success,
+                icon: CheckCircle,
+                trend: "+8%",
+              },
+              {
+                label: "Pendientes",
+                value: estadisticas.pendientes,
+                color: colors.warning,
+                icon: Clock,
+                trend: "-3%",
+              },
+              {
+                label: "Verificados",
+                value: estadisticas.verificados,
+                color: colors.primary,
+                icon: ShieldCheck,
+                trend: "+15%",
+              },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -346,8 +416,12 @@ export default function AdminEstablecimientos() {
                     {stat.trend}
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-slate-800 mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-600 font-medium">{stat.label}</div>
+                <div className="text-3xl font-bold text-slate-800 mb-1">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-slate-600 font-medium">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </div>
@@ -375,7 +449,8 @@ export default function AdminEstablecimientos() {
             {filtrarEstablecimientos().map((establecimiento, index) => {
               const statusConfig = getStatusConfig(establecimiento.estado);
               const StatusIcon = statusConfig.icon;
-              const isExpanded = establecimientoExpandido === establecimiento._id;
+              const isExpanded =
+                establecimientoExpandido === establecimiento._id;
 
               return (
                 <motion.div
@@ -418,10 +493,14 @@ export default function AdminEstablecimientos() {
                         <div className="flex flex-col gap-2">
                           <div
                             className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl font-bold text-white backdrop-blur-sm border border-white/30`}
-                            style={{ backgroundColor: `${statusConfig.color}CC` }}
+                            style={{
+                              backgroundColor: `${statusConfig.color}CC`,
+                            }}
                           >
                             <StatusIcon size={16} />
-                            <span className="capitalize text-sm">{establecimiento.estado}</span>
+                            <span className="capitalize text-sm">
+                              {establecimiento.estado}
+                            </span>
                           </div>
 
                           {establecimiento.verificado && (
@@ -436,9 +515,16 @@ export default function AdminEstablecimientos() {
                       {/* Rating Badge */}
                       <div className="self-end">
                         <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-2xl">
-                          <Star className="text-yellow-500 fill-current" size={18} />
-                          <span className="font-bold text-slate-800">{establecimiento.promedioCalificaciones}</span>
-                          <span className="text-slate-600 text-sm">({establecimiento.totalResenas})</span>
+                          <Star
+                            className="text-yellow-500 fill-current"
+                            size={18}
+                          />
+                          <span className="font-bold text-slate-800">
+                            {establecimiento.promedioCalificaciones}
+                          </span>
+                          <span className="text-slate-600 text-sm">
+                            ({establecimiento.totalResenas})
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -457,7 +543,11 @@ export default function AdminEstablecimientos() {
                             e.target.nextElementSibling.style.display = "flex";
                           }}
                         />
-                        <Store className="text-slate-400" size={32} style={{ display: "none" }} />
+                        <Store
+                          className="text-slate-400"
+                          size={32}
+                          style={{ display: "none" }}
+                        />
                       </div>
                       <div className="flex-1">
                         <p className="text-slate-600 leading-relaxed mb-4">
@@ -479,16 +569,41 @@ export default function AdminEstablecimientos() {
                     {/* Métricas */}
                     <div className="grid grid-cols-3 gap-4 mb-8">
                       {[
-                        { icon: Phone, label: "Teléfono", value: establecimiento.telefono || "N/A", color: colors.info },
-                        { icon: Heart, label: "Likes", value: establecimiento.likes?.length || 0, color: colors.accent },
-                        { icon: Users, label: "Seguidores", value: establecimiento.seguidores?.length || 0, color: colors.primary }
+                        {
+                          icon: Phone,
+                          label: "Teléfono",
+                          value: establecimiento.telefono || "N/A",
+                          color: colors.info,
+                        },
+                        {
+                          icon: Heart,
+                          label: "Likes",
+                          value: establecimiento.likes?.length || 0,
+                          color: colors.accent,
+                        },
+                        {
+                          icon: Users,
+                          label: "Seguidores",
+                          value: establecimiento.seguidores?.length || 0,
+                          color: colors.primary,
+                        },
                       ].map((metric, idx) => (
-                        <div key={idx} className="text-center p-4 bg-slate-50 rounded-2xl">
+                        <div
+                          key={idx}
+                          className="text-center p-4 bg-slate-50 rounded-2xl"
+                        >
                           <div className="flex justify-center mb-2">
-                            <metric.icon size={20} style={{ color: metric.color }} />
+                            <metric.icon
+                              size={20}
+                              style={{ color: metric.color }}
+                            />
                           </div>
-                          <div className="text-lg font-bold text-slate-800">{metric.value}</div>
-                          <div className="text-sm text-slate-600">{metric.label}</div>
+                          <div className="text-lg font-bold text-slate-800">
+                            {metric.value}
+                          </div>
+                          <div className="text-sm text-slate-600">
+                            {metric.label}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -502,8 +617,12 @@ export default function AdminEstablecimientos() {
                       {establecimiento.ubicacion?.map((ubi, idx) => (
                         <div key={idx} className="text-slate-700">
                           <p className="font-medium">{ubi.direccion}</p>
-                          <p className="text-sm text-slate-600">{ubi.ciudad}, {ubi.distrito} - {ubi.codigoPostal}</p>
-                          <p className="text-xs text-slate-500 mt-1">{ubi.referencia}</p>
+                          <p className="text-sm text-slate-600">
+                            {ubi.ciudad}, {ubi.distrito} - {ubi.codigoPostal}
+                          </p>
+                          <p className="text-xs text-slate-500 mt-1">
+                            {ubi.referencia}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -518,8 +637,14 @@ export default function AdminEstablecimientos() {
                       }}
                       className="w-full py-4 bg-slate-100 hover:bg-slate-200 rounded-2xl font-semibold text-slate-700 transition-all duration-300 flex items-center justify-center gap-3 mb-6"
                     >
-                      <span>{isExpanded ? "Ocultar detalles" : "Ver más detalles"}</span>
-                      {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                      <span>
+                        {isExpanded ? "Ocultar detalles" : "Ver más detalles"}
+                      </span>
+                      {isExpanded ? (
+                        <ChevronUp size={20} />
+                      ) : (
+                        <ChevronDown size={20} />
+                      )}
                     </motion.button>
 
                     {/* Información Expandida */}
@@ -535,16 +660,30 @@ export default function AdminEstablecimientos() {
                             {/* Horarios */}
                             <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6">
                               <div className="flex items-center gap-3 mb-4">
-                                <Calendar className="text-green-600" size={20} />
-                                <h4 className="font-bold text-slate-800">Horarios de Atención</h4>
+                                <Calendar
+                                  className="text-green-600"
+                                  size={20}
+                                />
+                                <h4 className="font-bold text-slate-800">
+                                  Horarios de Atención
+                                </h4>
                               </div>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {establecimiento.horario?.map((horario, idx) => (
-                                  <div key={idx} className="flex justify-between items-center bg-white/50 rounded-xl p-3">
-                                    <span className="font-semibold text-slate-700">{horario.dia}</span>
-                                    <span className="text-slate-600">{horario.entrada} - {horario.salida}</span>
-                                  </div>
-                                ))}
+                                {establecimiento.horario?.map(
+                                  (horario, idx) => (
+                                    <div
+                                      key={idx}
+                                      className="flex justify-between items-center bg-white/50 rounded-xl p-3"
+                                    >
+                                      <span className="font-semibold text-slate-700">
+                                        {horario.dia}
+                                      </span>
+                                      <span className="text-slate-600">
+                                        {horario.entrada} - {horario.salida}
+                                      </span>
+                                    </div>
+                                  )
+                                )}
                               </div>
                             </div>
 
@@ -552,13 +691,24 @@ export default function AdminEstablecimientos() {
                             <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6">
                               <div className="flex items-center gap-3 mb-4">
                                 <Globe className="text-purple-600" size={20} />
-                                <h4 className="font-bold text-slate-800">Redes Sociales</h4>
+                                <h4 className="font-bold text-slate-800">
+                                  Redes Sociales
+                                </h4>
                               </div>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {Object.entries(establecimiento.redesSociales || {}).map(([red, valor], idx) => (
-                                  <div key={idx} className="flex justify-between items-center bg-white/50 rounded-xl p-3">
-                                    <span className="font-semibold text-slate-700 capitalize">{red}</span>
-                                    <span className="text-slate-600 truncate ml-2">{valor}</span>
+                                {Object.entries(
+                                  establecimiento.redesSociales || {}
+                                ).map(([red, valor], idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex justify-between items-center bg-white/50 rounded-xl p-3"
+                                  >
+                                    <span className="font-semibold text-slate-700 capitalize">
+                                      {red}
+                                    </span>
+                                    <span className="text-slate-600 truncate ml-2">
+                                      {valor}
+                                    </span>
                                   </div>
                                 ))}
                               </div>
@@ -567,22 +717,37 @@ export default function AdminEstablecimientos() {
                             {/* Info Técnica */}
                             <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-2xl p-6">
                               <div className="flex items-center gap-3 mb-4">
-                                <Settings className="text-slate-600" size={20} />
-                                <h4 className="font-bold text-slate-800">Información Técnica</h4>
+                                <Settings
+                                  className="text-slate-600"
+                                  size={20}
+                                />
+                                <h4 className="font-bold text-slate-800">
+                                  Información Técnica
+                                </h4>
                               </div>
                               <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
                                   <span className="text-slate-500">ID:</span>
-                                  <span className="text-slate-700 font-mono">{establecimiento._id}</span>
+                                  <span className="text-slate-700 font-mono">
+                                    {establecimiento._id}
+                                  </span>
                                 </div>
                                 <div className="flex justify-between">
-                                  <span className="text-slate-500">Creador:</span>
-                                  <span className="text-slate-700">{establecimiento.creador}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-slate-500">Fecha de creación:</span>
+                                  <span className="text-slate-500">
+                                    Creador:
+                                  </span>
                                   <span className="text-slate-700">
-                                    {new Date(establecimiento.fechaCreacion).toLocaleDateString()}
+                                    {establecimiento.creador}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-slate-500">
+                                    Fecha de creación:
+                                  </span>
+                                  <span className="text-slate-700">
+                                    {new Date(
+                                      establecimiento.fechaCreacion
+                                    ).toLocaleDateString()}
                                   </span>
                                 </div>
                               </div>
@@ -615,12 +780,16 @@ export default function AdminEstablecimientos() {
                         whileTap={{ scale: 0.95 }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          cambiarVerificacion(establecimiento._id, !establecimiento.verificado);
+                          cambiarVerificacion(
+                            establecimiento._id,
+                            !establecimiento.verificado
+                          );
                         }}
-                        className={`px-6 py-4 rounded-2xl font-bold text-white transition-all duration-300 flex items-center gap-2 shadow-lg ${establecimiento.verificado
+                        className={`px-6 py-4 rounded-2xl font-bold text-white transition-all duration-300 flex items-center gap-2 shadow-lg ${
+                          establecimiento.verificado
                             ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
                             : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
-                          }`}
+                        }`}
                       >
                         {establecimiento.verificado ? (
                           <>
@@ -638,7 +807,9 @@ export default function AdminEstablecimientos() {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={(e) => irADetalleEstablecimiento(establecimiento._id, e)}
+                        onClick={(e) =>
+                          irADetalleEstablecimiento(establecimiento._id, e)
+                        }
                         className="px-6 py-4 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white rounded-2xl font-bold transition-all duration-300 flex items-center gap-2 shadow-lg"
                       >
                         <Eye size={18} />

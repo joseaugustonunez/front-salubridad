@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_URL = 'https://back-salubridad.sistemasudh.com/auth'; 
 //const API_URL = 'http://localhost:3000/auth';
@@ -8,13 +8,17 @@ export const login = async (credenciales) => {
     const response = await axios.post(`${API_URL}/login`, credenciales);
     const { accessToken, user } = response.data;
 
-    // Guarda el token con el nombre que tú quieras (puedes seguir usando 'token')
-    localStorage.setItem('token', accessToken);
+    // Guarda el token y configura header por defecto
+    if (accessToken) {
+      localStorage.setItem("token", accessToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    }
+    if (user) localStorage.setItem("user", JSON.stringify(user));
 
-    return { token: accessToken, user }; // <- este objeto es usado por el AuthContext
+    return { accessToken, user };
   } catch (error) {
-    console.error('Error al iniciar sesión:', error.response?.data || error.message);
-    throw new Error("Credenciales inválidas o token no válido");
+    console.error("Error al iniciar sesión:", error.response?.data || error.message);
+    throw error;
   }
 };
 
@@ -24,7 +28,7 @@ export const registrar = async (datosUsuario) => {
     const response = await axios.post(`${API_URL}/register`, datosUsuario);
     return response.data;
   } catch (error) {
-    console.error('Error al registrar:', error);
+    console.error("Error al registrar:", error);
     throw error;
   }
 };
@@ -39,7 +43,7 @@ export const obtenerUsuarioAutenticado = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error al obtener el usuario autenticado:', error);
+    console.error("Error al obtener el usuario autenticado:", error);
     throw error;
   }
 };
@@ -51,7 +55,7 @@ export const requestPasswordRecovery = async ({ email }) => {
     const response = await axios.post(`${API_URL}/recover-password`, { email });
     return response.data;
   } catch (error) {
-    console.error('Error al solicitar recuperación de contraseña:', error);
+    console.error("Error al solicitar recuperación de contraseña:", error);
     throw error;
   }
 };
@@ -62,7 +66,7 @@ export async function verifyResetCode(token) {
     const response = await axios.get(`${API_URL}/verify-recovery-token/${token}`);
     return response.data;
   } catch (error) {
-    console.error('Error verificando el token:', error);
+    console.error("Error verificando el token:", error);
     return { isValid: false };
   }
 }
@@ -77,7 +81,23 @@ export const resetPassword = async ({ token, newPassword }) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error al restablecer contraseña:', error);
+    console.error("Error al restablecer contraseña:", error);
+    throw error;
+  }
+};
+
+// Google Sign-In: espera que el backend devuelva { accessToken, user }
+export const googleSignIn = async (idToken) => {
+  try {
+    const response = await axios.post(`${API_URL}/google`, { idToken });
+    const { accessToken, user } = response.data;
+    if (accessToken) {
+      localStorage.setItem("token", accessToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    }
+    if (user) localStorage.setItem("user", JSON.stringify(user));
+    return { accessToken, user };
+  } catch (error) {
     throw error;
   }
 };

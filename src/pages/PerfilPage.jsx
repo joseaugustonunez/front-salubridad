@@ -380,6 +380,14 @@ const PerfilPage = () => {
     );
   }
 
+  const fotoUrl = user?.fotoPerfil
+    ? user.fotoPerfil.startsWith("http")
+      ? user.fotoPerfil
+      : `https://back-salubridad.sistemasudh.com${user.fotoPerfil}${
+          user.fotoPerfil.includes("?") ? "&" : "?"
+        }t=${Date.now()}`
+    : null;
+
   return (
     <div
       className="w-full min-h-screen pb-20"
@@ -440,13 +448,9 @@ const PerfilPage = () => {
                 className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white shadow-2xl flex items-center justify-center relative"
                 style={{ backgroundColor: COLORS.primary }}
               >
-                {user?.fotoPerfil ? (
+                {fotoUrl ? (
                   <img
-                    src={`https://back-salubridad.sistemasudh.com${
-                      user.fotoPerfil
-                    }${
-                      user.fotoPerfil.includes("?") ? "&" : "?"
-                    }t=${Date.now()}`}
+                    src={fotoUrl}
                     alt="Foto de perfil"
                     className="w-full h-full object-cover"
                   />
@@ -888,7 +892,7 @@ const PerfilPage = () => {
 
               <div className="p-6">
                 {activeTab === "Favoritos" && (
-                  <div className="bg-white rounded-2xl shadow-md p-6">
+                  <div className="space-y-6">
                     <MisFavoritos />
                   </div>
                 )}

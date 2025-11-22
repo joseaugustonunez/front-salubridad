@@ -90,6 +90,32 @@ const Resenas = ({ userId: propUserId }) => {
       </div>
     );
 
+  if (!comentarios || comentarios.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[500px] bg-white rounded-2xl shadow-md p-8 sm:p-12">
+        <svg
+          className="text-gray-300 mb-6 w-20 h-20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z" />
+        </svg>
+
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-700 mb-3">
+          No hay elementos para mostrar
+        </h2>
+        <p className="text-center text-gray-500 text-base sm:text-lg max-w-md">
+          Aún no hay contenido disponible. Explora la app y vuelve más tarde.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-6">

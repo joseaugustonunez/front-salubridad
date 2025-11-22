@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import NotificacionesComponent from "./NotificacionesComponent";
 import { buscarEstablecimientosPorNombre } from "../api/establecimientos";
@@ -335,9 +336,10 @@ export default function NavbarPage() {
                   >
                     Promociones
                   </a>
-                  {!user && (
-                    <a
-                      href="/asociate"
+                  {/* Mostrar "Asóciate" cuando NO sea admin y (no esté autenticado OR su rol no sea 'vendedor') */}
+                  {(!user || rol !== "vendedor") && (
+                    <Link
+                      to="/asociate"
                       className={`block md:px-2 md:py-1 px-3 py-1 text-white rounded-3xl transition duration-200 text-sm ${
                         activeLink === "asociate"
                           ? "bg-gradient-to-r from-[#267241]  to-[#00f0b5] shadow-lg transform scale-105"
@@ -346,7 +348,7 @@ export default function NavbarPage() {
                       onClick={() => handleLinkClick("asociate")}
                     >
                       ¡Asóciate ya!
-                    </a>
+                    </Link>
                   )}
                 </>
               )}
@@ -916,19 +918,20 @@ export default function NavbarPage() {
                   >
                     Promociones
                   </a>
-                  {!user && (
-                    <a
-                      href="/asociate"
+                  {/* Mostrar "Asóciate" cuando NO sea admin y (no esté autenticado OR su rol no sea 'vendedor') */}
+                  {(!user || rol !== "vendedor") && (
+                    <Link
+                      to="/asociate"
                       className={`block py-3 px-6 rounded-full font-semibold text-white text-lg transition-all duration-300 mx-2 my-1
-      ${
-        activeLink === "asociate"
-          ? "bg-gradient-to-r from-[#267241]  to-[#00f0b5] shadow-lg transform scale-105"
-          : "bg-gradient-to-r from-[#267241]  to-[#49C581] hover:shadow-xl hover:scale-105"
-      }`}
+        ${
+          activeLink === "asociate"
+            ? "bg-gradient-to-r from-[#267241]  to-[#00f0b5] shadow-lg transform scale-105"
+            : "bg-gradient-to-r from-[#267241]  to-[#49C581] hover:shadow-xl hover:scale-105"
+        }`}
                       onClick={() => handleLinkClick("asociate")}
                     >
                       ¡Asóciate ya!
-                    </a>
+                    </Link>
                   )}
 
                   {/* Business Owner */}
@@ -1037,17 +1040,6 @@ export default function NavbarPage() {
                     onClick={() => setActiveLink("establecimientos-admin")}
                   >
                     Gestionar Establecimientos
-                  </a>
-                  <a
-                    href="/admin/promociones"
-                    className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
-                      activeLink === "promociones-admin"
-                        ? "bg-[#254A5D] text-white"
-                        : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
-                    }`}
-                    onClick={() => setActiveLink("promociones-admin")}
-                  >
-                    Promociones
                   </a>
                 </>
               )}

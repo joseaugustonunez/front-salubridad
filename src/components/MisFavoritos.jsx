@@ -67,12 +67,24 @@ const MisFavoritos = () => {
   if (establecimientos.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[500px] bg-white rounded-2xl shadow-md p-8 sm:p-12">
-        <FaHeart className="text-7xl sm:text-8xl text-gray-300 mb-6" />
+        <svg
+          className="text-gray-300 mb-6 w-20 h-20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z" />
+        </svg>
+
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-700 mb-3">
-          No tienes favoritos aún
+          No hay elementos para mostrar
         </h2>
         <p className="text-center text-gray-500 text-base sm:text-lg max-w-md">
-          Explora y agrega establecimientos a tus favoritos para verlos aquí
+          Aún no hay contenido disponible. Explora la app y vuelve más tarde.
         </p>
       </div>
     );

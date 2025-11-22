@@ -2,21 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- ICONOS -->
     <link rel="icon" type="image/svg+xml" href="/escudo.png" />
-    <!-- Usar `escudo.png` temporalmente para evitar 404 en ambientes locales -->
     <link rel="icon" type="image/png" sizes="192x192" href="/escudo.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/escudo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/180.png" />
+
+    <!-- CONFIG -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <title>Boulevard Amarilis</title>
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/180.png" />
-     <meta name="theme-color" content="#49C581" />
-    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#49C581" />
+
+    <title>Boulevard Amarilis</title>
+
+    <!-- MANIFEST -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Google Identity Services - SOLO UNA VEZ -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
+
   <body>
+    <!-- Aquí React monta toda tu app -->
     <div id="root"></div>
+
+    <!-- Tu aplicación React -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

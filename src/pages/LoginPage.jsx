@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { obtenerUsuarioAutenticado } from "../api/auth";
+import { obtenerUsuarioAutenticado, googleSignIn } from "../api/auth";
+import axios from "axios";
 
 function LoginPage() {
   const [nombreUsuario, setNombreUsuario] = useState("");
@@ -11,7 +12,13 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, setUser, user: currentUser } = useAuth();
+  const googleButtonRef = useRef(null);
+
+  // Debug: Ver el estado del usuario en tiempo real
+  useEffect(() => {
+    console.log("👤 Usuario actual en LoginPage:", currentUser);
+  }, [currentUser]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -20,25 +27,176 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Ejecuta el login (debe almacenar token en el contexto/localStorage)
-      await login({ nombreUsuario, password });
+      console.log("🔐 Intentando login normal...");
+      const usuario = await login({ nombreUsuario, password });
+      console.log("✅ Login exitoso, usuario:", usuario);
+      console.log("📍 Navegando según rol:", usuario?.rol);
 
-      // Obtener usuario autenticado desde backend/endpoint para conocer su rol
-      const usuario = await obtenerUsuarioAutenticado();
-
-      // Redirigir según rol
-      if (usuario?.rol === "administrador") {
-        navigate("/admin/tipos");
-      } else {
-        navigate("/");
-      }
-
+      if (usuario?.rol === "administrador") navigate("/admin/tipos");
+      else navigate("/");
       toast.success("Inicio de sesión exitoso");
     } catch (err) {
+      console.error("❌ Error en login:", err);
       toast.error("Usuario o contraseña incorrectos");
       setError("Usuario o contraseña incorrectos");
     }
   };
+
+  useEffect(() => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!clientId) return;
+
+    let mounted = true;
+    let interval = null;
+    let timeout = null;
+
+    const loadScript = () =>
+      new Promise((resolve) => {
+        if (
+          window.google &&
+          window.google.accounts &&
+          window.google.accounts.id
+        ) {
+          return resolve(true);
+        }
+        const existing = Array.from(document.scripts).find((s) =>
+          /accounts\.google\.com\/gsi\/client/.test(s.src)
+        );
+        if (existing) {
+          if (existing.getAttribute("data-loaded") === "true")
+            return resolve(true);
+          existing.addEventListener("load", () => resolve(true));
+          existing.addEventListener("error", () => resolve(false));
+          return;
+        }
+        const s = document.createElement("script");
+        s.src = "https://accounts.google.com/gsi/client";
+        s.async = true;
+        s.defer = true;
+        s.onload = () => {
+          s.setAttribute("data-loaded", "true");
+          resolve(true);
+        };
+        s.onerror = () => resolve(false);
+        document.head.appendChild(s);
+      });
+
+    const tryInit = () => {
+      if (!mounted) return false;
+      if (!window.google?.accounts?.id) return false;
+
+      try {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: async (credentialResponse) => {
+            const idToken = credentialResponse?.credential;
+            if (!idToken) {
+              toast.error("No se obtuvo token de Google");
+              return;
+            }
+            try {
+              console.log(
+                "1. Iniciando Google Sign In con token:",
+                idToken?.substring(0, 20) + "..."
+              );
+
+              // Llamar a googleSignIn que guarda el token en el backend
+              const response = await googleSignIn(idToken);
+              console.log("2. Respuesta de googleSignIn:", response);
+
+              // El backend debería devolver el token
+              const token = response?.token || response?.accessToken;
+              console.log(
+                "3. Token obtenido:",
+                token?.substring(0, 20) + "..."
+              );
+
+              if (token) {
+                localStorage.setItem("token", token);
+                axios.defaults.headers.common[
+                  "Authorization"
+                ] = `Bearer ${token}`;
+                console.log(
+                  "4. Token guardado en localStorage y headers configurados"
+                );
+              }
+
+              // Obtener el usuario autenticado
+              const usuario = await obtenerUsuarioAutenticado();
+              console.log("5. Usuario obtenido:", usuario);
+
+              // Actualizar el contexto con el usuario
+              if (usuario) {
+                localStorage.setItem("user", JSON.stringify(usuario));
+                setUser(usuario);
+                console.log("6. Usuario guardado en contexto y localStorage");
+              }
+
+              // Navegar según el rol
+              if (usuario?.rol === "administrador") {
+                console.log("7. Navegando a /admin/tipos");
+                navigate("/admin/tipos");
+              } else {
+                console.log("7. Navegando a /");
+                navigate("/");
+              }
+              toast.success("Inicio con Google exitoso");
+            } catch (err) {
+              console.error("Error completo:", err);
+              console.error("Error response:", err.response);
+              const msg =
+                err.response?.data?.message || "Error al autenticar con Google";
+              toast.error(msg);
+            }
+          },
+        });
+
+        if (googleButtonRef.current)
+          googleButtonRef.current.style.width = "100%";
+
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: "outline",
+          size: "large",
+        });
+
+        try {
+          window.google.accounts.id.prompt();
+        } catch (e) {
+          /* ignore */
+        }
+      } catch {
+        return false;
+      }
+
+      return true;
+    };
+
+    (async () => {
+      const ok = await loadScript();
+      if (!ok) return;
+
+      if (tryInit()) return;
+
+      interval = setInterval(() => {
+        if (tryInit()) {
+          clearInterval(interval);
+          clearTimeout(timeout);
+        }
+      }, 300);
+
+      timeout = setTimeout(() => {
+        clearInterval(interval);
+      }, 10000);
+    })();
+
+    return () => {
+      mounted = false;
+      if (interval) clearInterval(interval);
+      if (timeout) clearTimeout(timeout);
+      if (window.google?.accounts?.id?.cancel)
+        window.google.accounts.id.cancel();
+    };
+  }, [navigate, setUser]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 pt-10">
@@ -151,6 +309,20 @@ function LoginPage() {
             >
               Iniciar Sesión
             </button>
+          </div>
+
+          {/* Divider y botón Google */}
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">O inicia con</span>
+            </div>
+          </div>
+
+          <div className="flex justify-center">
+            <div ref={googleButtonRef} />
           </div>
 
           <div className="text-center mt-4">

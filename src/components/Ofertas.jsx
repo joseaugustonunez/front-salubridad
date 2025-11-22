@@ -52,6 +52,32 @@ const Ofertas = ({ userId: propUserId }) => {
     );
   }
 
+  if (!promociones || promociones.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[500px] bg-white rounded-2xl shadow-md p-8 sm:p-12">
+        <svg
+          className="text-gray-300 mb-6 w-20 h-20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M20.59 13.41L11 3.83a2 2 0 0 0-2.83 0L3.41 9.59a2 2 0 0 0 0 2.83l9.59 9.59a2 2 0 0 0 2.83 0l4.76-4.76a2 2 0 0 0 0-2.83z" />
+        </svg>
+
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-700 mb-3">
+          No hay elementos para mostrar
+        </h2>
+        <p className="text-center text-gray-500 text-base sm:text-lg max-w-md">
+          Aún no hay contenido disponible. Explora la app y vuelve más tarde.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full  py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
