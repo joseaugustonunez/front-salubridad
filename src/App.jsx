@@ -21,6 +21,8 @@ import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute"; // Ajusta la ruta si es necesario
 import { Toaster } from "react-hot-toast";
 import Asociate from "./pages/Asociate";
+import ManualLavado from "./pages/ManualLavado";
+import CapacitacionManipulacion from "./pages/CapacitacionManipulacion";
 function AppWrapper() {
   const location = useLocation();
 
@@ -67,6 +69,8 @@ function AppWrapper() {
         />
         <Route path="/promociones" element={<PromocionPage />} />
         <Route path="/asociate" element={<Asociate />} />
+        <Route path="/manual-lavado" element={<ManualLavado />} />
+        <Route path="/capacitacion" element={<CapacitacionManipulacion />} />
         <Route
           path="/establecimientodetalle/:id"
           element={<EstablecimientoDetallePage />}

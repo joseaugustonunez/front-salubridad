@@ -138,6 +138,10 @@ export default function NavbarPage() {
       setActiveLink("perfil");
     } else if (path.includes("/asociate")) {
       setActiveLink("asociate");
+    } else if (path.includes("/capacitacion")) {
+      setActiveLink("capacitacion");
+    } else if (path.includes("/manual-lavado")) {
+      setActiveLink("manual-lavado");
     }
   }, []); // Empty dependency array means this runs once on mount
 
@@ -194,6 +198,8 @@ export default function NavbarPage() {
   const isBusinessOwner = Boolean(
     user && (rol === "propietario" || rol === "propietary" || rol === "owner")
   );
+  // Check if user is vendor
+  const isVendor = Boolean(user && rol === "vendedor");
 
   // Handle link click - update state and allow default navigation
   const handleLinkClick = (linkName) => {
@@ -453,6 +459,26 @@ export default function NavbarPage() {
                     </a>
                   </div>
                 </div>
+              )}
+
+              {/* Vendor specific navigation items */}
+              {isVendor && (
+                <>
+                  <a
+                    href="/capacitacion"
+                    className="block px-4 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white rounded-3xl transition duration-200 mx-2"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    Capacitación
+                  </a>
+                  <a
+                    href="/manual-lavado"
+                    className="block px-4 py-2 text-gray-700 hover:bg-[#254A5D] hover:text-white rounded-3xl transition duration-200 mx-2"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    Manual Lavado
+                  </a>
+                </>
               )}
             </div>
 
@@ -985,6 +1011,38 @@ export default function NavbarPage() {
                         onClick={() => setActiveLink("negocio-estadisticas")}
                       >
                         Estadísticas
+                      </a>
+                    </>
+                  )}
+                  {/* Vendor specific links for mobile */}
+                  {isVendor && (
+                    <>
+                      <div className="my-2 border-t border-gray-200 pt-2">
+                        <div className="mx-2 text-sm text-gray-500 mb-1">
+                          Vendedor
+                        </div>
+                      </div>
+                      <a
+                        href="/capacitacion"
+                        className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                          activeLink === "capacitacion"
+                            ? "bg-[#254A5D] text-white"
+                            : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                        }`}
+                        onClick={() => setActiveLink("capacitacion")}
+                      >
+                        Capacitación
+                      </a>
+                      <a
+                        href="/manual-lavado"
+                        className={`block py-1.5 px-3 rounded-3xl transition duration-200 mx-2 my-1 ${
+                          activeLink === "manual-lavado"
+                            ? "bg-[#254A5D] text-white"
+                            : "text-gray-700 hover:bg-[#254A5D] hover:text-white"
+                        }`}
+                        onClick={() => setActiveLink("manual-lavado")}
+                      >
+                        Manual Lavado
                       </a>
                     </>
                   )}
