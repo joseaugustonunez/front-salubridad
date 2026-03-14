@@ -19,7 +19,7 @@ export default function TrainingVideos() {
       id: 1,
       title: "Capacitación en seguridad del manejo de alimentos",
       duration: "34 min",
-      videoUrl: "/videos/Modulo1.mp4",
+      videoUrl: "/videos/modulo1.mp4",
       description:
         "Formación dirigida a manipuladores para garantizar prácticas higiénicas y seguras en la preparación de alimentos.",
       icon: <FaUtensils />,
@@ -51,7 +51,7 @@ export default function TrainingVideos() {
       id: 2,
       title: "Tips para aplicar buenas prácticas y hábitos de higiene",
       duration: "4 min",
-      videoUrl: "/videos/Modulo2.mp4",
+      videoUrl: "/videos/modulo2.mp4",
       description:
         "Son recomendaciones que ayudan a los manipuladores de alimentos a mantener condiciones higiénicas adecuadas durante la preparación y manejo de los alimentos, evitando riesgos para la salud.",
       icon: <FaHandsWash />,
